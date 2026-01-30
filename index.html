@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Star Submission Assistant</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- React -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'display': ['Outfit', 'sans-serif'],
+                        'body': ['Inter', 'system-ui', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        'forest': {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 50%, #f0f9ff 100%);
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .category-badge {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .category-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .credit-card {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .credit-card:hover {
+            background-color: rgba(243, 244, 246, 0.8);
+        }
+
+        .credit-card.selected {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-color: #10b981;
+        }
+
+        .circular-progress {
+            transition: stroke-dashoffset 0.5s ease-in-out;
+        }
+
+        .star-badge {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        /* Custom checkbox */
+        .custom-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .custom-checkbox:checked {
+            background-color: #10b981;
+            border-color: #10b981;
+        }
+
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            width: 6px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .required-badge {
+            font-size: 0.65rem;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        // ============================================
+        // DATA: Categories and Credits from Green Star Buildings v1.1
+        // ============================================
+
+        const categoriesData = [
+            {
+                id: 'responsible',
+                name: 'Responsible',
+                icon: '🏗️',
+                color: 'blue',
+                colorClasses: {
+                    bg: 'bg-blue-500',
+                    bgLight: 'bg-blue-100',
+                    text: 'text-blue-600',
+                    border: 'border-blue-500',
+                    hover: 'hover:bg-blue-50'
+                },
+                maxPoints: 35,
+                description: 'Responsible sourcing, construction practices, and materials',
+                credits: [
+                    { id: 'ind-dev', name: 'Industry Development', points: 2, required: false, description: 'Supporting the development of the green building industry through training, research, and knowledge sharing.' },
+                    { id: 'resp-const', name: 'Responsible Construction', points: 5, required: false, description: 'Implementing environmental management practices during construction.' },
+                    { id: 'verify-hand', name: 'Verification and Handover', points: 3, required: false, description: 'Ensuring building systems work as designed through commissioning and handover processes.' },
+                    { id: 'resp-resource', name: 'Responsible Resource Management', points: 3, required: false, description: 'Managing construction waste and materials responsibly.' },
+                    { id: 'resp-proc', name: 'Responsible Procurement', points: 2, required: false, description: 'Sourcing products and materials with verified sustainability credentials.' },
+                    { id: 'resp-struct', name: 'Responsible Structure', points: 5, required: false, description: 'Using responsible structural materials with lower environmental impacts.' },
+                    { id: 'resp-envelope', name: 'Responsible Envelope', points: 5, required: false, description: 'Using responsible envelope materials and systems.' },
+                    { id: 'resp-systems', name: 'Responsible Systems', points: 5, required: false, description: 'Using responsible building systems and services.' },
+                    { id: 'resp-finishes', name: 'Responsible Finishes', points: 3, required: false, description: 'Using responsible interior finishes and materials.' },
+                    { id: 'impacts-disc', name: 'Impacts Disclosure', points: 2, required: false, description: 'Disclosing environmental impacts of the building.' }
+                ]
+            },
+            {
+                id: 'healthy',
+                name: 'Healthy',
+                icon: '💚',
+                color: 'red',
+                colorClasses: {
+                    bg: 'bg-red-500',
+                    bgLight: 'bg-red-100',
+                    text: 'text-red-600',
+                    border: 'border-red-500',
+                    hover: 'hover:bg-red-50'
+                },
+                maxPoints: 25,
+                description: 'Indoor environment quality and occupant health',
+                credits: [
+                    { id: 'clean-air', name: 'Clean Air', points: 6, required: false, description: 'Ensuring high indoor air quality through ventilation and low-emission materials.' },
+                    { id: 'light-quality', name: 'Light Quality', points: 5, required: false, description: 'Providing adequate natural and artificial lighting for occupant comfort.' },
+                    { id: 'acoustic', name: 'Acoustic Comfort', points: 5, required: false, description: 'Managing noise levels and acoustic conditions within the building.' },
+                    { id: 'toxins', name: 'Exposure to Toxins', points: 4, required: false, description: 'Minimizing occupant exposure to harmful chemicals and materials.' },
+                    { id: 'amenity', name: 'Amenity and Comfort', points: 3, required: false, description: 'Providing comfortable thermal conditions and amenities.' },
+                    { id: 'nature-conn', name: 'Connection to Nature', points: 2, required: false, description: 'Creating visual and physical connections to natural elements.' }
+                ]
+            },
+            {
+                id: 'resilient',
+                name: 'Resilient',
+                icon: '🛡️',
+                color: 'orange',
+                colorClasses: {
+                    bg: 'bg-orange-500',
+                    bgLight: 'bg-orange-100',
+                    text: 'text-orange-600',
+                    border: 'border-orange-500',
+                    hover: 'hover:bg-orange-50'
+                },
+                maxPoints: 15,
+                description: 'Climate adaptation and resilience',
+                credits: [
+                    { id: 'climate-res', name: 'Climate Resilience', points: 4, required: false, description: 'Designing for current and future climate conditions.' },
+                    { id: 'ops-res', name: 'Operations Resilience', points: 3, required: false, description: 'Ensuring building can maintain operations during disruptions.' },
+                    { id: 'comm-res', name: 'Community Resilience', points: 3, required: false, description: 'Contributing to community resilience during emergencies.' },
+                    { id: 'heat-res', name: 'Heat Resilience', points: 3, required: false, description: 'Managing urban heat island effects and extreme heat events.' },
+                    { id: 'grid-res', name: 'Grid Resilience', points: 2, required: false, description: 'Supporting electricity grid stability and reliability.' }
+                ]
+            },
+            {
+                id: 'positive',
+                name: 'Positive',
+                icon: '⚡',
+                color: 'green',
+                colorClasses: {
+                    bg: 'bg-green-500',
+                    bgLight: 'bg-green-100',
+                    text: 'text-green-600',
+                    border: 'border-green-500',
+                    hover: 'hover:bg-green-50'
+                },
+                maxPoints: 40,
+                description: 'Energy, carbon, and resource efficiency',
+                credits: [
+                    { id: 'energy-source', name: 'Energy Source', points: 6, required: true, description: 'Using renewable or low-carbon energy sources.', calculatorRequired: true },
+                    { id: 'energy-use', name: 'Energy Use', points: 10, required: true, description: 'Reducing operational energy consumption.', calculatorRequired: true },
+                    { id: 'upfront-carbon-red', name: 'Upfront Carbon Reduction', points: 10, required: true, description: 'Reducing embodied carbon in construction materials.', calculatorRequired: true },
+                    { id: 'upfront-carbon-comp', name: 'Upfront Carbon Compensation', points: 3, required: false, description: 'Offsetting remaining embodied carbon emissions.', calculatorRequired: true },
+                    { id: 'refrigerant', name: 'Refrigerant Systems Impacts', points: 3, required: false, description: 'Using low global warming potential refrigerants.', calculatorRequired: true },
+                    { id: 'low-emissions', name: 'Low-Emissions Transport', points: 3, required: false, description: 'Supporting electric vehicles and active transport.' },
+                    { id: 'circularity', name: 'Design for Circularity', points: 2, required: false, description: 'Designing for adaptability and material reuse.' },
+                    { id: 'water-use', name: 'Water Use', points: 3, required: false, description: 'Reducing potable water consumption.', calculatorRequired: true }
+                ]
+            },
+            {
+                id: 'places',
+                name: 'Places',
+                icon: '🏛️',
+                color: 'purple',
+                colorClasses: {
+                    bg: 'bg-purple-500',
+                    bgLight: 'bg-purple-100',
+                    text: 'text-purple-600',
+                    border: 'border-purple-500',
+                    hover: 'hover:bg-purple-50'
+                },
+                maxPoints: 15,
+                description: 'Place-making and community contribution',
+                credits: [
+                    { id: 'movement', name: 'Movement and Place', points: 5, required: false, description: 'Supporting sustainable transport and walkability.', calculatorRequired: true },
+                    { id: 'enjoyable', name: 'Enjoyable Places', points: 4, required: false, description: 'Creating quality public and communal spaces.' },
+                    { id: 'contribution', name: 'Contribution to Place', points: 3, required: false, description: 'Contributing positively to the local area.' },
+                    { id: 'culture', name: 'Culture, Heritage and Identity', points: 3, required: false, description: 'Respecting and celebrating cultural heritage.' }
+                ]
+            },
+            {
+                id: 'people',
+                name: 'People',
+                icon: '👥',
+                color: 'pink',
+                colorClasses: {
+                    bg: 'bg-pink-500',
+                    bgLight: 'bg-pink-100',
+                    text: 'text-pink-600',
+                    border: 'border-pink-500',
+                    hover: 'hover:bg-pink-50'
+                },
+                maxPoints: 15,
+                description: 'Social sustainability and inclusion',
+                credits: [
+                    { id: 'inclusive-const', name: 'Inclusive Construction Practices', points: 4, required: false, description: 'Promoting diversity and inclusion in construction.' },
+                    { id: 'first-nations', name: 'First Nations Inclusion', points: 4, required: false, description: 'Engaging with and supporting First Nations peoples.' },
+                    { id: 'proc-workforce', name: 'Procurement and Workforce Inclusion', points: 4, required: false, description: 'Supporting social enterprises and diverse suppliers.', calculatorRequired: true },
+                    { id: 'design-equity', name: 'Design for Equity', points: 3, required: false, description: 'Designing for accessibility and diverse users.' }
+                ]
+            },
+            {
+                id: 'nature',
+                name: 'Nature',
+                icon: '🌿',
+                color: 'emerald',
+                colorClasses: {
+                    bg: 'bg-emerald-500',
+                    bgLight: 'bg-emerald-100',
+                    text: 'text-emerald-600',
+                    border: 'border-emerald-500',
+                    hover: 'hover:bg-emerald-50'
+                },
+                maxPoints: 20,
+                description: 'Ecological impact and biodiversity',
+                credits: [
+                    { id: 'impacts-nature', name: 'Impacts to Nature', points: 6, required: false, description: 'Minimizing negative impacts on ecological values.' },
+                    { id: 'biodiversity', name: 'Biodiversity Enhancement', points: 6, required: false, description: 'Enhancing biodiversity on and around the site.', calculatorRequired: true },
+                    { id: 'nature-connectivity', name: 'Nature Connectivity', points: 3, required: false, description: 'Creating ecological corridors and connections.' },
+                    { id: 'nature-steward', name: 'Nature Stewardship', points: 3, required: false, description: 'Long-term management of natural features.' },
+                    { id: 'waterway', name: 'Waterway Protection', points: 2, required: false, description: 'Protecting water quality and aquatic ecosystems.' }
+                ]
+            },
+            {
+                id: 'leadership',
+                name: 'Leadership',
+                icon: '🏆',
+                color: 'yellow',
+                colorClasses: {
+                    bg: 'bg-yellow-500',
+                    bgLight: 'bg-yellow-100',
+                    text: 'text-yellow-600',
+                    border: 'border-yellow-500',
+                    hover: 'hover:bg-yellow-50'
+                },
+                maxPoints: 5,
+                description: 'Innovation and market leadership',
+                credits: [
+                    { id: 'market-transform', name: 'Market Transformation', points: 2, required: false, description: 'Initiatives that transform the market and inspire others.' },
+                    { id: 'leadership-challenge', name: 'Leadership Challenges', points: 3, required: false, description: 'Addressing specific leadership challenges.' }
+                ]
+            }
+        ];
+
+        // Calculator data
+        const calculatorsData = [
+            { id: 'responsible-products', name: 'Responsible Products Calculator', description: 'Calculate responsible products percentage', icon: 'fa-boxes-stacked', type: 'products' },
+            { id: 'energy-reference', name: 'Energy Use - Reference Pathway', description: 'Calculate energy reduction vs reference', icon: 'fa-bolt', type: 'energy' },
+            { id: 'upfront-carbon', name: 'Upfront Carbon Emissions', description: 'Calculate embodied carbon emissions', icon: 'fa-cloud', type: 'carbon' },
+            { id: 'carbon-compensation', name: 'Upfront Carbon Compensation', description: 'Calculate carbon offset requirements', icon: 'fa-leaf', type: 'carbon' },
+            { id: 'refrigerant', name: 'Refrigerant Systems GWP', description: 'Calculate refrigerant GWP impact', icon: 'fa-snowflake', type: 'energy' },
+            { id: 'water', name: 'Water Use Calculator', description: 'Calculate water consumption reduction', icon: 'fa-droplet', type: 'water' },
+            { id: 'movement', name: 'Movement and Place', description: 'Calculate transport impact score', icon: 'fa-person-walking', type: 'transport' },
+            { id: 'procurement', name: 'Procurement and Workforce', description: 'Calculate social procurement spend', icon: 'fa-handshake', type: 'social' },
+            { id: 'biodiversity', name: 'Biodiversity Enhancement', description: 'Calculate biodiversity net gain', icon: 'fa-tree', type: 'biodiversity' }
+        ];
+
+        // Star rating calculation (based on Green Star Buildings v1.1)
+        function calculateStarRating(totalPoints) {
+            const cappedPoints = Math.min(totalPoints, 100);
+            if (cappedPoints >= 70) return { stars: 6, name: '6 Star', description: 'World Leadership', color: 'text-yellow-500' };
+            if (cappedPoints >= 35) return { stars: 5, name: '5 Star', description: 'Australian Excellence', color: 'text-emerald-500' };
+            if (cappedPoints >= 15) return { stars: 4, name: '4 Star', description: 'Best Practice', color: 'text-blue-500' };
+            return { stars: 0, name: 'No Rating', description: 'Need 15+ points', color: 'text-gray-400' };
+        }
+
+        // Get next rating target
+        function getNextRatingTarget(totalPoints) {
+            const cappedPoints = Math.min(totalPoints, 100);
+            if (cappedPoints >= 70) return null;
+            if (cappedPoints >= 35) return { target: 70, name: '6 Star', remaining: 70 - cappedPoints };
+            if (cappedPoints >= 15) return { target: 35, name: '5 Star', remaining: 35 - cappedPoints };
+            return { target: 15, name: '4 Star', remaining: 15 - cappedPoints };
+        }
+
+        // ============================================
+        // COMPONENTS
+        // ============================================
+
+        // Circular Progress Component
+        function CircularProgress({ current, max, size = 140, strokeWidth = 10 }) {
+            const radius = (size - strokeWidth) / 2;
+            const circumference = radius * 2 * Math.PI;
+            const cappedCurrent = Math.min(current, max);
+            const percentage = (cappedCurrent / max) * 100;
+            const offset = circumference - (percentage / 100) * circumference;
+
+            return (
+                <div className="relative" style={{ width: size, height: size }}>
+                    <svg className="transform -rotate-90" width={size} height={size}>
+                        {/* Background circle */}
+                        <circle
+                            cx={size / 2}
+                            cy={size / 2}
+                            r={radius}
+                            fill="none"
+                            stroke="#e5e7eb"
+                            strokeWidth={strokeWidth}
+                        />
+                        {/* Progress circle */}
+                        <circle
+                            cx={size / 2}
+                            cy={size / 2}
+                            r={radius}
+                            fill="none"
+                            stroke="url(#gradient)"
+                            strokeWidth={strokeWidth}
+                            strokeLinecap="round"
+                            strokeDasharray={circumference}
+                            strokeDashoffset={offset}
+                            className="circular-progress"
+                        />
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="#10b981" />
+                                <stop offset="100%" stopColor="#0284c7" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <span className="font-mono text-3xl font-bold text-gray-800">{current}</span>
+                        <span className="text-sm text-gray-500">/ {max} pts</span>
+                    </div>
+                </div>
+            );
+        }
+
+        // Star Rating Display
+        function StarRatingDisplay({ rating }) {
+            return (
+                <div className={`flex flex-col items-center ${rating.color}`}>
+                    <div className="flex gap-1">
+                        {[...Array(6)].map((_, i) => (
+                            <i
+                                key={i}
+                                className={`fa-star ${i < rating.stars ? 'fa-solid' : 'fa-regular'} text-xl`}
+                            />
+                        ))}
+                    </div>
+                    <span className="font-display font-semibold mt-1">{rating.name}</span>
+                    <span className="text-xs text-gray-500">{rating.description}</span>
+                </div>
+            );
+        }
+
+        // Score Dashboard Component
+        function ScoreDashboard({ totalPoints, selectedCredits, categories }) {
+            const rating = calculateStarRating(totalPoints);
+            const nextTarget = getNextRatingTarget(totalPoints);
+            const requiredCredits = ['positive-energy-source', 'positive-energy-use', 'positive-upfront-carbon-red'];
+            const requiredMet = requiredCredits.filter(key => selectedCredits[key] > 0).length;
+
+            return (
+                <div className="glass-card rounded-2xl p-6 shadow-lg">
+                    <div className="flex flex-wrap items-center justify-between gap-6">
+                        <div className="flex items-center gap-6">
+                            <CircularProgress current={totalPoints} max={100} />
+                            <div>
+                                <StarRatingDisplay rating={rating} />
+                                {nextTarget && (
+                                    <p className="text-sm text-gray-500 mt-2">
+                                        <span className="font-semibold">{nextTarget.remaining}</span> more points for {nextTarget.name}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-2 text-sm">
+                                <i className={`fa-solid fa-check-circle ${requiredMet === 3 ? 'text-green-500' : 'text-gray-300'}`}></i>
+                                <span className={requiredMet === 3 ? 'text-green-600 font-medium' : 'text-gray-500'}>
+                                    Required Credits: {requiredMet}/3
+                                </span>
+                            </div>
+                            <div className="text-xs text-gray-400">
+                                Energy Source, Energy Use, Upfront Carbon
+                            </div>
+                        </div>
+
+                        <div className="text-right">
+                            <p className="text-sm text-gray-500">Credits Selected</p>
+                            <p className="font-mono text-2xl font-bold text-gray-800">
+                                {Object.values(selectedCredits).filter(v => v > 0).length}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Category Badge Component
+        function CategoryBadge({ category, isActive, onClick, selectedPoints }) {
+            const { colorClasses } = category;
+            const percentage = Math.round((selectedPoints / category.maxPoints) * 100);
+
+            return (
+                <button
+                    onClick={onClick}
+                    className={`category-badge flex flex-col items-center p-4 rounded-xl cursor-pointer min-w-[120px]
+                        ${isActive ? `${colorClasses.bgLight} ${colorClasses.border} border-2` : 'glass-card border border-gray-200'}
+                        ${colorClasses.hover}`}
+                >
+                    <span className="text-2xl mb-1">{category.icon}</span>
+                    <span className={`font-medium text-sm ${isActive ? colorClasses.text : 'text-gray-700'}`}>
+                        {category.name}
+                    </span>
+                    <div className="flex items-center gap-1 mt-1">
+                        <span className={`font-mono text-sm font-bold ${isActive ? colorClasses.text : 'text-gray-600'}`}>
+                            {selectedPoints}
+                        </span>
+                        <span className="text-xs text-gray-400">/ {category.maxPoints}</span>
+                    </div>
+                    {/* Mini progress bar */}
+                    <div className="w-full h-1.5 bg-gray-200 rounded-full mt-2 overflow-hidden">
+                        <div
+                            className={`h-full ${colorClasses.bg} transition-all duration-300`}
+                            style={{ width: `${percentage}%` }}
+                        />
+                    </div>
+                </button>
+            );
+        }
+
+        // Credit Card Component
+        function CreditCard({ credit, categoryId, isSelected, onToggle, colorClasses }) {
+            return (
+                <div
+                    onClick={onToggle}
+                    className={`credit-card flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all
+                        ${isSelected ? `border-green-500 bg-green-50` : 'border-gray-200 bg-white'}`}
+                >
+                    <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={onToggle}
+                        className="custom-checkbox flex-shrink-0"
+                        onClick={(e) => e.stopPropagation()}
+                    />
+
+                    <div className="flex-grow min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className={`font-medium ${isSelected ? 'text-green-700' : 'text-gray-800'}`}>
+                                {credit.name}
+                            </h3>
+                            {credit.required && (
+                                <span className="required-badge bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-semibold uppercase">
+                                    Required
+                                </span>
+                            )}
+                            {credit.calculatorRequired && (
+                                <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
+                                    <i className="fa-solid fa-calculator mr-1"></i>
+                                    Calculator
+                                </span>
+                            )}
+                        </div>
+                        {credit.description && (
+                            <p className="text-sm text-gray-500 mt-1 line-clamp-2">{credit.description}</p>
+                        )}
+                    </div>
+
+                    <div className={`flex-shrink-0 font-mono text-xl font-bold ${isSelected ? 'text-green-600' : 'text-gray-400'}`}>
+                        +{credit.points}
+                    </div>
+                </div>
+            );
+        }
+
+        // Credits List Component
+        function CreditsList({ category, selectedCredits, onToggleCredit }) {
+            return (
+                <div className="glass-card rounded-2xl p-6 shadow-lg">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                            <span className="text-3xl">{category.icon}</span>
+                            <div>
+                                <h2 className="font-display text-xl font-bold text-gray-800">{category.name}</h2>
+                                <p className="text-sm text-gray-500">{category.description}</p>
+                            </div>
+                        </div>
+                        <div className={`${category.colorClasses.bgLight} ${category.colorClasses.text} px-4 py-2 rounded-lg`}>
+                            <span className="font-mono font-bold">{category.maxPoints}</span>
+                            <span className="text-sm ml-1">points max</span>
+                        </div>
+                    </div>
+
+                    <div className="space-y-3">
+                        {category.credits.map((credit, index) => {
+                            const creditKey = `${category.id}-${credit.id}`;
+                            const isSelected = selectedCredits[creditKey] > 0;
+
+                            return (
+                                <div key={credit.id} className="fade-in" style={{ animationDelay: `${index * 50}ms` }}>
+                                    <CreditCard
+                                        credit={credit}
+                                        categoryId={category.id}
+                                        isSelected={isSelected}
+                                        onToggle={() => onToggleCredit(creditKey, credit.points)}
+                                        colorClasses={category.colorClasses}
+                                    />
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        }
+
+        // Calculators Modal Component
+        function CalculatorsModal({ isOpen, onClose }) {
+            if (!isOpen) return null;
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
+                    <div
+                        className="glass-card rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between mb-6">
+                            <div>
+                                <h2 className="font-display text-2xl font-bold text-gray-800">Green Star Calculators</h2>
+                                <p className="text-gray-500">Required calculators for specific credits</p>
+                            </div>
+                            <button
+                                onClick={onClose}
+                                className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                            >
+                                <i className="fa-solid fa-xmark text-gray-600"></i>
+                            </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {calculatorsData.map((calc) => (
+                                <div
+                                    key={calc.id}
+                                    className="bg-white rounded-xl p-4 border border-gray-200 hover:border-green-300 hover:shadow-md transition-all cursor-pointer"
+                                >
+                                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center mb-3">
+                                        <i className={`fa-solid ${calc.icon} text-xl text-green-600`}></i>
+                                    </div>
+                                    <h3 className="font-medium text-gray-800 mb-1">{calc.name}</h3>
+                                    <p className="text-sm text-gray-500 mb-3">{calc.description}</p>
+                                    <button className="text-sm text-green-600 font-medium hover:text-green-700">
+                                        Open Calculator <i className="fa-solid fa-arrow-right ml-1"></i>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+
+                        <p className="text-center text-sm text-gray-400 mt-6">
+                            Calculator functionality coming in Phase 3
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        // Export Modal Component
+        function ExportModal({ isOpen, onClose, projectData }) {
+            if (!isOpen) return null;
+
+            const handleExport = (format) => {
+                const data = {
+                    projectName: projectData.projectName,
+                    exportDate: new Date().toISOString(),
+                    totalPoints: projectData.totalPoints,
+                    rating: calculateStarRating(projectData.totalPoints),
+                    selectedCredits: projectData.selectedCredits,
+                    categories: categoriesData.map(cat => ({
+                        name: cat.name,
+                        maxPoints: cat.maxPoints,
+                        earnedPoints: cat.credits.reduce((sum, credit) => {
+                            const key = `${cat.id}-${credit.id}`;
+                            return sum + (projectData.selectedCredits[key] || 0);
+                        }, 0),
+                        selectedCredits: cat.credits.filter(credit => {
+                            const key = `${cat.id}-${credit.id}`;
+                            return projectData.selectedCredits[key] > 0;
+                        }).map(c => c.name)
+                    }))
+                };
+
+                if (format === 'json') {
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `green-star-submission-${Date.now()}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }
+
+                alert(`Export to ${format.toUpperCase()} - Full functionality coming in Phase 2`);
+            };
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
+                    <div
+                        className="glass-card rounded-2xl p-6 max-w-md w-full"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="font-display text-xl font-bold text-gray-800">Export Submission</h2>
+                            <button
+                                onClick={onClose}
+                                className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                            >
+                                <i className="fa-solid fa-xmark text-gray-600"></i>
+                            </button>
+                        </div>
+
+                        <div className="space-y-3">
+                            <button
+                                onClick={() => handleExport('pdf')}
+                                className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-all"
+                            >
+                                <div className="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center">
+                                    <i className="fa-solid fa-file-pdf text-xl text-red-600"></i>
+                                </div>
+                                <div className="text-left">
+                                    <p className="font-medium text-gray-800">PDF Checklist</p>
+                                    <p className="text-sm text-gray-500">Printable submission checklist</p>
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() => handleExport('json')}
+                                className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all"
+                            >
+                                <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
+                                    <i className="fa-solid fa-file-code text-xl text-blue-600"></i>
+                                </div>
+                                <div className="text-left">
+                                    <p className="font-medium text-gray-800">JSON Data</p>
+                                    <p className="text-sm text-gray-500">Machine-readable format</p>
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() => handleExport('excel')}
+                                className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-all"
+                            >
+                                <div className="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center">
+                                    <i className="fa-solid fa-file-excel text-xl text-green-600"></i>
+                                </div>
+                                <div className="text-left">
+                                    <p className="font-medium text-gray-800">Excel Spreadsheet</p>
+                                    <p className="text-sm text-gray-500">Detailed credit breakdown</p>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Header Component
+        function Header({ projectName, onProjectNameChange }) {
+            const [isEditing, setIsEditing] = useState(false);
+            const [tempName, setTempName] = useState(projectName);
+
+            const handleSave = () => {
+                onProjectNameChange(tempName);
+                setIsEditing(false);
+            };
+
+            return (
+                <header className="glass-card rounded-2xl p-4 shadow-lg mb-6">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                                <i className="fa-solid fa-leaf text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h1 className="font-display text-xl font-bold text-gray-800">Green Star Assistant</h1>
+                                <p className="text-sm text-gray-500">Buildings v1.1 Submission Guide</p>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            {isEditing ? (
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="text"
+                                        value={tempName}
+                                        onChange={(e) => setTempName(e.target.value)}
+                                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-green-500"
+                                        autoFocus
+                                    />
+                                    <button
+                                        onClick={handleSave}
+                                        className="px-3 py-2 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600"
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            ) : (
+                                <button
+                                    onClick={() => setIsEditing(true)}
+                                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                                >
+                                    <i className="fa-solid fa-building text-gray-600"></i>
+                                    <span className="font-medium text-gray-700">{projectName}</span>
+                                    <i className="fa-solid fa-pen text-xs text-gray-400"></i>
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </header>
+            );
+        }
+
+        // Quick Actions Component
+        function QuickActions({ onOpenCalculators, onOpenExport }) {
+            return (
+                <div className="flex gap-3 mb-6">
+                    <button
+                        onClick={onOpenCalculators}
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl hover:border-green-300 hover:bg-green-50 transition-all"
+                    >
+                        <i className="fa-solid fa-calculator text-green-600"></i>
+                        <span className="font-medium text-gray-700">Calculators</span>
+                    </button>
+
+                    <button
+                        onClick={onOpenExport}
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition-all"
+                    >
+                        <i className="fa-solid fa-download text-blue-600"></i>
+                        <span className="font-medium text-gray-700">Export</span>
+                    </button>
+
+                    <button
+                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl hover:shadow-lg transition-all opacity-60 cursor-not-allowed"
+                        disabled
+                    >
+                        <i className="fa-solid fa-robot"></i>
+                        <span className="font-medium">AI Assistant</span>
+                        <span className="text-xs bg-white/20 px-2 py-0.5 rounded">Soon</span>
+                    </button>
+                </div>
+            );
+        }
+
+        // Main App Component
+        function App() {
+            const [projectName, setProjectName] = useState('My Green Star Project');
+            const [activeCategory, setActiveCategory] = useState('responsible');
+            const [selectedCredits, setSelectedCredits] = useState({});
+            const [showCalculators, setShowCalculators] = useState(false);
+            const [showExport, setShowExport] = useState(false);
+
+            // Load from localStorage on mount
+            useEffect(() => {
+                const saved = localStorage.getItem('greenstar-project');
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        setProjectName(data.projectName || 'My Green Star Project');
+                        setSelectedCredits(data.selectedCredits || {});
+                    } catch (e) {
+                        console.error('Failed to load saved project:', e);
+                    }
+                }
+            }, []);
+
+            // Save to localStorage on change
+            useEffect(() => {
+                const data = { projectName, selectedCredits };
+                localStorage.setItem('greenstar-project', JSON.stringify(data));
+            }, [projectName, selectedCredits]);
+
+            // Calculate totals
+            const totalPoints = useMemo(() => {
+                return Object.values(selectedCredits).reduce((sum, points) => sum + points, 0);
+            }, [selectedCredits]);
+
+            const getCategoryPoints = (categoryId) => {
+                const category = categoriesData.find(c => c.id === categoryId);
+                return category.credits.reduce((sum, credit) => {
+                    const key = `${categoryId}-${credit.id}`;
+                    return sum + (selectedCredits[key] || 0);
+                }, 0);
+            };
+
+            const handleToggleCredit = (creditKey, points) => {
+                setSelectedCredits(prev => {
+                    if (prev[creditKey]) {
+                        const { [creditKey]: _, ...rest } = prev;
+                        return rest;
+                    }
+                    return { ...prev, [creditKey]: points };
+                });
+            };
+
+            const activeCateg = categoriesData.find(c => c.id === activeCategory);
+
+            return (
+                <div className="min-h-screen p-4 md:p-6 lg:p-8">
+                    <div className="max-w-6xl mx-auto">
+                        <Header
+                            projectName={projectName}
+                            onProjectNameChange={setProjectName}
+                        />
+
+                        <ScoreDashboard
+                            totalPoints={totalPoints}
+                            selectedCredits={selectedCredits}
+                            categories={categoriesData}
+                        />
+
+                        <div className="mt-6">
+                            <QuickActions
+                                onOpenCalculators={() => setShowCalculators(true)}
+                                onOpenExport={() => setShowExport(true)}
+                            />
+                        </div>
+
+                        {/* Category Navigation */}
+                        <div className="flex gap-3 overflow-x-auto pb-4 mt-6">
+                            {categoriesData.map(category => (
+                                <CategoryBadge
+                                    key={category.id}
+                                    category={category}
+                                    isActive={activeCategory === category.id}
+                                    onClick={() => setActiveCategory(category.id)}
+                                    selectedPoints={getCategoryPoints(category.id)}
+                                />
+                            ))}
+                        </div>
+
+                        {/* Credits List */}
+                        <div className="mt-6">
+                            <CreditsList
+                                category={activeCateg}
+                                selectedCredits={selectedCredits}
+                                onToggleCredit={handleToggleCredit}
+                            />
+                        </div>
+
+                        {/* Footer */}
+                        <footer className="mt-8 text-center text-sm text-gray-400">
+                            <p>Green Star Buildings v1.1 Submission Assistant</p>
+                            <p className="mt-1">Based on GBCA Green Star Buildings Submission Guidelines</p>
+                        </footer>
+
+                        {/* Modals */}
+                        <CalculatorsModal
+                            isOpen={showCalculators}
+                            onClose={() => setShowCalculators(false)}
+                        />
+                        <ExportModal
+                            isOpen={showExport}
+                            onClose={() => setShowExport(false)}
+                            projectData={{ projectName, totalPoints, selectedCredits }}
+                        />
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
