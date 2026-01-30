@@ -145,6 +145,111 @@
             font-size: 0.65rem;
             letter-spacing: 0.05em;
         }
+
+        /* Credit Detail Modal Styles */
+        .modal-enter {
+            animation: modalEnter 0.3s ease-out;
+        }
+
+        @keyframes modalEnter {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .section-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .section-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .criteria-item {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .criteria-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #0284c7 100%);
+        }
+
+        .doc-item {
+            transition: all 0.2s ease;
+        }
+
+        .doc-item:hover {
+            background-color: #f0fdf4;
+            transform: translateX(4px);
+        }
+
+        .pathway-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #f0fdf4 100%);
+            border: 1px solid #bae6fd;
+            transition: all 0.2s ease;
+        }
+
+        .pathway-card:hover {
+            border-color: #7dd3fc;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+        }
+
+        .points-badge {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .info-button {
+            transition: all 0.2s ease;
+        }
+
+        .info-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .tab-button {
+            transition: all 0.2s ease;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #10b981 0%, #0284c7 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 </head>
 <body>
@@ -173,16 +278,222 @@
                 maxPoints: 35,
                 description: 'Responsible sourcing, construction practices, and materials',
                 credits: [
-                    { id: 'ind-dev', name: 'Industry Development', points: 2, required: false, description: 'Supporting the development of the green building industry through training, research, and knowledge sharing.' },
-                    { id: 'resp-const', name: 'Responsible Construction', points: 5, required: false, description: 'Implementing environmental management practices during construction.' },
-                    { id: 'verify-hand', name: 'Verification and Handover', points: 3, required: false, description: 'Ensuring building systems work as designed through commissioning and handover processes.' },
-                    { id: 'resp-resource', name: 'Responsible Resource Management', points: 3, required: false, description: 'Managing construction waste and materials responsibly.' },
-                    { id: 'resp-proc', name: 'Responsible Procurement', points: 2, required: false, description: 'Sourcing products and materials with verified sustainability credentials.' },
-                    { id: 'resp-struct', name: 'Responsible Structure', points: 5, required: false, description: 'Using responsible structural materials with lower environmental impacts.' },
-                    { id: 'resp-envelope', name: 'Responsible Envelope', points: 5, required: false, description: 'Using responsible envelope materials and systems.' },
-                    { id: 'resp-systems', name: 'Responsible Systems', points: 5, required: false, description: 'Using responsible building systems and services.' },
-                    { id: 'resp-finishes', name: 'Responsible Finishes', points: 3, required: false, description: 'Using responsible interior finishes and materials.' },
-                    { id: 'impacts-disc', name: 'Impacts Disclosure', points: 2, required: false, description: 'Disclosing environmental impacts of the building.' }
+                    {
+                        id: 'ind-dev',
+                        name: 'Industry Development',
+                        points: 2,
+                        required: false,
+                        description: 'Supporting the development of the green building industry through training, research, and knowledge sharing.',
+                        aims: 'To encourage and recognise projects that support the development of the green building industry and sustainability skills within the project team.',
+                        criteria: [
+                            'Professional Development: Project team members undertake Green Star-related professional development',
+                            'Industry Contribution: The project contributes to the green building industry through case studies, tours, or presentations',
+                            'Research & Innovation: The project supports sustainability research or innovation initiatives'
+                        ],
+                        documentation: [
+                            'Evidence of professional development completion (certificates, attendance records)',
+                            'Case study or presentation materials',
+                            'Research collaboration agreements or outputs'
+                        ],
+                        tips: 'Start early - professional development can be completed throughout the project. Consider hosting site tours for industry groups.'
+                    },
+                    {
+                        id: 'resp-const',
+                        name: 'Responsible Construction',
+                        points: 5,
+                        required: false,
+                        description: 'Implementing environmental management practices during construction.',
+                        aims: 'To encourage and recognise construction practices that minimise environmental impacts and promote responsible site management.',
+                        criteria: [
+                            'Environmental Management Plan: An EMP is implemented throughout construction',
+                            'Air Quality Management: Dust and emissions are actively controlled on site',
+                            'Noise Management: Construction noise is monitored and managed',
+                            'Stormwater Management: Sediment and erosion controls are in place',
+                            'Waste Management: Construction waste is sorted and diverted from landfill'
+                        ],
+                        documentation: [
+                            'Environmental Management Plan (EMP)',
+                            'Site inspection reports and photos',
+                            'Waste tracking documentation',
+                            'Complaints register and response actions',
+                            'Third-party audit reports (if applicable)'
+                        ],
+                        tips: 'Implement robust systems from day one. Regular site inspections and photographic evidence are essential.'
+                    },
+                    {
+                        id: 'verify-hand',
+                        name: 'Verification and Handover',
+                        points: 3,
+                        required: false,
+                        description: 'Ensuring building systems work as designed through commissioning and handover processes.',
+                        aims: 'To ensure that building systems are properly commissioned, tuned, and handed over to enable optimal performance.',
+                        criteria: [
+                            'Commissioning Plan: A comprehensive commissioning plan is developed and implemented',
+                            'Systems Testing: All building systems are tested and verified against design intent',
+                            'Building Tuning: Post-occupancy tuning is undertaken for at least 12 months',
+                            'Handover Documentation: Comprehensive O&M manuals and training are provided'
+                        ],
+                        documentation: [
+                            'Commissioning plan and reports',
+                            'Test certificates and results',
+                            'Building tuning reports',
+                            'O&M manuals',
+                            'Training records for building operators'
+                        ],
+                        tips: 'Engage a commissioning agent early. Building tuning commitment should be included in contracts.'
+                    },
+                    {
+                        id: 'resp-resource',
+                        name: 'Responsible Resource Management',
+                        points: 3,
+                        required: false,
+                        description: 'Managing construction waste and materials responsibly.',
+                        aims: 'To encourage practices that reduce construction waste and promote material reuse and recycling.',
+                        criteria: [
+                            'Waste Management Plan: A detailed waste management plan is implemented',
+                            'Waste Diversion: At least 90% of construction waste is diverted from landfill',
+                            'Material Reuse: Salvaged or reused materials are incorporated into the project'
+                        ],
+                        documentation: [
+                            'Waste Management Plan',
+                            'Waste tracking records and receipts',
+                            'Recycling facility certifications',
+                            'Photos of material reuse applications'
+                        ],
+                        tips: 'Set up clear waste streams on site from day one. Work with recyclers early to understand what they can accept.'
+                    },
+                    {
+                        id: 'resp-proc',
+                        name: 'Responsible Procurement',
+                        points: 2,
+                        required: false,
+                        description: 'Sourcing products and materials with verified sustainability credentials.',
+                        aims: 'To encourage the specification and procurement of products with third-party verified sustainability credentials.',
+                        criteria: [
+                            'Procurement Policy: A sustainable procurement policy is implemented',
+                            'Certified Products: Products with recognised sustainability certifications are specified',
+                            'Supply Chain Transparency: Product supply chains are documented and verified'
+                        ],
+                        documentation: [
+                            'Sustainable procurement policy',
+                            'Product certifications and EPDs',
+                            'Supplier declarations and evidence',
+                            'Procurement tracking spreadsheet'
+                        ],
+                        tips: 'Engage with suppliers early about certification requirements. EPDs are increasingly available for common products.'
+                    },
+                    {
+                        id: 'resp-struct',
+                        name: 'Responsible Structure',
+                        points: 5,
+                        required: false,
+                        description: 'Using responsible structural materials with lower environmental impacts.',
+                        aims: 'To encourage the use of structural materials with reduced environmental impacts and verified sustainability credentials.',
+                        criteria: [
+                            'Responsible Concrete: Concrete includes supplementary cementitious materials or uses low-carbon cement',
+                            'Responsible Steel: Steel is sourced from responsible suppliers with verified credentials',
+                            'Responsible Timber: Timber is certified under FSC or PEFC schemes',
+                            'Product Transparency: Structural products have Environmental Product Declarations (EPDs)'
+                        ],
+                        documentation: [
+                            'Material specifications and quantities',
+                            'EPDs for structural products',
+                            'Supplier certifications (ResponsibleSteel, FSC, PEFC)',
+                            'Concrete mix designs and cement mill certificates',
+                            'Responsible Products Calculator outputs'
+                        ],
+                        calculatorRequired: true,
+                        relatedCalculator: 'responsible-products',
+                        tips: 'Work with structural engineers early to optimise material quantities. Low-carbon concrete is increasingly available.'
+                    },
+                    {
+                        id: 'resp-envelope',
+                        name: 'Responsible Envelope',
+                        points: 5,
+                        required: false,
+                        description: 'Using responsible envelope materials and systems.',
+                        aims: 'To encourage the use of building envelope materials with reduced environmental impacts.',
+                        criteria: [
+                            'Responsible Facade Materials: Facade systems use materials with sustainability credentials',
+                            'Responsible Insulation: Insulation products have low embodied carbon and no harmful substances',
+                            'Responsible Glazing: Glazing systems are responsibly sourced',
+                            'Product Transparency: Envelope products have EPDs or equivalent documentation'
+                        ],
+                        documentation: [
+                            'Material specifications for envelope systems',
+                            'EPDs for envelope products',
+                            'Supplier sustainability certifications',
+                            'Responsible Products Calculator outputs'
+                        ],
+                        calculatorRequired: true,
+                        relatedCalculator: 'responsible-products',
+                        tips: 'Consider the whole envelope system including framing, insulation, and finishes.'
+                    },
+                    {
+                        id: 'resp-systems',
+                        name: 'Responsible Systems',
+                        points: 5,
+                        required: false,
+                        description: 'Using responsible building systems and services.',
+                        aims: 'To encourage the use of building services and systems with reduced environmental impacts.',
+                        criteria: [
+                            'Responsible HVAC: HVAC equipment and ductwork use responsible materials',
+                            'Responsible Electrical: Electrical systems use products with sustainability credentials',
+                            'Responsible Plumbing: Plumbing products are responsibly sourced',
+                            'Product Transparency: Building systems products have EPDs'
+                        ],
+                        documentation: [
+                            'Equipment specifications and schedules',
+                            'EPDs for systems products',
+                            'Supplier certifications',
+                            'Responsible Products Calculator outputs'
+                        ],
+                        calculatorRequired: true,
+                        relatedCalculator: 'responsible-products',
+                        tips: 'Engage MEP consultants early on responsible product requirements.'
+                    },
+                    {
+                        id: 'resp-finishes',
+                        name: 'Responsible Finishes',
+                        points: 3,
+                        required: false,
+                        description: 'Using responsible interior finishes and materials.',
+                        aims: 'To encourage the use of interior finishes with reduced environmental impacts and health benefits.',
+                        criteria: [
+                            'Responsible Flooring: Floor finishes have sustainability certifications',
+                            'Responsible Ceilings: Ceiling systems use responsible materials',
+                            'Responsible Walls: Wall finishes and linings are responsibly sourced',
+                            'Low-VOC Products: Interior finishes meet low-VOC requirements'
+                        ],
+                        documentation: [
+                            'Finish schedules with product details',
+                            'Product certifications (GECA, Declare, etc.)',
+                            'EPDs for finish products',
+                            'VOC test reports or certifications'
+                        ],
+                        calculatorRequired: true,
+                        relatedCalculator: 'responsible-products',
+                        tips: 'Coordinate with interior designers early. Many finish products now have sustainability certifications.'
+                    },
+                    {
+                        id: 'impacts-disc',
+                        name: 'Impacts Disclosure',
+                        points: 2,
+                        required: false,
+                        description: 'Disclosing environmental impacts of the building.',
+                        aims: 'To encourage transparency about the environmental impacts of the building through public disclosure.',
+                        criteria: [
+                            'Whole Building LCA: A life cycle assessment is completed for the building',
+                            'Public Disclosure: Environmental impact data is publicly disclosed',
+                            'Third-Party Verification: Impact data is independently verified'
+                        ],
+                        documentation: [
+                            'Life Cycle Assessment report',
+                            'Public disclosure documentation (website, report)',
+                            'Third-party verification statement'
+                        ],
+                        tips: 'Use LCA early in design to inform material selection decisions. Consider publishing an environmental disclosure report.'
+                    }
                 ]
             },
             {
@@ -200,12 +511,138 @@
                 maxPoints: 25,
                 description: 'Indoor environment quality and occupant health',
                 credits: [
-                    { id: 'clean-air', name: 'Clean Air', points: 6, required: false, description: 'Ensuring high indoor air quality through ventilation and low-emission materials.' },
-                    { id: 'light-quality', name: 'Light Quality', points: 5, required: false, description: 'Providing adequate natural and artificial lighting for occupant comfort.' },
-                    { id: 'acoustic', name: 'Acoustic Comfort', points: 5, required: false, description: 'Managing noise levels and acoustic conditions within the building.' },
-                    { id: 'toxins', name: 'Exposure to Toxins', points: 4, required: false, description: 'Minimizing occupant exposure to harmful chemicals and materials.' },
-                    { id: 'amenity', name: 'Amenity and Comfort', points: 3, required: false, description: 'Providing comfortable thermal conditions and amenities.' },
-                    { id: 'nature-conn', name: 'Connection to Nature', points: 2, required: false, description: 'Creating visual and physical connections to natural elements.' }
+                    {
+                        id: 'clean-air',
+                        name: 'Clean Air',
+                        points: 6,
+                        required: false,
+                        description: 'Ensuring high indoor air quality through ventilation and low-emission materials.',
+                        aims: 'To ensure good indoor air quality that supports occupant health and wellbeing.',
+                        criteria: [
+                            'Ventilation Rates: Fresh air supply exceeds minimum code requirements',
+                            'Air Filtration: High-efficiency filtration is provided for outdoor air',
+                            'CO2 Monitoring: CO2 sensors are installed to monitor air quality',
+                            'Low-Emission Materials: Interior materials meet stringent VOC limits',
+                            'Exhaust Systems: Pollutant sources are directly exhausted'
+                        ],
+                        documentation: [
+                            'Mechanical ventilation design calculations',
+                            'Air filtration specifications (MERV ratings)',
+                            'CO2 sensor locations and BMS integration details',
+                            'VOC test reports for interior materials',
+                            'As-built drawings showing exhaust systems'
+                        ],
+                        tips: 'Consider demand-controlled ventilation based on CO2 levels. Low-VOC specifications should be included in contracts.'
+                    },
+                    {
+                        id: 'light-quality',
+                        name: 'Light Quality',
+                        points: 5,
+                        required: false,
+                        description: 'Providing adequate natural and artificial lighting for occupant comfort.',
+                        aims: 'To provide high-quality lighting that supports visual comfort, health, and productivity.',
+                        criteria: [
+                            'Daylight Access: Occupied spaces receive adequate natural daylight',
+                            'Glare Control: Glare from windows and light sources is controlled',
+                            'Lighting Levels: Artificial lighting meets recommended levels for tasks',
+                            'Lighting Control: Occupants have control over their lighting environment',
+                            'Circadian Lighting: Lighting supports natural circadian rhythms'
+                        ],
+                        documentation: [
+                            'Daylight modelling reports',
+                            'Glare analysis (UGR calculations)',
+                            'Lighting design documentation',
+                            'Lighting control zone drawings',
+                            'Commissioning reports for lighting systems'
+                        ],
+                        tips: 'Use daylight modelling early in design. Consider automated blind systems for glare control.'
+                    },
+                    {
+                        id: 'acoustic',
+                        name: 'Acoustic Comfort',
+                        points: 5,
+                        required: false,
+                        description: 'Managing noise levels and acoustic conditions within the building.',
+                        aims: 'To provide acoustic conditions that support concentration, communication, and comfort.',
+                        criteria: [
+                            'Background Noise: HVAC and equipment noise meets appropriate levels',
+                            'Reverberation Time: Spaces have appropriate acoustic treatment',
+                            'Sound Isolation: Adequate sound insulation between spaces',
+                            'Speech Privacy: Confidential spaces have appropriate acoustic isolation',
+                            'External Noise: Facade provides adequate noise attenuation'
+                        ],
+                        documentation: [
+                            'Acoustic consultant report',
+                            'Background noise measurements',
+                            'Reverberation time calculations',
+                            'Sound insulation test results',
+                            'Facade acoustic specifications'
+                        ],
+                        tips: 'Engage an acoustic consultant early. Consider noise from all sources including HVAC, lifts, and external traffic.'
+                    },
+                    {
+                        id: 'toxins',
+                        name: 'Exposure to Toxins',
+                        points: 4,
+                        required: false,
+                        description: 'Minimizing occupant exposure to harmful chemicals and materials.',
+                        aims: 'To reduce occupant exposure to harmful substances through careful material selection.',
+                        criteria: [
+                            'Hazardous Materials: Known hazardous materials are avoided',
+                            'Red List Chemicals: Products free from Red List chemicals are specified',
+                            'Lead & Asbestos: Building is free from lead paint and asbestos',
+                            'Flame Retardants: Furniture and finishes avoid harmful flame retardants'
+                        ],
+                        documentation: [
+                            'Material declarations (Declare labels, HPDs)',
+                            'Red List free product certifications',
+                            'Hazardous materials survey (for refurbishments)',
+                            'Furniture and fabric specifications'
+                        ],
+                        tips: 'Use Declare labels and Health Product Declarations to verify product contents. Create a project Red List.'
+                    },
+                    {
+                        id: 'amenity',
+                        name: 'Amenity and Comfort',
+                        points: 3,
+                        required: false,
+                        description: 'Providing comfortable thermal conditions and amenities.',
+                        aims: 'To provide comfortable conditions and amenities that support occupant wellbeing.',
+                        criteria: [
+                            'Thermal Comfort: Building achieves appropriate thermal comfort conditions',
+                            'Individual Control: Occupants have control over their thermal environment',
+                            'Amenities: Appropriate amenities are provided (end-of-trip, breakout spaces)',
+                            'Outdoor Access: Occupants have access to quality outdoor spaces'
+                        ],
+                        documentation: [
+                            'Thermal comfort modelling (PMV/PPD analysis)',
+                            'HVAC zone drawings and control descriptions',
+                            'Amenity floor plans and specifications',
+                            'Outdoor space design documentation'
+                        ],
+                        tips: 'Consider operable windows where appropriate. Quality end-of-trip facilities encourage active transport.'
+                    },
+                    {
+                        id: 'nature-conn',
+                        name: 'Connection to Nature',
+                        points: 2,
+                        required: false,
+                        description: 'Creating visual and physical connections to natural elements.',
+                        aims: 'To provide connections to nature that support occupant health and wellbeing (biophilic design).',
+                        criteria: [
+                            'Views to Nature: Occupied spaces have views to vegetation or natural features',
+                            'Indoor Plants: Living plants are incorporated into interior spaces',
+                            'Natural Materials: Natural materials and patterns are used in finishes',
+                            'Water Features: Water elements are incorporated where appropriate'
+                        ],
+                        documentation: [
+                            'Floor plans showing view lines to nature',
+                            'Interior planting plans and specifications',
+                            'Material schedules highlighting natural materials',
+                            'Photos of biophilic design elements'
+                        ],
+                        tips: 'Biophilic design can be cost-effective. Even small interventions like indoor plants can make a difference.'
+                    }
                 ]
             },
             {
@@ -245,14 +682,205 @@
                 maxPoints: 40,
                 description: 'Energy, carbon, and resource efficiency',
                 credits: [
-                    { id: 'energy-source', name: 'Energy Source', points: 6, required: true, description: 'Using renewable or low-carbon energy sources.', calculatorRequired: true },
-                    { id: 'energy-use', name: 'Energy Use', points: 10, required: true, description: 'Reducing operational energy consumption.', calculatorRequired: true },
-                    { id: 'upfront-carbon-red', name: 'Upfront Carbon Reduction', points: 10, required: true, description: 'Reducing embodied carbon in construction materials.', calculatorRequired: true },
-                    { id: 'upfront-carbon-comp', name: 'Upfront Carbon Compensation', points: 3, required: false, description: 'Offsetting remaining embodied carbon emissions.', calculatorRequired: true },
-                    { id: 'refrigerant', name: 'Refrigerant Systems Impacts', points: 3, required: false, description: 'Using low global warming potential refrigerants.', calculatorRequired: true },
-                    { id: 'low-emissions', name: 'Low-Emissions Transport', points: 3, required: false, description: 'Supporting electric vehicles and active transport.' },
-                    { id: 'circularity', name: 'Design for Circularity', points: 2, required: false, description: 'Designing for adaptability and material reuse.' },
-                    { id: 'water-use', name: 'Water Use', points: 3, required: false, description: 'Reducing potable water consumption.', calculatorRequired: true }
+                    {
+                        id: 'energy-source',
+                        name: 'Energy Source',
+                        points: 6,
+                        required: true,
+                        description: 'Using renewable or low-carbon energy sources.',
+                        aims: 'To encourage the use of renewable energy sources and reduce reliance on fossil fuels.',
+                        criteria: [
+                            'On-site Renewables: Solar PV, wind, or other renewable generation is installed',
+                            'Off-site Renewables: Green power purchase agreements are in place',
+                            'Electrification: Building systems are fully electric (no gas)',
+                            'Grid Decarbonisation: Building supports grid transition to renewables'
+                        ],
+                        pathways: [
+                            { name: 'Pathway A: Owner Operated', description: 'For buildings where the owner controls energy procurement' },
+                            { name: 'Pathway B: Tenant Operated', description: 'For multi-tenant buildings with separate tenant energy accounts' }
+                        ],
+                        documentation: [
+                            'Solar PV system design and specifications',
+                            'Power Purchase Agreement (PPA) documentation',
+                            'GreenPower certification or LGCs',
+                            'Energy modelling showing renewable contribution',
+                            'Electrical single line diagrams'
+                        ],
+                        calculatorRequired: true,
+                        relatedCalculator: 'energy-reference',
+                        tips: 'Consider on-site solar PV as a priority. PPAs can provide cost-effective renewable energy for larger loads.'
+                    },
+                    {
+                        id: 'energy-use',
+                        name: 'Energy Use',
+                        points: 10,
+                        required: true,
+                        description: 'Reducing operational energy consumption.',
+                        aims: 'To encourage energy efficient building design and systems that minimise operational energy use.',
+                        criteria: [
+                            'Energy Modelling: Building energy performance is modelled and optimised',
+                            'Efficient Systems: High-efficiency HVAC, lighting, and equipment are specified',
+                            'Passive Design: Building form and envelope minimise heating/cooling loads',
+                            'Controls: Smart controls optimise energy use based on occupancy and conditions'
+                        ],
+                        pathways: [
+                            { name: 'Pathway A: Reference Building', description: 'Compare energy use against a reference building model' },
+                            { name: 'Pathway B: NABERS Commitment', description: 'Commit to achieving a NABERS Energy rating' },
+                            { name: 'Pathway C: Residential', description: 'Use NatHERS star ratings for residential buildings' },
+                            { name: 'Pathway D: Small Non-Residential', description: 'Simplified pathway for buildings under 2,500m2' }
+                        ],
+                        documentation: [
+                            'Energy model and report',
+                            'NABERS Commitment Agreement (if applicable)',
+                            'NatHERS certificates (if applicable)',
+                            'Equipment specifications showing efficiency ratings',
+                            'Controls description and sequence of operations'
+                        ],
+                        calculatorRequired: true,
+                        relatedCalculator: 'energy-reference',
+                        tips: 'Start energy modelling early in design. Target at least 10% improvement over reference for 4 Star.'
+                    },
+                    {
+                        id: 'upfront-carbon-red',
+                        name: 'Upfront Carbon Reduction',
+                        points: 10,
+                        required: true,
+                        description: 'Reducing embodied carbon in construction materials.',
+                        aims: 'To reduce the upfront carbon emissions from construction materials and processes.',
+                        criteria: [
+                            'Carbon Assessment: Upfront carbon is calculated using recognised methodology',
+                            'Material Optimisation: Structure and envelope are optimised to reduce materials',
+                            'Low-Carbon Materials: Low-carbon alternatives are specified where available',
+                            'Carbon Reduction: Upfront carbon is reduced below benchmark/reference'
+                        ],
+                        pathways: [
+                            { name: 'Pathway A: Benchmark', description: 'Compare upfront carbon against a benchmark value' },
+                            { name: 'Pathway B: Reference Building', description: 'Compare against a reference building with standard materials' }
+                        ],
+                        documentation: [
+                            'Life Cycle Assessment (LCA) report',
+                            'Upfront Carbon Calculator outputs',
+                            'Material quantities (Bill of Quantities)',
+                            'EPDs for major materials',
+                            'Evidence of low-carbon material specifications'
+                        ],
+                        calculatorRequired: true,
+                        relatedCalculator: 'upfront-carbon',
+                        tips: 'Focus on structure first - concrete and steel typically dominate upfront carbon. Low-carbon concrete can significantly reduce totals.'
+                    },
+                    {
+                        id: 'upfront-carbon-comp',
+                        name: 'Upfront Carbon Compensation',
+                        points: 3,
+                        required: false,
+                        description: 'Offsetting remaining embodied carbon emissions.',
+                        aims: 'To compensate for upfront carbon emissions that cannot be eliminated through design.',
+                        criteria: [
+                            'Carbon Calculation: Total upfront carbon has been accurately calculated',
+                            'Offset Purchase: Verified carbon offsets are purchased',
+                            'Offset Quality: Offsets meet recognised standards (Gold Standard, VCS)',
+                            'Disclosure: Offset strategy is publicly disclosed'
+                        ],
+                        documentation: [
+                            'Upfront carbon calculation',
+                            'Carbon offset purchase receipts',
+                            'Offset verification certificates',
+                            'Public disclosure documentation'
+                        ],
+                        calculatorRequired: true,
+                        relatedCalculator: 'carbon-compensation',
+                        tips: 'Prioritise reduction over offsets. If offsetting, choose high-quality offsets with co-benefits.'
+                    },
+                    {
+                        id: 'refrigerant',
+                        name: 'Refrigerant Systems Impacts',
+                        points: 3,
+                        required: false,
+                        description: 'Using low global warming potential refrigerants.',
+                        aims: 'To reduce the climate impact of refrigerant gases used in building systems.',
+                        criteria: [
+                            'Low-GWP Refrigerants: HVAC systems use refrigerants with GWP < 750',
+                            'Natural Refrigerants: Consider CO2, ammonia, or hydrocarbons where feasible',
+                            'Leak Prevention: Systems are designed to minimise refrigerant leakage',
+                            'Future-Ready: Systems can transition to lower-GWP refrigerants'
+                        ],
+                        documentation: [
+                            'HVAC equipment schedules showing refrigerant types',
+                            'Refrigerant GWP values',
+                            'Refrigerant charge quantities',
+                            'Leak detection system specifications',
+                            'Refrigerant Systems Calculator outputs'
+                        ],
+                        calculatorRequired: true,
+                        relatedCalculator: 'refrigerant',
+                        tips: 'Low-GWP options like R-32 are now widely available. Consider VRF alternatives with lower refrigerant charges.'
+                    },
+                    {
+                        id: 'low-emissions',
+                        name: 'Low-Emissions Transport',
+                        points: 3,
+                        required: false,
+                        description: 'Supporting electric vehicles and active transport.',
+                        aims: 'To support the transition to low-emission transport through building infrastructure.',
+                        criteria: [
+                            'EV Charging: Electric vehicle charging infrastructure is provided',
+                            'EV-Ready: Additional parking spaces are wired for future EV charging',
+                            'Bicycle Facilities: Secure bicycle parking and end-of-trip facilities',
+                            'Active Transport: Building supports walking and cycling access'
+                        ],
+                        documentation: [
+                            'EV charging infrastructure drawings and specifications',
+                            'Bicycle parking locations and quantities',
+                            'End-of-trip facility floor plans',
+                            'Site plan showing pedestrian and cyclist access'
+                        ],
+                        tips: 'Plan for future EV uptake - install conduit and switchboard capacity even if not installing chargers now.'
+                    },
+                    {
+                        id: 'circularity',
+                        name: 'Design for Circularity',
+                        points: 2,
+                        required: false,
+                        description: 'Designing for adaptability and material reuse.',
+                        aims: 'To design buildings that can be adapted, disassembled, and have materials recovered at end of life.',
+                        criteria: [
+                            'Adaptability: Building can be adapted for different uses over time',
+                            'Disassembly: Connections allow for non-destructive disassembly',
+                            'Material Recovery: Materials can be recovered and reused at end of life',
+                            'Material Passports: Building materials are documented for future recovery'
+                        ],
+                        documentation: [
+                            'Design for adaptability report',
+                            'Disassembly strategy documentation',
+                            'Connection details showing reversibility',
+                            'Material passport or register'
+                        ],
+                        tips: 'Use mechanical connections where possible instead of adhesives. Document all materials for future recovery.'
+                    },
+                    {
+                        id: 'water-use',
+                        name: 'Water Use',
+                        points: 3,
+                        required: false,
+                        description: 'Reducing potable water consumption.',
+                        aims: 'To reduce potable water consumption through efficiency and alternative water sources.',
+                        criteria: [
+                            'Efficient Fixtures: Water-efficient fixtures and fittings are installed',
+                            'Rainwater Harvesting: Rainwater is collected and used on site',
+                            'Recycled Water: Greywater or blackwater recycling is implemented',
+                            'Landscape Efficiency: Landscaping minimises irrigation requirements'
+                        ],
+                        documentation: [
+                            'Water balance calculations',
+                            'Fixture schedules with WELS ratings',
+                            'Rainwater tank sizing and plumbing drawings',
+                            'Recycled water system specifications',
+                            'Landscape irrigation specifications'
+                        ],
+                        calculatorRequired: true,
+                        relatedCalculator: 'water',
+                        tips: 'Rainwater harvesting is often cost-effective for toilet flushing and irrigation. Consider waterless urinals.'
+                    }
                 ]
             },
             {
@@ -520,10 +1148,9 @@
         }
 
         // Credit Card Component
-        function CreditCard({ credit, categoryId, isSelected, onToggle, colorClasses }) {
+        function CreditCard({ credit, categoryId, isSelected, onToggle, onViewDetails, colorClasses }) {
             return (
                 <div
-                    onClick={onToggle}
                     className={`credit-card flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all
                         ${isSelected ? `border-green-500 bg-green-50` : 'border-gray-200 bg-white'}`}
                 >
@@ -535,7 +1162,7 @@
                         onClick={(e) => e.stopPropagation()}
                     />
 
-                    <div className="flex-grow min-w-0">
+                    <div className="flex-grow min-w-0" onClick={onToggle}>
                         <div className="flex items-center gap-2 flex-wrap">
                             <h3 className={`font-medium ${isSelected ? 'text-green-700' : 'text-gray-800'}`}>
                                 {credit.name}
@@ -557,15 +1184,287 @@
                         )}
                     </div>
 
-                    <div className={`flex-shrink-0 font-mono text-xl font-bold ${isSelected ? 'text-green-600' : 'text-gray-400'}`}>
-                        +{credit.points}
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onViewDetails();
+                            }}
+                            className="info-button w-9 h-9 rounded-full bg-blue-100 hover:bg-blue-200 flex items-center justify-center"
+                            title="View credit details"
+                        >
+                            <i className="fa-solid fa-info text-blue-600"></i>
+                        </button>
+                        <div className={`font-mono text-xl font-bold ${isSelected ? 'text-green-600' : 'text-gray-400'}`}>
+                            +{credit.points}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Credit Detail Modal Component
+        function CreditDetailModal({ isOpen, onClose, credit, category, isSelected, onToggle }) {
+            const [activeTab, setActiveTab] = useState('overview');
+
+            useEffect(() => {
+                if (isOpen) {
+                    setActiveTab('overview');
+                }
+            }, [isOpen, credit]);
+
+            if (!isOpen || !credit) return null;
+
+            const tabs = [
+                { id: 'overview', label: 'Overview', icon: 'fa-eye' },
+                { id: 'criteria', label: 'Criteria', icon: 'fa-list-check' },
+                { id: 'documentation', label: 'Documentation', icon: 'fa-file-lines' }
+            ];
+
+            if (credit.pathways && credit.pathways.length > 0) {
+                tabs.splice(2, 0, { id: 'pathways', label: 'Pathways', icon: 'fa-route' });
+            }
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
+                    <div
+                        className="modal-enter bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Header */}
+                        <div className={`${category.colorClasses.bgLight} p-6 relative overflow-hidden`}>
+                            <div className="absolute top-0 right-0 w-64 h-64 opacity-10">
+                                <span className="text-[200px] leading-none">{category.icon}</span>
+                            </div>
+                            <div className="relative z-10">
+                                <div className="flex items-start justify-between mb-4">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-4xl">{category.icon}</span>
+                                        <div>
+                                            <p className={`text-sm font-medium ${category.colorClasses.text} uppercase tracking-wide`}>
+                                                {category.name} Category
+                                            </p>
+                                            <h2 className="font-display text-2xl font-bold text-gray-900 mt-1">
+                                                {credit.name}
+                                            </h2>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={onClose}
+                                        className="w-10 h-10 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors shadow-sm"
+                                    >
+                                        <i className="fa-solid fa-xmark text-gray-600"></i>
+                                    </button>
+                                </div>
+
+                                <div className="flex items-center gap-4 flex-wrap">
+                                    <div className="points-badge text-white px-4 py-2 rounded-xl flex items-center gap-2">
+                                        <i className="fa-solid fa-star"></i>
+                                        <span className="font-mono font-bold text-lg">{credit.points}</span>
+                                        <span className="text-sm opacity-90">points</span>
+                                    </div>
+                                    {credit.required && (
+                                        <span className="bg-red-500 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2">
+                                            <i className="fa-solid fa-exclamation-circle"></i>
+                                            Required for Rating
+                                        </span>
+                                    )}
+                                    {credit.calculatorRequired && (
+                                        <span className="bg-blue-500 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2">
+                                            <i className="fa-solid fa-calculator"></i>
+                                            Calculator Required
+                                        </span>
+                                    )}
+                                    <button
+                                        onClick={onToggle}
+                                        className={`ml-auto px-4 py-2 rounded-xl font-medium flex items-center gap-2 transition-all ${
+                                            isSelected
+                                                ? 'bg-green-500 text-white hover:bg-green-600'
+                                                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                                        }`}
+                                    >
+                                        <i className={`fa-solid ${isSelected ? 'fa-check' : 'fa-plus'}`}></i>
+                                        {isSelected ? 'Selected' : 'Add Credit'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Tabs */}
+                        <div className="flex gap-2 px-6 py-3 bg-gray-50 border-b border-gray-200">
+                            {tabs.map(tab => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`tab-button px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${
+                                        activeTab === tab.id ? 'active' : 'text-gray-600 hover:bg-gray-100'
+                                    }`}
+                                >
+                                    <i className={`fa-solid ${tab.icon}`}></i>
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1 overflow-y-auto p-6 scrollbar-thin">
+                            {activeTab === 'overview' && (
+                                <div className="space-y-6 fade-in">
+                                    {/* Description */}
+                                    <div className="section-card rounded-xl p-5">
+                                        <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                            <i className="fa-solid fa-quote-left text-gray-400"></i>
+                                            Description
+                                        </h3>
+                                        <p className="text-gray-600 leading-relaxed">{credit.description}</p>
+                                    </div>
+
+                                    {/* Aims */}
+                                    {credit.aims && (
+                                        <div className="section-card rounded-xl p-5">
+                                            <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                                <i className="fa-solid fa-bullseye text-green-500"></i>
+                                                Credit Aims
+                                            </h3>
+                                            <p className="text-gray-600 leading-relaxed">{credit.aims}</p>
+                                        </div>
+                                    )}
+
+                                    {/* Tips */}
+                                    {credit.tips && (
+                                        <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-xl p-5">
+                                            <h3 className="font-semibold text-amber-800 mb-2 flex items-center gap-2">
+                                                <i className="fa-solid fa-lightbulb text-amber-500"></i>
+                                                Pro Tips
+                                            </h3>
+                                            <p className="text-amber-700 leading-relaxed">{credit.tips}</p>
+                                        </div>
+                                    )}
+
+                                    {/* Quick Stats */}
+                                    <div className="grid grid-cols-3 gap-4">
+                                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 text-center">
+                                            <i className="fa-solid fa-star text-2xl text-green-500 mb-2"></i>
+                                            <p className="font-mono text-2xl font-bold text-gray-800">{credit.points}</p>
+                                            <p className="text-sm text-gray-500">Points Available</p>
+                                        </div>
+                                        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 text-center">
+                                            <i className="fa-solid fa-list-check text-2xl text-blue-500 mb-2"></i>
+                                            <p className="font-mono text-2xl font-bold text-gray-800">{credit.criteria?.length || 0}</p>
+                                            <p className="text-sm text-gray-500">Criteria Items</p>
+                                        </div>
+                                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 text-center">
+                                            <i className="fa-solid fa-file-lines text-2xl text-purple-500 mb-2"></i>
+                                            <p className="font-mono text-2xl font-bold text-gray-800">{credit.documentation?.length || 0}</p>
+                                            <p className="text-sm text-gray-500">Documents Required</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'criteria' && (
+                                <div className="space-y-4 fade-in">
+                                    <p className="text-gray-600 mb-4">
+                                        Meet the following criteria to achieve points for this credit:
+                                    </p>
+                                    {credit.criteria && credit.criteria.length > 0 ? (
+                                        credit.criteria.map((criterion, index) => {
+                                            const [title, ...descParts] = criterion.split(':');
+                                            const desc = descParts.join(':').trim();
+                                            return (
+                                                <div key={index} className="section-card rounded-xl p-5 fade-in" style={{ animationDelay: `${index * 50}ms` }}>
+                                                    <div className="flex items-start gap-4">
+                                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center flex-shrink-0">
+                                                            <span className="text-white font-bold text-sm">{index + 1}</span>
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-semibold text-gray-800">{title}</h4>
+                                                            {desc && <p className="text-gray-600 mt-1">{desc}</p>}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })
+                                    ) : (
+                                        <div className="text-center py-8 text-gray-500">
+                                            <i className="fa-solid fa-clipboard-list text-4xl mb-3 text-gray-300"></i>
+                                            <p>Detailed criteria coming soon</p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {activeTab === 'pathways' && credit.pathways && (
+                                <div className="space-y-4 fade-in">
+                                    <p className="text-gray-600 mb-4">
+                                        Choose one of the following pathways to demonstrate compliance:
+                                    </p>
+                                    {credit.pathways.map((pathway, index) => (
+                                        <div key={index} className="pathway-card rounded-xl p-5 fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                                            <div className="flex items-start gap-4">
+                                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0">
+                                                    <i className="fa-solid fa-route text-white"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-semibold text-gray-800">{pathway.name}</h4>
+                                                    <p className="text-gray-600 mt-1">{pathway.description}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {activeTab === 'documentation' && (
+                                <div className="space-y-4 fade-in">
+                                    <p className="text-gray-600 mb-4">
+                                        The following documentation is required for submission:
+                                    </p>
+                                    {credit.documentation && credit.documentation.length > 0 ? (
+                                        <div className="space-y-2">
+                                            {credit.documentation.map((doc, index) => (
+                                                <div key={index} className="doc-item flex items-center gap-3 p-4 rounded-xl bg-gray-50 border border-gray-100 fade-in" style={{ animationDelay: `${index * 50}ms` }}>
+                                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center flex-shrink-0">
+                                                        <i className="fa-solid fa-file-alt text-purple-600"></i>
+                                                    </div>
+                                                    <span className="text-gray-700">{doc}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-8 text-gray-500">
+                                            <i className="fa-solid fa-folder-open text-4xl mb-3 text-gray-300"></i>
+                                            <p>Documentation requirements coming soon</p>
+                                        </div>
+                                    )}
+
+                                    {/* Calculator Link */}
+                                    {credit.calculatorRequired && (
+                                        <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-5">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center flex-shrink-0">
+                                                    <i className="fa-solid fa-calculator text-white text-xl"></i>
+                                                </div>
+                                                <div className="flex-grow">
+                                                    <h4 className="font-semibold text-blue-800">Calculator Required</h4>
+                                                    <p className="text-blue-600 text-sm">Use the Green Star Calculator to determine compliance</p>
+                                                </div>
+                                                <button className="px-4 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors">
+                                                    Open Calculator
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             );
         }
 
         // Credits List Component
-        function CreditsList({ category, selectedCredits, onToggleCredit }) {
+        function CreditsList({ category, selectedCredits, onToggleCredit, onViewCreditDetails }) {
             return (
                 <div className="glass-card rounded-2xl p-6 shadow-lg">
                     <div className="flex items-center justify-between mb-4">
@@ -594,6 +1493,7 @@
                                         categoryId={category.id}
                                         isSelected={isSelected}
                                         onToggle={() => onToggleCredit(creditKey, credit.points)}
+                                        onViewDetails={() => onViewCreditDetails(credit, category)}
                                         colorClasses={category.colorClasses}
                                     />
                                 </div>
@@ -847,6 +1747,7 @@
             const [selectedCredits, setSelectedCredits] = useState({});
             const [showCalculators, setShowCalculators] = useState(false);
             const [showExport, setShowExport] = useState(false);
+            const [creditDetailModal, setCreditDetailModal] = useState({ isOpen: false, credit: null, category: null });
 
             // Load from localStorage on mount
             useEffect(() => {
@@ -891,7 +1792,27 @@
                 });
             };
 
+            const handleViewCreditDetails = (credit, category) => {
+                setCreditDetailModal({ isOpen: true, credit, category });
+            };
+
+            const handleCloseCreditDetail = () => {
+                setCreditDetailModal({ isOpen: false, credit: null, category: null });
+            };
+
+            const handleToggleCreditFromModal = () => {
+                if (creditDetailModal.credit && creditDetailModal.category) {
+                    const creditKey = `${creditDetailModal.category.id}-${creditDetailModal.credit.id}`;
+                    handleToggleCredit(creditKey, creditDetailModal.credit.points);
+                }
+            };
+
             const activeCateg = categoriesData.find(c => c.id === activeCategory);
+
+            // Get if current modal credit is selected
+            const isModalCreditSelected = creditDetailModal.credit && creditDetailModal.category
+                ? selectedCredits[`${creditDetailModal.category.id}-${creditDetailModal.credit.id}`] > 0
+                : false;
 
             return (
                 <div className="min-h-screen p-4 md:p-6 lg:p-8">
@@ -933,6 +1854,7 @@
                                 category={activeCateg}
                                 selectedCredits={selectedCredits}
                                 onToggleCredit={handleToggleCredit}
+                                onViewCreditDetails={handleViewCreditDetails}
                             />
                         </div>
 
@@ -951,6 +1873,14 @@
                             isOpen={showExport}
                             onClose={() => setShowExport(false)}
                             projectData={{ projectName, totalPoints, selectedCredits }}
+                        />
+                        <CreditDetailModal
+                            isOpen={creditDetailModal.isOpen}
+                            onClose={handleCloseCreditDetail}
+                            credit={creditDetailModal.credit}
+                            category={creditDetailModal.category}
+                            isSelected={isModalCreditSelected}
+                            onToggle={handleToggleCreditFromModal}
                         />
                     </div>
                 </div>
