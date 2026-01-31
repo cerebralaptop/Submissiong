@@ -1914,6 +1914,40 @@
                         points: 6,
                         required: true,
                         description: 'Using renewable or low-carbon energy sources.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Building meets minimum NCC energy requirements',
+                                    'Standard grid electricity supply'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 3,
+                                color: 'blue',
+                                requirements: [
+                                    '25% of energy from renewable sources',
+                                    'On-site solar PV or green power agreement',
+                                    'Building is at least 50% electric'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 6,
+                                color: 'green',
+                                requirements: [
+                                    '100% renewable energy (on-site or off-site)',
+                                    'Fully electric building (no fossil fuels)',
+                                    'Verified renewable energy certificates'
+                                ]
+                            }
+                        ],
                         aims: 'To encourage the use of renewable energy sources and reduce reliance on fossil fuels.',
                         criteria: [
                             'On-site Renewables: Solar PV, wind, or other renewable generation is installed',
@@ -1950,6 +1984,40 @@
                         points: 10,
                         required: true,
                         description: 'Reducing operational energy consumption.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Building meets minimum NCC Section J requirements',
+                                    'Standard efficiency HVAC and lighting'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 5,
+                                color: 'blue',
+                                requirements: [
+                                    '10% improvement over reference building',
+                                    '4.5 Star NABERS Energy Commitment Agreement',
+                                    'High-efficiency HVAC systems specified'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 10,
+                                color: 'green',
+                                requirements: [
+                                    '30%+ improvement over reference building',
+                                    '5.5+ Star NABERS Energy Commitment Agreement',
+                                    'Best practice passive design and systems'
+                                ]
+                            }
+                        ],
                         aims: 'To encourage energy efficient building design and systems that minimise operational energy use.',
                         criteria: [
                             'Energy Modelling: Building energy performance is modelled and optimised',
@@ -1988,6 +2056,40 @@
                         points: 10,
                         required: true,
                         description: 'Reducing embodied carbon in construction materials.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Upfront carbon assessment completed',
+                                    'Standard construction materials used'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 5,
+                                color: 'blue',
+                                requirements: [
+                                    '10% reduction below benchmark',
+                                    'Low-carbon concrete specified for major elements',
+                                    'Material optimization strategies implemented'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 10,
+                                color: 'green',
+                                requirements: [
+                                    '30%+ reduction below benchmark',
+                                    'Low-carbon materials throughout structure',
+                                    'Mass timber or innovative low-carbon systems'
+                                ]
+                            }
+                        ],
                         aims: 'To reduce the upfront carbon emissions from construction materials and processes.',
                         criteria: [
                             'Carbon Assessment: Upfront carbon is calculated using recognised methodology',
@@ -2024,6 +2126,40 @@
                         points: 3,
                         required: false,
                         description: 'Offsetting remaining embodied carbon emissions.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Upfront carbon calculated',
+                                    'No offset strategy in place'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 2,
+                                color: 'blue',
+                                requirements: [
+                                    '50% of upfront carbon offset',
+                                    'Verified carbon offsets purchased',
+                                    'Offset strategy documented'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 3,
+                                color: 'green',
+                                requirements: [
+                                    '100% of upfront carbon offset (carbon neutral)',
+                                    'Gold Standard or equivalent offsets',
+                                    'Public disclosure of offset strategy'
+                                ]
+                            }
+                        ],
                         aims: 'To compensate for upfront carbon emissions that cannot be eliminated through design.',
                         criteria: [
                             'Carbon Calculation: Total upfront carbon has been accurately calculated',
@@ -2055,6 +2191,40 @@
                         points: 3,
                         required: false,
                         description: 'Using low global warming potential refrigerants.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Standard refrigerants (R-410A or similar)',
+                                    'Basic leak detection systems'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 2,
+                                color: 'blue',
+                                requirements: [
+                                    'Refrigerants with GWP < 750 (e.g., R-32)',
+                                    'Enhanced leak detection and monitoring',
+                                    'Refrigerant management plan in place'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 3,
+                                color: 'green',
+                                requirements: [
+                                    'Natural or ultra-low GWP refrigerants (GWP < 150)',
+                                    'Systems designed for minimal refrigerant charge',
+                                    'Comprehensive leak prevention measures'
+                                ]
+                            }
+                        ],
                         aims: 'To reduce the climate impact of refrigerant gases used in building systems.',
                         criteria: [
                             'Low-GWP Refrigerants: HVAC systems use refrigerants with GWP < 750',
@@ -2087,6 +2257,40 @@
                         points: 3,
                         required: false,
                         description: 'Supporting electric vehicles and active transport.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Basic bicycle parking provided',
+                                    'No EV charging infrastructure'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 2,
+                                color: 'blue',
+                                requirements: [
+                                    '10% of parking spaces with EV charging',
+                                    '25% of parking spaces EV-ready (conduit installed)',
+                                    'End-of-trip facilities with showers and lockers'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 3,
+                                color: 'green',
+                                requirements: [
+                                    '25%+ of parking spaces with EV charging',
+                                    '100% of parking spaces EV-ready',
+                                    'Premium end-of-trip facilities exceeding requirements'
+                                ]
+                            }
+                        ],
                         aims: 'To support the transition to low-emission transport through building infrastructure.',
                         criteria: [
                             'EV Charging: Electric vehicle charging infrastructure is provided',
@@ -2116,6 +2320,40 @@
                         points: 2,
                         required: false,
                         description: 'Designing for adaptability and material reuse.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Standard construction methods',
+                                    'No specific adaptability considerations'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 1,
+                                color: 'blue',
+                                requirements: [
+                                    'Design for adaptability strategy documented',
+                                    'Flexible floor plates and services zones',
+                                    'Some mechanical connections for disassembly'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 2,
+                                color: 'green',
+                                requirements: [
+                                    'Comprehensive circularity strategy',
+                                    'Material passports for major elements',
+                                    'Design for disassembly throughout structure'
+                                ]
+                            }
+                        ],
                         aims: 'To design buildings that can be adapted, disassembled, and have materials recovered at end of life.',
                         criteria: [
                             'Adaptability: Building can be adapted for different uses over time',
@@ -2145,6 +2383,40 @@
                         points: 3,
                         required: false,
                         description: 'Reducing potable water consumption.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'WELS 4-star fixtures throughout',
+                                    'Standard landscape irrigation'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 2,
+                                color: 'blue',
+                                requirements: [
+                                    'WELS 5-star fixtures or better',
+                                    'Rainwater harvesting for toilet flushing or irrigation',
+                                    '30% reduction in potable water use'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 3,
+                                color: 'green',
+                                requirements: [
+                                    '60%+ reduction in potable water use',
+                                    'Rainwater and/or recycled water systems',
+                                    'Native/drought-tolerant landscaping with minimal irrigation'
+                                ]
+                            }
+                        ],
                         aims: 'To reduce potable water consumption through efficiency and alternative water sources.',
                         criteria: [
                             'Efficient Fixtures: Water-efficient fixtures and fittings are installed',
