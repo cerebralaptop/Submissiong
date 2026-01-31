@@ -393,7 +393,15 @@
                             'Complaints register and response actions',
                             'Third-party audit reports (if applicable)'
                         ],
-                        tips: 'Implement robust systems from day one. Regular site inspections and photographic evidence are essential.'
+                        tips: 'Implement robust systems from day one. Regular site inspections and photographic evidence are essential.',
+                        projectPhases: ['Construction', 'Handover'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not having EMP ready before construction begins',
+                            'Inadequate monitoring and reporting systems',
+                            'Poor waste tracking documentation'
+                        ],
+                        relatedCredits: ['ind-dev', 'resp-resource', 'impacts-nature']
                     },
                     {
                         id: 'verify-hand',
@@ -451,7 +459,15 @@
                             'O&M manuals',
                             'Training records for building operators'
                         ],
-                        tips: 'Engage a commissioning agent early. Building tuning commitment should be included in contracts.'
+                        tips: 'Engage a commissioning agent early. Building tuning commitment should be included in contracts.',
+                        projectPhases: ['Documentation', 'Construction', 'Handover'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Engaging commissioning agent too late in design',
+                            'Insufficient time allocated for building tuning',
+                            'O&M manuals not completed before handover'
+                        ],
+                        relatedCredits: ['resp-const', 'energy-use', 'ops-res']
                     },
                     {
                         id: 'resp-resource',
@@ -637,7 +653,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'responsible-products',
-                        tips: 'Work with structural engineers early to optimise material quantities. Low-carbon concrete is increasingly available.'
+                        tips: 'Work with structural engineers early to optimise material quantities. Low-carbon concrete is increasingly available.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not engaging structural engineer early on material optimization',
+                            'Missing EPD collection during procurement',
+                            'Incomplete chain of custody documentation for timber'
+                        ],
+                        relatedCredits: ['resp-envelope', 'upfront-carbon-red', 'resp-proc']
                     },
                     {
                         id: 'resp-envelope',
@@ -696,7 +720,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'responsible-products',
-                        tips: 'Consider the whole envelope system including framing, insulation, and finishes.'
+                        tips: 'Consider the whole envelope system including framing, insulation, and finishes.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not tracking sustainability credentials of substituted products',
+                            'Overlooking thermal bridging from framing materials',
+                            'Insulation specifications changed without checking EPD availability'
+                        ],
+                        relatedCredits: ['resp-struct', 'clean-air', 'upfront-carbon-red']
                     },
                     {
                         id: 'resp-systems',
@@ -756,7 +788,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'responsible-products',
-                        tips: 'Engage MEP consultants early on responsible product requirements.'
+                        tips: 'Engage MEP consultants early on responsible product requirements.',
+                        projectPhases: ['Design Dev', 'Documentation', 'Construction'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Late engagement with MEP consultants on sustainability',
+                            'Equipment substitutions without checking refrigerant GWP',
+                            'Missing EPDs for major equipment items'
+                        ],
+                        relatedCredits: ['refrigerant', 'energy-use', 'verify-hand']
                     },
                     {
                         id: 'resp-finishes',
@@ -816,7 +856,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'responsible-products',
-                        tips: 'Coordinate with interior designers early. Many finish products now have sustainability certifications.'
+                        tips: 'Coordinate with interior designers early. Many finish products now have sustainability certifications.',
+                        projectPhases: ['Design Dev', 'Documentation', 'Construction'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Interior designer selections made without checking certifications',
+                            'VOC testing not specified in contracts',
+                            'Finish substitutions without re-checking sustainability credentials'
+                        ],
+                        relatedCredits: ['toxins', 'clean-air', 'resp-proc']
                     },
                     {
                         id: 'impacts-disc',
@@ -870,7 +918,15 @@
                             'Public disclosure documentation (website, report)',
                             'Third-party verification statement'
                         ],
-                        tips: 'Use LCA early in design to inform material selection decisions. Consider publishing an environmental disclosure report.'
+                        tips: 'Use LCA early in design to inform material selection decisions. Consider publishing an environmental disclosure report.',
+                        projectPhases: ['Documentation', 'Handover'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Starting LCA too late in design to influence decisions',
+                            'Using inconsistent data sources across LCA',
+                            'Not planning for public disclosure early enough'
+                        ],
+                        relatedCredits: ['upfront-carbon-red', 'resp-struct', 'ind-dev']
                     }
                 ]
             },
@@ -1016,7 +1072,15 @@
                             'Lighting control zone drawings',
                             'Commissioning reports for lighting systems'
                         ],
-                        tips: 'Use daylight modelling early in design. Consider automated blind systems for glare control.'
+                        tips: 'Use daylight modelling early in design. Consider automated blind systems for glare control.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not running daylight simulations until late in design',
+                            'Underestimating glare issues from large glazing areas',
+                            'Lighting control zones too large for effective user control'
+                        ],
+                        relatedCredits: ['clean-air', 'amenity', 'nature-conn']
                     },
                     {
                         id: 'acoustic',
@@ -1076,7 +1140,15 @@
                             'Sound insulation test results',
                             'Facade acoustic specifications'
                         ],
-                        tips: 'Engage an acoustic consultant early. Consider noise from all sources including HVAC, lifts, and external traffic.'
+                        tips: 'Engage an acoustic consultant early. Consider noise from all sources including HVAC, lifts, and external traffic.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not coordinating acoustic requirements with HVAC design',
+                            'Underspecifying wall and floor sound ratings',
+                            'Open plan areas lacking sufficient acoustic treatment'
+                        ],
+                        relatedCredits: ['clean-air', 'light-quality', 'amenity']
                     },
                     {
                         id: 'toxins',
@@ -1134,7 +1206,15 @@
                             'Hazardous materials survey (for refurbishments)',
                             'Furniture and fabric specifications'
                         ],
-                        tips: 'Use Declare labels and Health Product Declarations to verify product contents. Create a project Red List.'
+                        tips: 'Use Declare labels and Health Product Declarations to verify product contents. Create a project Red List.',
+                        projectPhases: ['Design Dev', 'Documentation', 'Construction'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not requesting HPDs early enough from suppliers',
+                            'Accepting product substitutions without checking declarations',
+                            'Missing Red List chemicals in furniture specifications'
+                        ],
+                        relatedCredits: ['clean-air', 'resp-finishes', 'resp-proc']
                     },
                     {
                         id: 'amenity',
@@ -1192,7 +1272,15 @@
                             'Amenity floor plans and specifications',
                             'Outdoor space design documentation'
                         ],
-                        tips: 'Consider operable windows where appropriate. Quality end-of-trip facilities encourage active transport.'
+                        tips: 'Consider operable windows where appropriate. Quality end-of-trip facilities encourage active transport.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Thermal comfort modelling not done until late in design',
+                            'End-of-trip facilities undersized or poorly located',
+                            'Limited outdoor amenity space for building occupants'
+                        ],
+                        relatedCredits: ['clean-air', 'light-quality', 'movement']
                     },
                     {
                         id: 'nature-conn',
@@ -1250,7 +1338,15 @@
                             'Material schedules highlighting natural materials',
                             'Photos of biophilic design elements'
                         ],
-                        tips: 'Biophilic design can be cost-effective. Even small interventions like indoor plants can make a difference.'
+                        tips: 'Biophilic design can be cost-effective. Even small interventions like indoor plants can make a difference.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Easy',
+                        commonMistakes: [
+                            'Not developing a biophilic design strategy early',
+                            'Indoor plants specified without maintenance plan',
+                            'Views to nature blocked by interior partitions'
+                        ],
+                        relatedCredits: ['light-quality', 'amenity', 'biodiversity']
                     }
                 ]
             },
@@ -1391,7 +1487,15 @@
                             'Water storage and alternative supply documentation',
                             'Passive survivability analysis'
                         ],
-                        tips: 'Consider battery storage with solar PV for resilient power. Passive design features improve survivability.'
+                        tips: 'Consider battery storage with solar PV for resilient power. Passive design features improve survivability.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not developing business continuity plan until late',
+                            'Backup power undersized for essential loads',
+                            'Passive survivability not tested through modelling'
+                        ],
+                        relatedCredits: ['climate-res', 'grid-res', 'energy-source']
                     },
                     {
                         id: 'comm-res',
@@ -1449,7 +1553,15 @@
                             'Emergency shelter capacity documentation',
                             'Resource sharing arrangements'
                         ],
-                        tips: 'Coordinate with local council on emergency planning. Consider building as a potential refuge during extreme events.'
+                        tips: 'Coordinate with local council on emergency planning. Consider building as a potential refuge during extreme events.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not engaging with local council early enough',
+                            'Community resilience features not planned from concept',
+                            'Missing formal agreements with emergency services'
+                        ],
+                        relatedCredits: ['climate-res', 'ops-res', 'contribution']
                     },
                     {
                         id: 'heat-res',
@@ -1507,7 +1619,15 @@
                             'Passive cooling analysis',
                             'Landscape design with vegetation coverage'
                         ],
-                        tips: 'Green roofs provide cooling and other benefits. Light-coloured surfaces significantly reduce heat absorption.'
+                        tips: 'Green roofs provide cooling and other benefits. Light-coloured surfaces significantly reduce heat absorption.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not modelling passive performance during heatwaves',
+                            'Roof color or SRI not specified in documentation',
+                            'Shading design not optimized for summer sun angles'
+                        ],
+                        relatedCredits: ['climate-res', 'biodiversity', 'energy-use']
                     },
                     {
                         id: 'grid-res',
@@ -1565,7 +1685,15 @@
                             'Smart metering and controls documentation',
                             'Peak demand management strategy'
                         ],
-                        tips: 'Battery storage with solar PV can provide grid services and backup power. Consider demand response program participation.'
+                        tips: 'Battery storage with solar PV can provide grid services and backup power. Consider demand response program participation.',
+                        projectPhases: ['Design Dev', 'Documentation', 'Construction'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not designing electrical infrastructure for future EV growth',
+                            'Missing demand response capability in BMS specification',
+                            'Battery storage not sized appropriately for grid services'
+                        ],
+                        relatedCredits: ['energy-source', 'ops-res', 'low-emissions']
                     }
                 ]
             },
@@ -1610,7 +1738,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'energy-reference',
-                        tips: 'Consider on-site solar PV as a priority. PPAs can provide cost-effective renewable energy for larger loads.'
+                        tips: 'Consider on-site solar PV as a priority. PPAs can provide cost-effective renewable energy for larger loads.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not maximizing rooftop solar PV potential',
+                            'PPA negotiations started too late',
+                            'Electrification requirements conflicting with gas cooking preferences'
+                        ],
+                        relatedCredits: ['energy-use', 'grid-res', 'upfront-carbon-red']
                     },
                     {
                         id: 'energy-use',
@@ -1640,7 +1776,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'energy-reference',
-                        tips: 'Start energy modelling early in design. Target at least 10% improvement over reference for 4 Star.'
+                        tips: 'Start energy modelling early in design. Target at least 10% improvement over reference for 4 Star.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Energy modelling not started until documentation phase',
+                            'Unrealistic assumptions in energy model',
+                            'NABERS Commitment Agreement not secured early'
+                        ],
+                        relatedCredits: ['energy-source', 'verify-hand', 'resp-systems']
                     },
                     {
                         id: 'upfront-carbon-red',
@@ -1668,7 +1812,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'upfront-carbon',
-                        tips: 'Focus on structure first - concrete and steel typically dominate upfront carbon. Low-carbon concrete can significantly reduce totals.'
+                        tips: 'Focus on structure first - concrete and steel typically dominate upfront carbon. Low-carbon concrete can significantly reduce totals.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'LCA not started until after structural design is fixed',
+                            'Incorrect system boundaries in carbon calculations',
+                            'Not collecting EPDs during procurement'
+                        ],
+                        relatedCredits: ['resp-struct', 'impacts-disc', 'circularity']
                     },
                     {
                         id: 'upfront-carbon-comp',
@@ -1691,7 +1843,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'carbon-compensation',
-                        tips: 'Prioritise reduction over offsets. If offsetting, choose high-quality offsets with co-benefits.'
+                        tips: 'Prioritise reduction over offsets. If offsetting, choose high-quality offsets with co-benefits.',
+                        projectPhases: ['Documentation', 'Construction', 'Handover'],
+                        difficulty: 'Easy',
+                        commonMistakes: [
+                            'Using poor quality carbon offsets without verification',
+                            'Not calculating total upfront carbon accurately',
+                            'Missing public disclosure requirements'
+                        ],
+                        relatedCredits: ['upfront-carbon-red', 'impacts-disc', 'market-transform']
                     },
                     {
                         id: 'refrigerant',
@@ -1715,7 +1875,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'refrigerant',
-                        tips: 'Low-GWP options like R-32 are now widely available. Consider VRF alternatives with lower refrigerant charges.'
+                        tips: 'Low-GWP options like R-32 are now widely available. Consider VRF alternatives with lower refrigerant charges.',
+                        projectPhases: ['Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not specifying low-GWP refrigerants in tender documents',
+                            'Equipment substitutions without checking refrigerant type',
+                            'Missing leak detection system specifications'
+                        ],
+                        relatedCredits: ['resp-systems', 'energy-use', 'climate-res']
                     },
                     {
                         id: 'low-emissions',
@@ -1736,7 +1904,15 @@
                             'End-of-trip facility floor plans',
                             'Site plan showing pedestrian and cyclist access'
                         ],
-                        tips: 'Plan for future EV uptake - install conduit and switchboard capacity even if not installing chargers now.'
+                        tips: 'Plan for future EV uptake - install conduit and switchboard capacity even if not installing chargers now.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Easy',
+                        commonMistakes: [
+                            'Not providing adequate electrical capacity for future EV growth',
+                            'Poor location of EV chargers in car park',
+                            'End-of-trip facilities undersized for cycling demand'
+                        ],
+                        relatedCredits: ['movement', 'grid-res', 'amenity']
                     },
                     {
                         id: 'circularity',
@@ -1757,7 +1933,15 @@
                             'Connection details showing reversibility',
                             'Material passport or register'
                         ],
-                        tips: 'Use mechanical connections where possible instead of adhesives. Document all materials for future recovery.'
+                        tips: 'Use mechanical connections where possible instead of adhesives. Document all materials for future recovery.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not considering future adaptability in structural design',
+                            'Using permanent adhesives where mechanical connections possible',
+                            'Missing material passport documentation'
+                        ],
+                        relatedCredits: ['upfront-carbon-red', 'resp-struct', 'resp-finishes']
                     },
                     {
                         id: 'water-use',
@@ -1781,7 +1965,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'water',
-                        tips: 'Rainwater harvesting is often cost-effective for toilet flushing and irrigation. Consider waterless urinals.'
+                        tips: 'Rainwater harvesting is often cost-effective for toilet flushing and irrigation. Consider waterless urinals.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Rainwater tank undersized for demand',
+                            'Not considering recycled water early enough',
+                            'Irrigation designed without considering water efficiency'
+                        ],
+                        relatedCredits: ['waterway', 'biodiversity', 'ops-res']
                     }
                 ]
             },
@@ -1923,7 +2115,15 @@
                             'Public realm design documentation',
                             'Place quality assessment'
                         ],
-                        tips: 'Engage with urban designers and council early. Quality public spaces add value to projects.'
+                        tips: 'Engage with urban designers and council early. Quality public spaces add value to projects.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Ground floor retail designed without considering activation',
+                            'Outdoor spaces not designed for comfort and use',
+                            'Community spaces undersized or poorly located'
+                        ],
+                        relatedCredits: ['movement', 'contribution', 'culture']
                     },
                     {
                         id: 'contribution',
@@ -1981,7 +2181,15 @@
                             'Community benefit documentation',
                             'Local procurement evidence'
                         ],
-                        tips: 'Early engagement with community groups builds support. Consider long-term relationships with local organisations.'
+                        tips: 'Early engagement with community groups builds support. Consider long-term relationships with local organisations.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Easy',
+                        commonMistakes: [
+                            'Community engagement started too late to influence design',
+                            'Not documenting engagement activities properly',
+                            'Promises made to community not followed through'
+                        ],
+                        relatedCredits: ['enjoyable', 'culture', 'first-nations']
                     },
                     {
                         id: 'culture',
@@ -2039,7 +2247,15 @@
                             'Cultural design elements documentation',
                             'Interpretation strategy'
                         ],
-                        tips: 'Engage with Traditional Owners early and meaningfully. Heritage consultants can help identify opportunities.'
+                        tips: 'Engage with Traditional Owners early and meaningfully. Heritage consultants can help identify opportunities.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Traditional Owner engagement started too late',
+                            'Heritage interpretation treated as afterthought',
+                            'Cultural elements not integrated authentically'
+                        ],
+                        relatedCredits: ['first-nations', 'contribution', 'enjoyable']
                     }
                 ]
             },
@@ -2114,7 +2330,15 @@
                             'Training records',
                             'Diversity reporting and outcomes'
                         ],
-                        tips: 'Partner with industry bodies like NAWIC for best practice guidance. Mental health programs benefit workers and productivity.'
+                        tips: 'Partner with industry bodies like NAWIC for best practice guidance. Mental health programs benefit workers and productivity.',
+                        projectPhases: ['Construction', 'Handover'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Diversity policy not included in contractor requirements',
+                            'Mental health support not accessible to all workers',
+                            'Training outcomes not tracked or reported'
+                        ],
+                        relatedCredits: ['first-nations', 'proc-workforce', 'resp-const']
                     },
                     {
                         id: 'first-nations',
@@ -2172,7 +2396,15 @@
                             'First Nations procurement records',
                             'Partnership agreements'
                         ],
-                        tips: 'Engage with Traditional Owners early - relationships take time. Supply Nation can help identify First Nations businesses.'
+                        tips: 'Engage with Traditional Owners early - relationships take time. Supply Nation can help identify First Nations businesses.',
+                        projectPhases: ['Concept', 'Schematic', 'Construction'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Traditional Owner engagement treated as box-ticking',
+                            'First Nations procurement requirements not in contracts',
+                            'Insufficient time allowed for relationship building'
+                        ],
+                        relatedCredits: ['culture', 'proc-workforce', 'inclusive-const']
                     },
                     {
                         id: 'proc-workforce',
@@ -2231,7 +2463,15 @@
                             'Employment and training records'
                         ],
                         calculatorRequired: true,
-                        tips: 'Social Traders can help identify certified social enterprises. Include social procurement requirements in tender documents.'
+                        tips: 'Social Traders can help identify certified social enterprises. Include social procurement requirements in tender documents.',
+                        projectPhases: ['Documentation', 'Construction'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Social procurement targets not included in contracts',
+                            'Social enterprise capacity not verified before award',
+                            'Tracking systems not set up from project start'
+                        ],
+                        relatedCredits: ['first-nations', 'inclusive-const', 'resp-proc']
                     },
                     {
                         id: 'design-equity',
@@ -2289,7 +2529,15 @@
                             'User consultation records',
                             'Accessibility certification'
                         ],
-                        tips: 'Engage an accessibility consultant early. Consider the needs of neurodiverse users and families with young children.'
+                        tips: 'Engage an accessibility consultant early. Consider the needs of neurodiverse users and families with young children.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Accessibility consultant engaged too late',
+                            'Only designing to minimum code requirements',
+                            'Not consulting with diverse user groups'
+                        ],
+                        relatedCredits: ['amenity', 'movement', 'enjoyable']
                     }
                 ]
             },
@@ -2365,7 +2613,15 @@
                             'Erosion and sediment control plans',
                             'Construction environmental management plan'
                         ],
-                        tips: 'Engage an ecologist early to identify ecological constraints and opportunities. Protect trees with root zones during construction.'
+                        tips: 'Engage an ecologist early to identify ecological constraints and opportunities. Protect trees with root zones during construction.',
+                        projectPhases: ['Concept', 'Schematic', 'Construction'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Ecological assessment done too late to influence design',
+                            'Tree protection zones not maintained during construction',
+                            'Environmental permits not obtained early enough'
+                        ],
+                        relatedCredits: ['biodiversity', 'nature-connectivity', 'waterway']
                     },
                     {
                         id: 'biodiversity',
@@ -2424,7 +2680,15 @@
                             'Monitoring and maintenance plan'
                         ],
                         calculatorRequired: true,
-                        tips: 'Use local native species suited to the site conditions. Green roofs can provide valuable habitat in urban areas.'
+                        tips: 'Use local native species suited to the site conditions. Green roofs can provide valuable habitat in urban areas.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Using non-local or invasive species in planting',
+                            'Green roof not designed for biodiversity outcomes',
+                            'Habitat features not maintained post-construction'
+                        ],
+                        relatedCredits: ['impacts-nature', 'nature-connectivity', 'heat-res']
                     },
                     {
                         id: 'nature-connectivity',
@@ -2482,7 +2746,15 @@
                             'Lighting design addressing light pollution',
                             'Partnership agreements with conservation groups'
                         ],
-                        tips: 'Coordinate with council on regional wildlife corridors. Native planting strips can create valuable habitat links.'
+                        tips: 'Coordinate with council on regional wildlife corridors. Native planting strips can create valuable habitat links.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not coordinating with council on regional corridors',
+                            'Lighting design creating barriers for nocturnal fauna',
+                            'Fencing blocking wildlife movement paths'
+                        ],
+                        relatedCredits: ['biodiversity', 'impacts-nature', 'light-quality']
                     },
                     {
                         id: 'nature-steward',
@@ -2540,7 +2812,15 @@
                             'Monitoring reports',
                             'Community engagement records'
                         ],
-                        tips: 'Conservation covenants can provide permanent protection. Partner with local Landcare groups for ongoing management.'
+                        tips: 'Conservation covenants can provide permanent protection. Partner with local Landcare groups for ongoing management.',
+                        projectPhases: ['Design Dev', 'Documentation', 'Handover'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Long-term management not included in building operations budget',
+                            'Conservation commitments not legally secured',
+                            'Monitoring program not established before handover'
+                        ],
+                        relatedCredits: ['biodiversity', 'impacts-nature', 'comm-res']
                     },
                     {
                         id: 'waterway',
@@ -2598,7 +2878,15 @@
                             'Riparian management plan',
                             'Water quality monitoring data'
                         ],
-                        tips: 'WSUD treatment trains are effective for stormwater quality. Raingardens and wetlands can also provide habitat value.'
+                        tips: 'WSUD treatment trains are effective for stormwater quality. Raingardens and wetlands can also provide habitat value.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'WSUD elements undersized for pollutant targets',
+                            'Stormwater modelling not completed early enough',
+                            'Riparian buffer zones compromised by building footprint'
+                        ],
+                        relatedCredits: ['water-use', 'biodiversity', 'impacts-nature']
                     }
                 ]
             },
@@ -2673,7 +2961,15 @@
                             'Case study and presentation materials',
                             'Letters of support from industry partners'
                         ],
-                        tips: 'Document innovations from early in the project. Partner with GBCA or industry bodies to share learnings.'
+                        tips: 'Document innovations from early in the project. Partner with GBCA or industry bodies to share learnings.',
+                        projectPhases: ['Concept', 'Schematic', 'Handover'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not documenting innovations as they happen',
+                            'Failing to share learnings through case studies',
+                            'Innovation claims not supported by evidence'
+                        ],
+                        relatedCredits: ['leadership-challenge', 'ind-dev', 'impacts-disc']
                     },
                     {
                         id: 'leadership-challenge',
@@ -2738,7 +3034,15 @@
                             { name: 'Nature Positive', description: 'Achieving net positive biodiversity outcomes' },
                             { name: 'Custom Challenge', description: 'Project-specific challenge approved by GBCA' }
                         ],
-                        tips: 'Engage with GBCA early to discuss potential Leadership Challenges. Ensure robust measurement and verification.'
+                        tips: 'Engage with GBCA early to discuss potential Leadership Challenges. Ensure robust measurement and verification.',
+                        projectPhases: ['Concept', 'Schematic', 'Handover'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not engaging GBCA early enough for challenge approval',
+                            'Challenge outcomes not robustly measured',
+                            'Missing third-party verification of outcomes'
+                        ],
+                        relatedCredits: ['market-transform', 'impacts-disc', 'ind-dev']
                     }
                 ]
             }
