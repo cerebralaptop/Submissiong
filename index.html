@@ -1914,6 +1914,40 @@
                         points: 6,
                         required: true,
                         description: 'Using renewable or low-carbon energy sources.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Building meets minimum NCC energy requirements',
+                                    'Standard grid electricity supply'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 3,
+                                color: 'blue',
+                                requirements: [
+                                    '25% of energy from renewable sources',
+                                    'On-site solar PV or green power agreement',
+                                    'Building is at least 50% electric'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 6,
+                                color: 'green',
+                                requirements: [
+                                    '100% renewable energy (on-site or off-site)',
+                                    'Fully electric building (no fossil fuels)',
+                                    'Verified renewable energy certificates'
+                                ]
+                            }
+                        ],
                         aims: 'To encourage the use of renewable energy sources and reduce reliance on fossil fuels.',
                         criteria: [
                             'On-site Renewables: Solar PV, wind, or other renewable generation is installed',
@@ -1950,6 +1984,40 @@
                         points: 10,
                         required: true,
                         description: 'Reducing operational energy consumption.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Building meets minimum NCC Section J requirements',
+                                    'Standard efficiency HVAC and lighting'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 5,
+                                color: 'blue',
+                                requirements: [
+                                    '10% improvement over reference building',
+                                    '4.5 Star NABERS Energy Commitment Agreement',
+                                    'High-efficiency HVAC systems specified'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 10,
+                                color: 'green',
+                                requirements: [
+                                    '30%+ improvement over reference building',
+                                    '5.5+ Star NABERS Energy Commitment Agreement',
+                                    'Best practice passive design and systems'
+                                ]
+                            }
+                        ],
                         aims: 'To encourage energy efficient building design and systems that minimise operational energy use.',
                         criteria: [
                             'Energy Modelling: Building energy performance is modelled and optimised',
@@ -1988,6 +2056,40 @@
                         points: 10,
                         required: true,
                         description: 'Reducing embodied carbon in construction materials.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Upfront carbon assessment completed',
+                                    'Standard construction materials used'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 5,
+                                color: 'blue',
+                                requirements: [
+                                    '10% reduction below benchmark',
+                                    'Low-carbon concrete specified for major elements',
+                                    'Material optimization strategies implemented'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 10,
+                                color: 'green',
+                                requirements: [
+                                    '30%+ reduction below benchmark',
+                                    'Low-carbon materials throughout structure',
+                                    'Mass timber or innovative low-carbon systems'
+                                ]
+                            }
+                        ],
                         aims: 'To reduce the upfront carbon emissions from construction materials and processes.',
                         criteria: [
                             'Carbon Assessment: Upfront carbon is calculated using recognised methodology',
@@ -2024,6 +2126,40 @@
                         points: 3,
                         required: false,
                         description: 'Offsetting remaining embodied carbon emissions.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Upfront carbon calculated',
+                                    'No offset strategy in place'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 2,
+                                color: 'blue',
+                                requirements: [
+                                    '50% of upfront carbon offset',
+                                    'Verified carbon offsets purchased',
+                                    'Offset strategy documented'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 3,
+                                color: 'green',
+                                requirements: [
+                                    '100% of upfront carbon offset (carbon neutral)',
+                                    'Gold Standard or equivalent offsets',
+                                    'Public disclosure of offset strategy'
+                                ]
+                            }
+                        ],
                         aims: 'To compensate for upfront carbon emissions that cannot be eliminated through design.',
                         criteria: [
                             'Carbon Calculation: Total upfront carbon has been accurately calculated',
@@ -2055,6 +2191,40 @@
                         points: 3,
                         required: false,
                         description: 'Using low global warming potential refrigerants.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Standard refrigerants (R-410A or similar)',
+                                    'Basic leak detection systems'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 2,
+                                color: 'blue',
+                                requirements: [
+                                    'Refrigerants with GWP < 750 (e.g., R-32)',
+                                    'Enhanced leak detection and monitoring',
+                                    'Refrigerant management plan in place'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 3,
+                                color: 'green',
+                                requirements: [
+                                    'Natural or ultra-low GWP refrigerants (GWP < 150)',
+                                    'Systems designed for minimal refrigerant charge',
+                                    'Comprehensive leak prevention measures'
+                                ]
+                            }
+                        ],
                         aims: 'To reduce the climate impact of refrigerant gases used in building systems.',
                         criteria: [
                             'Low-GWP Refrigerants: HVAC systems use refrigerants with GWP < 750',
@@ -2087,6 +2257,40 @@
                         points: 3,
                         required: false,
                         description: 'Supporting electric vehicles and active transport.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Basic bicycle parking provided',
+                                    'No EV charging infrastructure'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 2,
+                                color: 'blue',
+                                requirements: [
+                                    '10% of parking spaces with EV charging',
+                                    '25% of parking spaces EV-ready (conduit installed)',
+                                    'End-of-trip facilities with showers and lockers'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 3,
+                                color: 'green',
+                                requirements: [
+                                    '25%+ of parking spaces with EV charging',
+                                    '100% of parking spaces EV-ready',
+                                    'Premium end-of-trip facilities exceeding requirements'
+                                ]
+                            }
+                        ],
                         aims: 'To support the transition to low-emission transport through building infrastructure.',
                         criteria: [
                             'EV Charging: Electric vehicle charging infrastructure is provided',
@@ -2116,6 +2320,40 @@
                         points: 2,
                         required: false,
                         description: 'Designing for adaptability and material reuse.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'Standard construction methods',
+                                    'No specific adaptability considerations'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 1,
+                                color: 'blue',
+                                requirements: [
+                                    'Design for adaptability strategy documented',
+                                    'Flexible floor plates and services zones',
+                                    'Some mechanical connections for disassembly'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 2,
+                                color: 'green',
+                                requirements: [
+                                    'Comprehensive circularity strategy',
+                                    'Material passports for major elements',
+                                    'Design for disassembly throughout structure'
+                                ]
+                            }
+                        ],
                         aims: 'To design buildings that can be adapted, disassembled, and have materials recovered at end of life.',
                         criteria: [
                             'Adaptability: Building can be adapted for different uses over time',
@@ -2145,6 +2383,40 @@
                         points: 3,
                         required: false,
                         description: 'Reducing potable water consumption.',
+                        performanceLevels: [
+                            {
+                                level: 'minimum',
+                                name: 'Minimum Practice',
+                                points: 0,
+                                color: 'gray',
+                                requirements: [
+                                    'WELS 4-star fixtures throughout',
+                                    'Standard landscape irrigation'
+                                ]
+                            },
+                            {
+                                level: 'credit',
+                                name: 'Good Practice',
+                                points: 2,
+                                color: 'blue',
+                                requirements: [
+                                    'WELS 5-star fixtures or better',
+                                    'Rainwater harvesting for toilet flushing or irrigation',
+                                    '30% reduction in potable water use'
+                                ]
+                            },
+                            {
+                                level: 'exceptional',
+                                name: 'Exceptional Performance',
+                                points: 3,
+                                color: 'green',
+                                requirements: [
+                                    '60%+ reduction in potable water use',
+                                    'Rainwater and/or recycled water systems',
+                                    'Native/drought-tolerant landscaping with minimal irrigation'
+                                ]
+                            }
+                        ],
                         aims: 'To reduce potable water consumption through efficiency and alternative water sources.',
                         criteria: [
                             'Efficient Fixtures: Water-efficient fixtures and fittings are installed',
@@ -4098,9 +4370,9 @@
         }
 
         // Credits List Component
-        function CreditsList({ category, selectedCredits, onSelectCreditLevel, onViewCreditDetails, phaseFilter, searchQuery, showQuickWins }) {
-            // Filter credits by multiple criteria
-            const filteredCredits = category.credits.filter(credit => {
+        function CreditsList({ categories, activeCategory, selectedCredits, onSelectCreditLevel, onViewCreditDetails, phaseFilter, searchQuery, showQuickWins, showRequired }) {
+            // Filter function for credits
+            const filterCredits = (credit) => {
                 // Phase filter
                 if (phaseFilter && phaseFilter !== 'all') {
                     if (!credit.projectPhases || !credit.projectPhases.includes(phaseFilter)) {
@@ -4108,9 +4380,16 @@
                     }
                 }
 
-                // Quick wins filter (Easy difficulty or high points-to-difficulty ratio)
+                // Quick wins filter (Easy difficulty)
                 if (showQuickWins) {
                     if (credit.difficulty !== 'Easy') {
+                        return false;
+                    }
+                }
+
+                // Minimum expectations filter (Required credits only)
+                if (showRequired) {
+                    if (!credit.required) {
                         return false;
                     }
                 }
@@ -4133,62 +4412,77 @@
                 }
 
                 return true;
-            });
+            };
 
-            if (filteredCredits.length === 0) {
+            // Get categories to display
+            const categoriesToShow = activeCategory === 'all'
+                ? categories
+                : categories.filter(c => c.id === activeCategory);
+
+            // Check if any credits match filters
+            const hasAnyCredits = categoriesToShow.some(cat =>
+                cat.credits.some(filterCredits)
+            );
+
+            if (!hasAnyCredits) {
                 return (
-                    <div className="glass-card rounded-2xl p-6 shadow-lg">
-                        <div className="flex items-center gap-3 mb-4">
-                            <span className="text-3xl">{category.icon}</span>
-                            <div>
-                                <h2 className="font-display text-xl font-bold text-gray-800">{category.name}</h2>
-                                <p className="text-sm text-gray-500">{category.description}</p>
-                            </div>
-                        </div>
-                        <p className="text-center text-gray-400 py-8">
-                            <i className="fa-solid fa-filter-circle-xmark text-2xl mb-2 block"></i>
-                            No credits for this phase in {category.name}
+                    <div className="glass-card rounded-2xl p-6 shadow-lg dark:bg-gray-800/80">
+                        <p className="text-center text-gray-400 py-12">
+                            <i className="fa-solid fa-filter-circle-xmark text-4xl mb-3 block"></i>
+                            No credits match your current filters
+                            <br />
+                            <span className="text-sm">Try adjusting your search or filter settings</span>
                         </p>
                     </div>
                 );
             }
 
             return (
-                <div className="glass-card rounded-2xl p-6 shadow-lg">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                            <span className="text-3xl">{category.icon}</span>
-                            <div>
-                                <h2 className="font-display text-xl font-bold text-gray-800">{category.name}</h2>
-                                <p className="text-sm text-gray-500">{category.description}</p>
-                            </div>
-                        </div>
-                        <div className={`${category.colorClasses.bgLight} ${category.colorClasses.text} px-4 py-2 rounded-lg`}>
-                            <span className="font-mono font-bold">{category.maxPoints}</span>
-                            <span className="text-sm ml-1">points max</span>
-                        </div>
-                    </div>
+                <div className="space-y-6">
+                    {categoriesToShow.map(category => {
+                        const filteredCredits = category.credits.filter(filterCredits);
 
-                    <div className="space-y-3">
-                        {filteredCredits.map((credit, index) => {
-                            const creditKey = `${category.id}-${credit.id}`;
-                            const selection = selectedCredits[creditKey];
-                            const selectedLevel = selection ? selection.level : null;
+                        if (filteredCredits.length === 0) return null;
 
-                            return (
-                                <div key={credit.id} className="fade-in" style={{ animationDelay: `${index * 50}ms` }}>
-                                    <CreditCard
-                                        credit={credit}
-                                        categoryId={category.id}
-                                        selectedLevel={selectedLevel}
-                                        onSelectLevel={(level, points) => onSelectCreditLevel(creditKey, level, points)}
-                                        onViewDetails={() => onViewCreditDetails(credit, category)}
-                                        colorClasses={category.colorClasses}
-                                    />
+                        return (
+                            <div key={category.id} className="glass-card rounded-2xl p-6 shadow-lg dark:bg-gray-800/80">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-3xl">{category.icon}</span>
+                                        <div>
+                                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">{category.name}</h2>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">{category.description}</p>
+                                        </div>
+                                    </div>
+                                    <div className={`${category.colorClasses.bgLight} ${category.colorClasses.text} px-4 py-2 rounded-lg`}>
+                                        <span className="font-mono font-bold">{filteredCredits.length}</span>
+                                        <span className="text-sm ml-1">credits</span>
+                                    </div>
                                 </div>
-                            );
-                        })}
-                    </div>
+
+                                <div className="space-y-3">
+                                    {filteredCredits.map((credit, index) => {
+                                        const creditKey = `${category.id}-${credit.id}`;
+                                        const selection = selectedCredits[creditKey];
+                                        const selectedLevel = selection ? selection.level : null;
+
+                                        return (
+                                            <div key={credit.id} className="fade-in" style={{ animationDelay: `${index * 30}ms` }}>
+                                                <CreditCard
+                                                    credit={credit}
+                                                    categoryId={category.id}
+                                                    selectedLevel={selectedLevel}
+                                                    onSelectLevel={(level, points) => onSelectCreditLevel(creditKey, level, points)}
+                                                    onViewDetails={() => onViewCreditDetails(credit, category)}
+                                                    colorClasses={category.colorClasses}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             );
         }
@@ -4392,6 +4686,147 @@
                             ))}
                         </div>
                     </div>
+                </div>
+            );
+        }
+
+        // Documentation View Component - Shows required documentation for selected credits
+        function DocumentationView({ categories, selectedCredits, creditDocs, onDocsChange, onViewCreditDetails }) {
+            // Get all selected credits with their documentation
+            const selectedCreditsList = [];
+            categories.forEach(category => {
+                category.credits.forEach(credit => {
+                    const creditKey = `${category.id}-${credit.id}`;
+                    if (selectedCredits[creditKey] && credit.documentation && credit.documentation.length > 0) {
+                        selectedCreditsList.push({ credit, category, creditKey });
+                    }
+                });
+            });
+
+            // Calculate overall progress
+            const totalDocs = selectedCreditsList.reduce((sum, { credit }) => sum + credit.documentation.length, 0);
+            const completedDocs = selectedCreditsList.reduce((sum, { creditKey, credit }) => {
+                const docs = creditDocs[creditKey] || {};
+                return sum + credit.documentation.filter((_, idx) => docs[idx]).length;
+            }, 0);
+
+            const handleDocToggle = (creditKey, docIndex) => {
+                const currentDocs = creditDocs[creditKey] || {};
+                const newDocs = { ...currentDocs, [docIndex]: !currentDocs[docIndex] };
+                onDocsChange(creditKey, newDocs);
+            };
+
+            return (
+                <div className="glass-card rounded-2xl p-6 shadow-lg dark:bg-gray-800/80">
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                            <i className="fa-solid fa-file-lines text-2xl text-purple-500"></i>
+                            <div>
+                                <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">Documentation Checklist</h2>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Track required documentation for your selected credits</p>
+                            </div>
+                        </div>
+                        {totalDocs > 0 && (
+                            <div className="text-right">
+                                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                                    {Math.round((completedDocs / totalDocs) * 100)}%
+                                </div>
+                                <div className="text-xs text-gray-500">{completedDocs} of {totalDocs} complete</div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Overall Progress Bar */}
+                    {totalDocs > 0 && (
+                        <div className="mb-6">
+                            <div className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                <div
+                                    className="h-full bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-500"
+                                    style={{ width: `${(completedDocs / totalDocs) * 100}%` }}
+                                ></div>
+                            </div>
+                        </div>
+                    )}
+
+                    {selectedCreditsList.length === 0 ? (
+                        <div className="text-center py-12">
+                            <i className="fa-solid fa-folder-open text-4xl text-gray-300 mb-3"></i>
+                            <p className="text-gray-500">No credits selected yet</p>
+                            <p className="text-sm text-gray-400">Select credits from the Credits view to see required documentation</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-6">
+                            {selectedCreditsList.map(({ credit, category, creditKey }) => {
+                                const docs = creditDocs[creditKey] || {};
+                                const creditCompleted = credit.documentation.filter((_, idx) => docs[idx]).length;
+                                const creditTotal = credit.documentation.length;
+                                const isComplete = creditCompleted === creditTotal;
+
+                                return (
+                                    <div key={creditKey} className={`rounded-xl border-2 overflow-hidden transition-all ${isComplete ? 'border-green-300 bg-green-50/50 dark:border-green-700 dark:bg-green-900/20' : 'border-gray-200 dark:border-gray-700'}`}>
+                                        {/* Credit Header */}
+                                        <div
+                                            className={`p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${isComplete ? 'bg-green-50 dark:bg-green-900/30' : 'bg-gray-50 dark:bg-gray-800'}`}
+                                            onClick={() => onViewCreditDetails(credit, category)}
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                    <span className="text-2xl">{category.icon}</span>
+                                                    <div>
+                                                        <h3 className="font-semibold text-gray-800 dark:text-white">{credit.name}</h3>
+                                                        <p className="text-xs text-gray-500">{category.name}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <span className={`text-sm font-medium ${isComplete ? 'text-green-600 dark:text-green-400' : 'text-gray-500'}`}>
+                                                        {creditCompleted}/{creditTotal}
+                                                    </span>
+                                                    {isComplete && <i className="fa-solid fa-circle-check text-green-500 text-xl"></i>}
+                                                </div>
+                                            </div>
+                                            {/* Mini progress bar */}
+                                            <div className="mt-2 w-full h-1.5 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                                                <div
+                                                    className={`h-full transition-all ${isComplete ? 'bg-green-500' : 'bg-purple-500'}`}
+                                                    style={{ width: `${(creditCompleted / creditTotal) * 100}%` }}
+                                                ></div>
+                                            </div>
+                                        </div>
+
+                                        {/* Documentation Items */}
+                                        <div className="p-4 pt-2 space-y-2">
+                                            {credit.documentation.map((doc, idx) => {
+                                                const isChecked = docs[idx];
+                                                return (
+                                                    <div
+                                                        key={idx}
+                                                        onClick={() => handleDocToggle(creditKey, idx)}
+                                                        className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all
+                                                            ${isChecked
+                                                                ? 'bg-green-100 dark:bg-green-900/40'
+                                                                : 'bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600'
+                                                            }`}
+                                                    >
+                                                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all
+                                                            ${isChecked
+                                                                ? 'bg-green-500 border-green-500'
+                                                                : 'border-gray-300 dark:border-gray-500'
+                                                            }`}
+                                                        >
+                                                            {isChecked && <i className="fa-solid fa-check text-white text-xs"></i>}
+                                                        </div>
+                                                        <span className={`text-sm ${isChecked ? 'text-green-700 dark:text-green-300 line-through' : 'text-gray-700 dark:text-gray-300'}`}>
+                                                            {doc}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             );
         }
@@ -4635,7 +5070,7 @@
         // Main App Component
         function App() {
             const [projectName, setProjectName] = useState('My Green Star Project');
-            const [activeCategory, setActiveCategory] = useState('responsible');
+            const [activeCategory, setActiveCategory] = useState('all'); // 'all' shows all categories
             const [selectedCredits, setSelectedCredits] = useState({});
             const [showCalculators, setShowCalculators] = useState(false);
             const [showExport, setShowExport] = useState(false);
@@ -4644,6 +5079,7 @@
             const [searchQuery, setSearchQuery] = useState('');
             const [darkMode, setDarkMode] = useState(false);
             const [showQuickWins, setShowQuickWins] = useState(false);
+            const [showRequired, setShowRequired] = useState(false); // Minimum expectations filter
             const [creditNotes, setCreditNotes] = useState({});
             const [creditDocs, setCreditDocs] = useState({});
             const [creditAssignments, setCreditAssignments] = useState({});
@@ -4752,8 +5188,6 @@
                 }
             };
 
-            const activeCateg = categoriesData.find(c => c.id === activeCategory);
-
             // Get if current modal credit is selected
             const isModalCreditSelected = creditDetailModal.credit && creditDetailModal.category
                 ? !!selectedCredits[`${creditDetailModal.category.id}-${creditDetailModal.credit.id}`]
@@ -4847,11 +5281,12 @@
                             {/* View Toggle */}
                             <div className="mb-4">
                                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">View</label>
-                                <div className="grid grid-cols-3 gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                                <div className="grid grid-cols-4 gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
                                     {[
                                         { id: 'credits', icon: 'fa-grip', label: 'Cards' },
                                         { id: 'timeline', icon: 'fa-timeline', label: 'Timeline' },
-                                        { id: 'matrix', icon: 'fa-table-cells', label: 'Matrix' }
+                                        { id: 'matrix', icon: 'fa-table-cells', label: 'Matrix' },
+                                        { id: 'docs', icon: 'fa-file-lines', label: 'Docs' }
                                     ].map(view => (
                                         <button
                                             key={view.id}
@@ -4869,18 +5304,66 @@
                             {/* Filters */}
                             <div className="mb-4">
                                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Filters</label>
-                                <button
-                                    onClick={() => setShowQuickWins(!showQuickWins)}
-                                    className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
-                                        ${showQuickWins
-                                            ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md'
-                                            : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-amber-50'
-                                        }`}
-                                >
-                                    <i className="fa-solid fa-bolt"></i>
-                                    <span>Quick Wins (Easy Credits)</span>
-                                    {showQuickWins && <i className="fa-solid fa-check ml-auto"></i>}
-                                </button>
+                                <div className="space-y-2">
+                                    <button
+                                        onClick={() => setShowQuickWins(!showQuickWins)}
+                                        className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
+                                            ${showQuickWins
+                                                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md'
+                                                : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-amber-50'
+                                            }`}
+                                    >
+                                        <i className="fa-solid fa-bolt"></i>
+                                        <span>Quick Wins (Easy)</span>
+                                        {showQuickWins && <i className="fa-solid fa-check ml-auto"></i>}
+                                    </button>
+                                    <button
+                                        onClick={() => setShowRequired(!showRequired)}
+                                        className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
+                                            ${showRequired
+                                                ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-md'
+                                                : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-red-50'
+                                            }`}
+                                    >
+                                        <i className="fa-solid fa-star"></i>
+                                        <span>Minimum Expectations</span>
+                                        {showRequired && <i className="fa-solid fa-check ml-auto"></i>}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Categories */}
+                            <div className="mb-4">
+                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Categories</label>
+                                <div className="space-y-1">
+                                    <button
+                                        onClick={() => setActiveCategory('all')}
+                                        className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
+                                            ${activeCategory === 'all'
+                                                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md'
+                                                : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-gray-600'
+                                            }`}
+                                    >
+                                        <i className="fa-solid fa-layer-group"></i>
+                                        <span className="flex-grow text-left">All Credits</span>
+                                        <span className="text-xs font-mono opacity-70">{totalPoints}/170</span>
+                                    </button>
+                                    {categoriesData.map(category => (
+                                        <button
+                                            key={category.id}
+                                            onClick={() => setActiveCategory(category.id)}
+                                            className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
+                                                ${activeCategory === category.id
+                                                    ? `${category.colorClasses.bgLight} ${category.colorClasses.text} shadow-sm`
+                                                    : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
+                                                }`}
+                                        >
+                                            <span className="text-lg">{category.icon}</span>
+                                            <span className="flex-grow text-left truncate">{category.name}</span>
+                                            <span className="text-xs font-mono opacity-70">{getCategoryPoints(category.id)}/{category.maxPoints}</span>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
 
                             {/* Project Phase Filter */}
@@ -4899,28 +5382,6 @@
                                         >
                                             <i className={`fa-solid ${phase.icon} text-xs w-4`}></i>
                                             <span className="truncate">{phase.name}</span>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Categories */}
-                            <div className="mb-4">
-                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Categories</label>
-                                <div className="space-y-1">
-                                    {categoriesData.map(category => (
-                                        <button
-                                            key={category.id}
-                                            onClick={() => setActiveCategory(category.id)}
-                                            className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
-                                                ${activeCategory === category.id
-                                                    ? `${category.colorClasses.bgLight} ${category.colorClasses.text} shadow-sm`
-                                                    : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
-                                                }`}
-                                        >
-                                            <span className="text-lg">{category.icon}</span>
-                                            <span className="flex-grow text-left truncate">{category.name}</span>
-                                            <span className="text-xs font-mono opacity-70">{getCategoryPoints(category.id)}/{category.maxPoints}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -4969,13 +5430,15 @@
                                 {/* Main Content Area - Credits, Timeline, or Matrix */}
                                 {activeView === 'credits' && (
                                     <CreditsList
-                                        category={activeCateg}
+                                        categories={categoriesData}
+                                        activeCategory={activeCategory}
                                         selectedCredits={selectedCredits}
                                         onSelectCreditLevel={handleSelectCreditLevel}
                                         onViewCreditDetails={handleViewCreditDetails}
                                         phaseFilter={phaseFilter}
                                         searchQuery={searchQuery}
                                         showQuickWins={showQuickWins}
+                                        showRequired={showRequired}
                                     />
                                 )}
 
@@ -4996,6 +5459,16 @@
                                         onAssignmentChange={(creditKey, assignment) => {
                                             setCreditAssignments(prev => ({ ...prev, [creditKey]: assignment }));
                                         }}
+                                        onViewCreditDetails={handleViewCreditDetails}
+                                    />
+                                )}
+
+                                {activeView === 'docs' && (
+                                    <DocumentationView
+                                        categories={categoriesData}
+                                        selectedCredits={selectedCredits}
+                                        creditDocs={creditDocs}
+                                        onDocsChange={(key, docs) => setCreditDocs(prev => ({ ...prev, [key]: docs }))}
                                         onViewCreditDetails={handleViewCreditDetails}
                                     />
                                 )}
