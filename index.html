@@ -327,7 +327,15 @@
                             'Case study or presentation materials',
                             'Research collaboration agreements or outputs'
                         ],
-                        tips: 'Start early - professional development can be completed throughout the project. Consider hosting site tours for industry groups.'
+                        tips: 'Start early - professional development can be completed throughout the project. Consider hosting site tours for industry groups.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Easy',
+                        commonMistakes: [
+                            'Waiting until late in project to arrange training',
+                            'Not documenting industry contributions as they happen',
+                            'Forgetting to get signed attendance records for events'
+                        ],
+                        relatedCredits: ['resp-const', 'impacts-disc']
                     },
                     {
                         id: 'resp-const',
@@ -498,7 +506,15 @@
                             'Recycling facility certifications',
                             'Photos of material reuse applications'
                         ],
-                        tips: 'Set up clear waste streams on site from day one. Work with recyclers early to understand what they can accept.'
+                        tips: 'Set up clear waste streams on site from day one. Work with recyclers early to understand what they can accept.',
+                        projectPhases: ['Construction', 'Handover'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Starting waste tracking too late in construction',
+                            'Not having EMP ready before construction begins',
+                            'Inadequate monitoring and reporting systems'
+                        ],
+                        relatedCredits: ['ind-dev', 'impacts-nature']
                     },
                     {
                         id: 'resp-proc',
@@ -552,7 +568,15 @@
                             'Supplier declarations and evidence',
                             'Procurement tracking spreadsheet'
                         ],
-                        tips: 'Engage with suppliers early about certification requirements. EPDs are increasingly available for common products.'
+                        tips: 'Engage with suppliers early about certification requirements. EPDs are increasingly available for common products.',
+                        projectPhases: ['Design Dev', 'Documentation', 'Construction'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not including sustainability requirements in tender documents',
+                            'Accepting substitutions without checking credentials',
+                            'Poor tracking of procured vs specified products'
+                        ],
+                        relatedCredits: ['resp-struct', 'resp-finishes', 'impacts-disc']
                     },
                     {
                         id: 'resp-struct',
@@ -924,7 +948,15 @@
                             'VOC test reports for interior materials',
                             'As-built drawings showing exhaust systems'
                         ],
-                        tips: 'Consider demand-controlled ventilation based on CO2 levels. Low-VOC specifications should be included in contracts.'
+                        tips: 'Consider demand-controlled ventilation based on CO2 levels. Low-VOC specifications should be included in contracts.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Undersizing ventilation rates without considering future flexibility',
+                            'Not specifying filter ratings in design documentation',
+                            'Leaving low-VOC requirements out of tender documents'
+                        ],
+                        relatedCredits: ['light-quality', 'toxins', 'amenity']
                     },
                     {
                         id: 'light-quality',
@@ -1293,7 +1325,15 @@
                             'Design response to identified risks',
                             'Adaptation strategy documentation'
                         ],
-                        tips: 'Use NARCliM or CSIRO projections for Australian climate data. Consider sea level rise for coastal locations.'
+                        tips: 'Use NARCliM or CSIRO projections for Australian climate data. Consider sea level rise for coastal locations.',
+                        projectPhases: ['Concept', 'Schematic'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Using outdated climate data or projections',
+                            'Not considering full building lifetime in risk assessment',
+                            'Failing to document design responses to identified risks'
+                        ],
+                        relatedCredits: ['heat-res', 'ops-res', 'grid-res']
                     },
                     {
                         id: 'ops-res',
@@ -1817,7 +1857,15 @@
                             'Pedestrian connectivity analysis'
                         ],
                         calculatorRequired: true,
-                        tips: 'Engage with council early on car parking reductions. Quality end-of-trip facilities encourage cycling.'
+                        tips: 'Engage with council early on car parking reductions. Quality end-of-trip facilities encourage cycling.',
+                        projectPhases: ['Concept', 'Schematic'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Underestimating bicycle parking requirements',
+                            'Not engaging with council early on parking reductions',
+                            'Poor location of end-of-trip facilities'
+                        ],
+                        relatedCredits: ['enjoyable', 'contribution', 'culture']
                     },
                     {
                         id: 'enjoyable',
@@ -2875,58 +2923,132 @@
             );
         }
 
-        // Credit Card Component
-        function CreditCard({ credit, categoryId, isSelected, onToggle, onViewDetails, colorClasses }) {
+        // Credit Card Component with Performance Level Selection
+        function CreditCard({ credit, categoryId, selectedLevel, onSelectLevel, onViewDetails, colorClasses }) {
+            const hasLevels = credit.performanceLevels && credit.performanceLevels.length > 0;
+            const currentPoints = selectedLevel ?
+                (hasLevels ? credit.performanceLevels.find(l => l.level === selectedLevel)?.points || 0 : credit.points) : 0;
+
+            const levelColors = {
+                minimum: { bg: 'bg-gray-100', border: 'border-gray-400', text: 'text-gray-600', hover: 'hover:bg-gray-200' },
+                credit: { bg: 'bg-blue-100', border: 'border-blue-500', text: 'text-blue-700', hover: 'hover:bg-blue-200' },
+                exceptional: { bg: 'bg-green-100', border: 'border-green-500', text: 'text-green-700', hover: 'hover:bg-green-200' }
+            };
+
+            const levelIcons = {
+                minimum: 'fa-minus',
+                credit: 'fa-check',
+                exceptional: 'fa-star'
+            };
+
+            const levelLabels = {
+                minimum: 'Min',
+                credit: 'Credit',
+                exceptional: 'Exceptional'
+            };
+
             return (
                 <div
-                    className={`credit-card flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all
-                        ${isSelected ? `border-green-500 bg-green-50` : 'border-gray-200 bg-white'}`}
+                    className={`credit-card rounded-xl border-2 transition-all bg-white
+                        ${selectedLevel ? `border-green-500 bg-gradient-to-r from-green-50 to-white` : 'border-gray-200'}`}
                 >
-                    <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={onToggle}
-                        className="custom-checkbox flex-shrink-0"
-                        onClick={(e) => e.stopPropagation()}
-                    />
-
-                    <div className="flex-grow min-w-0" onClick={onToggle}>
-                        <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className={`font-medium ${isSelected ? 'text-green-700' : 'text-gray-800'}`}>
-                                {credit.name}
-                            </h3>
-                            {credit.required && (
-                                <span className="required-badge bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-semibold uppercase">
-                                    Required
-                                </span>
-                            )}
-                            {credit.calculatorRequired && (
-                                <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
-                                    <i className="fa-solid fa-calculator mr-1"></i>
-                                    Calculator
-                                </span>
+                    {/* Header row */}
+                    <div className="flex items-center gap-4 p-4 pb-2">
+                        <div className="flex-grow min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <h3 className={`font-medium ${selectedLevel ? 'text-green-700' : 'text-gray-800'}`}>
+                                    {credit.name}
+                                </h3>
+                                {credit.required && (
+                                    <span className="required-badge bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-semibold uppercase">
+                                        Required
+                                    </span>
+                                )}
+                                {credit.calculatorRequired && (
+                                    <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
+                                        <i className="fa-solid fa-calculator mr-1"></i>
+                                        Calc
+                                    </span>
+                                )}
+                                {credit.projectPhases && credit.projectPhases[0] && (
+                                    <span className="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full">
+                                        <i className="fa-solid fa-clock mr-1"></i>
+                                        {credit.projectPhases[0]}
+                                    </span>
+                                )}
+                            </div>
+                            {credit.description && (
+                                <p className="text-sm text-gray-500 mt-1 line-clamp-2">{credit.description}</p>
                             )}
                         </div>
-                        {credit.description && (
-                            <p className="text-sm text-gray-500 mt-1 line-clamp-2">{credit.description}</p>
-                        )}
-                    </div>
 
-                    <div className="flex items-center gap-3 flex-shrink-0">
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onViewDetails();
-                            }}
-                            className="info-button w-9 h-9 rounded-full bg-blue-100 hover:bg-blue-200 flex items-center justify-center"
-                            title="View credit details"
-                        >
-                            <i className="fa-solid fa-info text-blue-600"></i>
-                        </button>
-                        <div className={`font-mono text-xl font-bold ${isSelected ? 'text-green-600' : 'text-gray-400'}`}>
-                            +{credit.points}
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onViewDetails();
+                                }}
+                                className="info-button w-9 h-9 rounded-full bg-blue-100 hover:bg-blue-200 flex items-center justify-center"
+                                title="View credit details"
+                            >
+                                <i className="fa-solid fa-info text-blue-600"></i>
+                            </button>
+                            <div className={`font-mono text-xl font-bold min-w-[50px] text-right ${selectedLevel ? 'text-green-600' : 'text-gray-400'}`}>
+                                +{currentPoints}
+                            </div>
                         </div>
                     </div>
+
+                    {/* Performance Level Selector */}
+                    {hasLevels ? (
+                        <div className="px-4 pb-4 pt-2">
+                            <div className="flex items-center gap-1 text-xs text-gray-500 mb-2">
+                                <i className="fa-solid fa-layer-group"></i>
+                                <span>Select target level:</span>
+                            </div>
+                            <div className="flex gap-2">
+                                {credit.performanceLevels.filter(l => l.level !== 'minimum' || l.points > 0).map((level) => {
+                                    const isLevelSelected = selectedLevel === level.level;
+                                    const colors = levelColors[level.level] || levelColors.credit;
+
+                                    return (
+                                        <button
+                                            key={level.level}
+                                            onClick={() => onSelectLevel(isLevelSelected ? null : level.level, level.points)}
+                                            className={`flex-1 py-2 px-3 rounded-lg border-2 transition-all text-sm font-medium
+                                                ${isLevelSelected
+                                                    ? `${colors.bg} ${colors.border} ${colors.text} shadow-sm`
+                                                    : `bg-white border-gray-200 text-gray-600 ${colors.hover}`
+                                                }`}
+                                        >
+                                            <div className="flex items-center justify-center gap-1 sm:gap-2">
+                                                <i className={`fa-solid ${levelIcons[level.level]} text-xs`}></i>
+                                                <span className="hidden sm:inline">{levelLabels[level.level]}</span>
+                                                <span className="font-mono text-xs">({level.points})</span>
+                                            </div>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="px-4 pb-4 pt-2">
+                            <button
+                                onClick={() => onSelectLevel(selectedLevel ? null : 'credit', credit.points)}
+                                className={`w-full py-2 px-3 rounded-lg border-2 transition-all text-sm font-medium
+                                    ${selectedLevel
+                                        ? 'bg-green-100 border-green-500 text-green-700'
+                                        : 'bg-white border-gray-200 text-gray-600 hover:bg-green-50'
+                                    }`}
+                            >
+                                <div className="flex items-center justify-center gap-2">
+                                    <i className={`fa-solid ${selectedLevel ? 'fa-check' : 'fa-plus'}`}></i>
+                                    <span>{selectedLevel ? 'Selected' : 'Select Credit'}</span>
+                                    <span className="font-mono">({credit.points} pts)</span>
+                                </div>
+                            </button>
+                        </div>
+                    )}
                 </div>
             );
         }
@@ -3067,6 +3189,59 @@
                                                 Pro Tips
                                             </h3>
                                             <p className="text-amber-700 leading-relaxed">{credit.tips}</p>
+                                        </div>
+                                    )}
+
+                                    {/* Common Mistakes */}
+                                    {credit.commonMistakes && credit.commonMistakes.length > 0 && (
+                                        <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl p-5">
+                                            <h3 className="font-semibold text-red-800 mb-3 flex items-center gap-2">
+                                                <i className="fa-solid fa-triangle-exclamation text-red-500"></i>
+                                                Common Mistakes to Avoid
+                                            </h3>
+                                            <ul className="space-y-2">
+                                                {credit.commonMistakes.map((mistake, idx) => (
+                                                    <li key={idx} className="flex items-start gap-2 text-red-700">
+                                                        <i className="fa-solid fa-xmark text-red-400 mt-1 flex-shrink-0"></i>
+                                                        <span>{mistake}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+
+                                    {/* Project Phase & Difficulty */}
+                                    {(credit.projectPhases || credit.difficulty) && (
+                                        <div className="grid grid-cols-2 gap-4">
+                                            {credit.projectPhases && (
+                                                <div className="section-card rounded-xl p-4">
+                                                    <h4 className="font-medium text-gray-700 mb-2 flex items-center gap-2">
+                                                        <i className="fa-solid fa-clock text-purple-500"></i>
+                                                        Key Project Phases
+                                                    </h4>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {credit.projectPhases.map((phase, idx) => (
+                                                            <span key={idx} className="px-2 py-1 bg-purple-100 text-purple-700 rounded-lg text-sm">
+                                                                {phase}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {credit.difficulty && (
+                                                <div className="section-card rounded-xl p-4">
+                                                    <h4 className="font-medium text-gray-700 mb-2 flex items-center gap-2">
+                                                        <i className="fa-solid fa-gauge text-blue-500"></i>
+                                                        Difficulty
+                                                    </h4>
+                                                    <span className={`px-3 py-1 rounded-lg text-sm font-medium
+                                                        ${credit.difficulty === 'Easy' ? 'bg-green-100 text-green-700' :
+                                                          credit.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
+                                                          'bg-red-100 text-red-700'}`}>
+                                                        {credit.difficulty}
+                                                    </span>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
 
@@ -3301,7 +3476,32 @@
         }
 
         // Credits List Component
-        function CreditsList({ category, selectedCredits, onToggleCredit, onViewCreditDetails }) {
+        function CreditsList({ category, selectedCredits, onSelectCreditLevel, onViewCreditDetails, phaseFilter }) {
+            // Filter credits by project phase if filter is active
+            const filteredCredits = phaseFilter && phaseFilter !== 'all'
+                ? category.credits.filter(credit =>
+                    credit.projectPhases && credit.projectPhases.includes(phaseFilter)
+                )
+                : category.credits;
+
+            if (filteredCredits.length === 0) {
+                return (
+                    <div className="glass-card rounded-2xl p-6 shadow-lg">
+                        <div className="flex items-center gap-3 mb-4">
+                            <span className="text-3xl">{category.icon}</span>
+                            <div>
+                                <h2 className="font-display text-xl font-bold text-gray-800">{category.name}</h2>
+                                <p className="text-sm text-gray-500">{category.description}</p>
+                            </div>
+                        </div>
+                        <p className="text-center text-gray-400 py-8">
+                            <i className="fa-solid fa-filter-circle-xmark text-2xl mb-2 block"></i>
+                            No credits for this phase in {category.name}
+                        </p>
+                    </div>
+                );
+            }
+
             return (
                 <div className="glass-card rounded-2xl p-6 shadow-lg">
                     <div className="flex items-center justify-between mb-4">
@@ -3319,17 +3519,18 @@
                     </div>
 
                     <div className="space-y-3">
-                        {category.credits.map((credit, index) => {
+                        {filteredCredits.map((credit, index) => {
                             const creditKey = `${category.id}-${credit.id}`;
-                            const isSelected = selectedCredits[creditKey] > 0;
+                            const selection = selectedCredits[creditKey];
+                            const selectedLevel = selection ? selection.level : null;
 
                             return (
                                 <div key={credit.id} className="fade-in" style={{ animationDelay: `${index * 50}ms` }}>
                                     <CreditCard
                                         credit={credit}
                                         categoryId={category.id}
-                                        isSelected={isSelected}
-                                        onToggle={() => onToggleCredit(creditKey, credit.points)}
+                                        selectedLevel={selectedLevel}
+                                        onSelectLevel={(level, points) => onSelectCreditLevel(creditKey, level, points)}
                                         onViewDetails={() => onViewCreditDetails(credit, category)}
                                         colorClasses={category.colorClasses}
                                     />
@@ -3585,6 +3786,18 @@
             const [showCalculators, setShowCalculators] = useState(false);
             const [showExport, setShowExport] = useState(false);
             const [creditDetailModal, setCreditDetailModal] = useState({ isOpen: false, credit: null, category: null });
+            const [phaseFilter, setPhaseFilter] = useState('all');
+
+            // Project phases for filtering
+            const projectPhases = [
+                { id: 'all', name: 'All Phases', icon: 'fa-layer-group' },
+                { id: 'Concept', name: 'Concept', icon: 'fa-lightbulb' },
+                { id: 'Schematic', name: 'Schematic Design', icon: 'fa-pencil-ruler' },
+                { id: 'Design Dev', name: 'Design Development', icon: 'fa-drafting-compass' },
+                { id: 'Documentation', name: 'Documentation', icon: 'fa-file-lines' },
+                { id: 'Construction', name: 'Construction', icon: 'fa-hammer' },
+                { id: 'Handover', name: 'Handover', icon: 'fa-handshake' }
+            ];
 
             // Load from localStorage on mount
             useEffect(() => {
@@ -3593,7 +3806,18 @@
                     try {
                         const data = JSON.parse(saved);
                         setProjectName(data.projectName || 'My Green Star Project');
-                        setSelectedCredits(data.selectedCredits || {});
+                        // Handle both old format (points only) and new format (level + points)
+                        const credits = data.selectedCredits || {};
+                        const normalizedCredits = {};
+                        Object.entries(credits).forEach(([key, value]) => {
+                            if (typeof value === 'number') {
+                                // Old format - convert to new
+                                normalizedCredits[key] = { level: 'credit', points: value };
+                            } else {
+                                normalizedCredits[key] = value;
+                            }
+                        });
+                        setSelectedCredits(normalizedCredits);
                     } catch (e) {
                         console.error('Failed to load saved project:', e);
                     }
@@ -3608,15 +3832,28 @@
 
             // Calculate totals
             const totalPoints = useMemo(() => {
-                return Object.values(selectedCredits).reduce((sum, points) => sum + points, 0);
+                return Object.values(selectedCredits).reduce((sum, selection) => {
+                    return sum + (selection.points || 0);
+                }, 0);
             }, [selectedCredits]);
 
             const getCategoryPoints = (categoryId) => {
                 const category = categoriesData.find(c => c.id === categoryId);
                 return category.credits.reduce((sum, credit) => {
                     const key = `${categoryId}-${credit.id}`;
-                    return sum + (selectedCredits[key] || 0);
+                    const selection = selectedCredits[key];
+                    return sum + (selection ? selection.points : 0);
                 }, 0);
+            };
+
+            const handleSelectCreditLevel = (creditKey, level, points) => {
+                setSelectedCredits(prev => {
+                    if (level === null) {
+                        const { [creditKey]: _, ...rest } = prev;
+                        return rest;
+                    }
+                    return { ...prev, [creditKey]: { level, points } };
+                });
             };
 
             const handleToggleCredit = (creditKey, points) => {
@@ -3625,7 +3862,7 @@
                         const { [creditKey]: _, ...rest } = prev;
                         return rest;
                     }
-                    return { ...prev, [creditKey]: points };
+                    return { ...prev, [creditKey]: { level: 'credit', points } };
                 });
             };
 
@@ -3648,7 +3885,7 @@
 
             // Get if current modal credit is selected
             const isModalCreditSelected = creditDetailModal.credit && creditDetailModal.category
-                ? selectedCredits[`${creditDetailModal.category.id}-${creditDetailModal.credit.id}`] > 0
+                ? !!selectedCredits[`${creditDetailModal.category.id}-${creditDetailModal.credit.id}`]
                 : false;
 
             return (
@@ -3685,13 +3922,40 @@
                             ))}
                         </div>
 
+                        {/* Project Phase Filter */}
+                        <div className="glass-card rounded-xl p-4 mt-6">
+                            <div className="flex items-center gap-2 mb-3">
+                                <i className="fa-solid fa-clock text-purple-500"></i>
+                                <span className="font-medium text-gray-700">Filter by Project Phase</span>
+                                <span className="text-xs text-gray-400 ml-2">Focus on credits relevant to your current stage</span>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {projectPhases.map(phase => (
+                                    <button
+                                        key={phase.id}
+                                        onClick={() => setPhaseFilter(phase.id)}
+                                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2
+                                            ${phaseFilter === phase.id
+                                                ? 'bg-purple-500 text-white shadow-md'
+                                                : 'bg-white border border-gray-200 text-gray-600 hover:bg-purple-50 hover:border-purple-300'
+                                            }`}
+                                    >
+                                        <i className={`fa-solid ${phase.icon} text-xs`}></i>
+                                        <span className="hidden sm:inline">{phase.name}</span>
+                                        <span className="sm:hidden">{phase.id === 'all' ? 'All' : phase.id}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
                         {/* Credits List */}
                         <div className="mt-6">
                             <CreditsList
                                 category={activeCateg}
                                 selectedCredits={selectedCredits}
-                                onToggleCredit={handleToggleCredit}
+                                onSelectCreditLevel={handleSelectCreditLevel}
                                 onViewCreditDetails={handleViewCreditDetails}
+                                phaseFilter={phaseFilter}
                             />
                         </div>
 
