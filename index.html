@@ -4370,9 +4370,9 @@
         }
 
         // Credits List Component
-        function CreditsList({ category, selectedCredits, onSelectCreditLevel, onViewCreditDetails, phaseFilter, searchQuery, showQuickWins }) {
-            // Filter credits by multiple criteria
-            const filteredCredits = category.credits.filter(credit => {
+        function CreditsList({ categories, activeCategory, selectedCredits, onSelectCreditLevel, onViewCreditDetails, phaseFilter, searchQuery, showQuickWins, showRequired }) {
+            // Filter function for credits
+            const filterCredits = (credit) => {
                 // Phase filter
                 if (phaseFilter && phaseFilter !== 'all') {
                     if (!credit.projectPhases || !credit.projectPhases.includes(phaseFilter)) {
@@ -4380,9 +4380,16 @@
                     }
                 }
 
-                // Quick wins filter (Easy difficulty or high points-to-difficulty ratio)
+                // Quick wins filter (Easy difficulty)
                 if (showQuickWins) {
                     if (credit.difficulty !== 'Easy') {
+                        return false;
+                    }
+                }
+
+                // Minimum expectations filter (Required credits only)
+                if (showRequired) {
+                    if (!credit.required) {
                         return false;
                     }
                 }
@@ -4405,62 +4412,77 @@
                 }
 
                 return true;
-            });
+            };
 
-            if (filteredCredits.length === 0) {
+            // Get categories to display
+            const categoriesToShow = activeCategory === 'all'
+                ? categories
+                : categories.filter(c => c.id === activeCategory);
+
+            // Check if any credits match filters
+            const hasAnyCredits = categoriesToShow.some(cat =>
+                cat.credits.some(filterCredits)
+            );
+
+            if (!hasAnyCredits) {
                 return (
-                    <div className="glass-card rounded-2xl p-6 shadow-lg">
-                        <div className="flex items-center gap-3 mb-4">
-                            <span className="text-3xl">{category.icon}</span>
-                            <div>
-                                <h2 className="font-display text-xl font-bold text-gray-800">{category.name}</h2>
-                                <p className="text-sm text-gray-500">{category.description}</p>
-                            </div>
-                        </div>
-                        <p className="text-center text-gray-400 py-8">
-                            <i className="fa-solid fa-filter-circle-xmark text-2xl mb-2 block"></i>
-                            No credits for this phase in {category.name}
+                    <div className="glass-card rounded-2xl p-6 shadow-lg dark:bg-gray-800/80">
+                        <p className="text-center text-gray-400 py-12">
+                            <i className="fa-solid fa-filter-circle-xmark text-4xl mb-3 block"></i>
+                            No credits match your current filters
+                            <br />
+                            <span className="text-sm">Try adjusting your search or filter settings</span>
                         </p>
                     </div>
                 );
             }
 
             return (
-                <div className="glass-card rounded-2xl p-6 shadow-lg">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                            <span className="text-3xl">{category.icon}</span>
-                            <div>
-                                <h2 className="font-display text-xl font-bold text-gray-800">{category.name}</h2>
-                                <p className="text-sm text-gray-500">{category.description}</p>
-                            </div>
-                        </div>
-                        <div className={`${category.colorClasses.bgLight} ${category.colorClasses.text} px-4 py-2 rounded-lg`}>
-                            <span className="font-mono font-bold">{category.maxPoints}</span>
-                            <span className="text-sm ml-1">points max</span>
-                        </div>
-                    </div>
+                <div className="space-y-6">
+                    {categoriesToShow.map(category => {
+                        const filteredCredits = category.credits.filter(filterCredits);
 
-                    <div className="space-y-3">
-                        {filteredCredits.map((credit, index) => {
-                            const creditKey = `${category.id}-${credit.id}`;
-                            const selection = selectedCredits[creditKey];
-                            const selectedLevel = selection ? selection.level : null;
+                        if (filteredCredits.length === 0) return null;
 
-                            return (
-                                <div key={credit.id} className="fade-in" style={{ animationDelay: `${index * 50}ms` }}>
-                                    <CreditCard
-                                        credit={credit}
-                                        categoryId={category.id}
-                                        selectedLevel={selectedLevel}
-                                        onSelectLevel={(level, points) => onSelectCreditLevel(creditKey, level, points)}
-                                        onViewDetails={() => onViewCreditDetails(credit, category)}
-                                        colorClasses={category.colorClasses}
-                                    />
+                        return (
+                            <div key={category.id} className="glass-card rounded-2xl p-6 shadow-lg dark:bg-gray-800/80">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-3xl">{category.icon}</span>
+                                        <div>
+                                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">{category.name}</h2>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">{category.description}</p>
+                                        </div>
+                                    </div>
+                                    <div className={`${category.colorClasses.bgLight} ${category.colorClasses.text} px-4 py-2 rounded-lg`}>
+                                        <span className="font-mono font-bold">{filteredCredits.length}</span>
+                                        <span className="text-sm ml-1">credits</span>
+                                    </div>
                                 </div>
-                            );
-                        })}
-                    </div>
+
+                                <div className="space-y-3">
+                                    {filteredCredits.map((credit, index) => {
+                                        const creditKey = `${category.id}-${credit.id}`;
+                                        const selection = selectedCredits[creditKey];
+                                        const selectedLevel = selection ? selection.level : null;
+
+                                        return (
+                                            <div key={credit.id} className="fade-in" style={{ animationDelay: `${index * 30}ms` }}>
+                                                <CreditCard
+                                                    credit={credit}
+                                                    categoryId={category.id}
+                                                    selectedLevel={selectedLevel}
+                                                    onSelectLevel={(level, points) => onSelectCreditLevel(creditKey, level, points)}
+                                                    onViewDetails={() => onViewCreditDetails(credit, category)}
+                                                    colorClasses={category.colorClasses}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             );
         }
@@ -5048,7 +5070,7 @@
         // Main App Component
         function App() {
             const [projectName, setProjectName] = useState('My Green Star Project');
-            const [activeCategory, setActiveCategory] = useState('responsible');
+            const [activeCategory, setActiveCategory] = useState('all'); // 'all' shows all categories
             const [selectedCredits, setSelectedCredits] = useState({});
             const [showCalculators, setShowCalculators] = useState(false);
             const [showExport, setShowExport] = useState(false);
@@ -5057,6 +5079,7 @@
             const [searchQuery, setSearchQuery] = useState('');
             const [darkMode, setDarkMode] = useState(false);
             const [showQuickWins, setShowQuickWins] = useState(false);
+            const [showRequired, setShowRequired] = useState(false); // Minimum expectations filter
             const [creditNotes, setCreditNotes] = useState({});
             const [creditDocs, setCreditDocs] = useState({});
             const [creditAssignments, setCreditAssignments] = useState({});
@@ -5164,8 +5187,6 @@
                     handleToggleCredit(creditKey, creditDetailModal.credit.points);
                 }
             };
-
-            const activeCateg = categoriesData.find(c => c.id === activeCategory);
 
             // Get if current modal credit is selected
             const isModalCreditSelected = creditDetailModal.credit && creditDetailModal.category
@@ -5283,18 +5304,66 @@
                             {/* Filters */}
                             <div className="mb-4">
                                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Filters</label>
-                                <button
-                                    onClick={() => setShowQuickWins(!showQuickWins)}
-                                    className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
-                                        ${showQuickWins
-                                            ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md'
-                                            : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-amber-50'
-                                        }`}
-                                >
-                                    <i className="fa-solid fa-bolt"></i>
-                                    <span>Quick Wins (Easy Credits)</span>
-                                    {showQuickWins && <i className="fa-solid fa-check ml-auto"></i>}
-                                </button>
+                                <div className="space-y-2">
+                                    <button
+                                        onClick={() => setShowQuickWins(!showQuickWins)}
+                                        className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
+                                            ${showQuickWins
+                                                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md'
+                                                : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-amber-50'
+                                            }`}
+                                    >
+                                        <i className="fa-solid fa-bolt"></i>
+                                        <span>Quick Wins (Easy)</span>
+                                        {showQuickWins && <i className="fa-solid fa-check ml-auto"></i>}
+                                    </button>
+                                    <button
+                                        onClick={() => setShowRequired(!showRequired)}
+                                        className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
+                                            ${showRequired
+                                                ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-md'
+                                                : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-red-50'
+                                            }`}
+                                    >
+                                        <i className="fa-solid fa-star"></i>
+                                        <span>Minimum Expectations</span>
+                                        {showRequired && <i className="fa-solid fa-check ml-auto"></i>}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Categories */}
+                            <div className="mb-4">
+                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Categories</label>
+                                <div className="space-y-1">
+                                    <button
+                                        onClick={() => setActiveCategory('all')}
+                                        className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
+                                            ${activeCategory === 'all'
+                                                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md'
+                                                : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-gray-600'
+                                            }`}
+                                    >
+                                        <i className="fa-solid fa-layer-group"></i>
+                                        <span className="flex-grow text-left">All Credits</span>
+                                        <span className="text-xs font-mono opacity-70">{totalPoints}/170</span>
+                                    </button>
+                                    {categoriesData.map(category => (
+                                        <button
+                                            key={category.id}
+                                            onClick={() => setActiveCategory(category.id)}
+                                            className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
+                                                ${activeCategory === category.id
+                                                    ? `${category.colorClasses.bgLight} ${category.colorClasses.text} shadow-sm`
+                                                    : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
+                                                }`}
+                                        >
+                                            <span className="text-lg">{category.icon}</span>
+                                            <span className="flex-grow text-left truncate">{category.name}</span>
+                                            <span className="text-xs font-mono opacity-70">{getCategoryPoints(category.id)}/{category.maxPoints}</span>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
 
                             {/* Project Phase Filter */}
@@ -5313,28 +5382,6 @@
                                         >
                                             <i className={`fa-solid ${phase.icon} text-xs w-4`}></i>
                                             <span className="truncate">{phase.name}</span>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Categories */}
-                            <div className="mb-4">
-                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Categories</label>
-                                <div className="space-y-1">
-                                    {categoriesData.map(category => (
-                                        <button
-                                            key={category.id}
-                                            onClick={() => setActiveCategory(category.id)}
-                                            className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
-                                                ${activeCategory === category.id
-                                                    ? `${category.colorClasses.bgLight} ${category.colorClasses.text} shadow-sm`
-                                                    : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
-                                                }`}
-                                        >
-                                            <span className="text-lg">{category.icon}</span>
-                                            <span className="flex-grow text-left truncate">{category.name}</span>
-                                            <span className="text-xs font-mono opacity-70">{getCategoryPoints(category.id)}/{category.maxPoints}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -5383,13 +5430,15 @@
                                 {/* Main Content Area - Credits, Timeline, or Matrix */}
                                 {activeView === 'credits' && (
                                     <CreditsList
-                                        category={activeCateg}
+                                        categories={categoriesData}
+                                        activeCategory={activeCategory}
                                         selectedCredits={selectedCredits}
                                         onSelectCreditLevel={handleSelectCreditLevel}
                                         onViewCreditDetails={handleViewCreditDetails}
                                         phaseFilter={phaseFilter}
                                         searchQuery={searchQuery}
                                         showQuickWins={showQuickWins}
+                                        showRequired={showRequired}
                                     />
                                 )}
 
