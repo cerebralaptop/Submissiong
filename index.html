@@ -6431,36 +6431,20 @@
 
                             {/* Target Star Rating Selector */}
                             <div className="mb-4 p-3 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl border border-amber-200 dark:border-amber-800">
-                                <div className="flex items-center justify-between mb-2">
+                                <div className="mb-2">
                                     <span className="text-xs font-medium text-amber-700 dark:text-amber-300">Target Rating</span>
-                                    <span className="text-xs text-amber-600 dark:text-amber-400">
-                                        {targetStarRating === 4 ? '15+ pts' : targetStarRating === 5 ? '35+ pts' : '70+ pts'}
-                                    </span>
                                 </div>
-                                <div className="flex gap-2">
-                                    {[4, 5, 6].map(stars => {
-                                        const isSelected = targetStarRating === stars;
-                                        const targetPoints = stars === 4 ? 15 : stars === 5 ? 35 : 70;
-                                        const isAchieved = totalPoints >= targetPoints;
-                                        return (
-                                            <button
-                                                key={stars}
-                                                onClick={() => setTargetStarRating(stars)}
-                                                className={`flex-1 py-2 px-2 rounded-lg text-sm font-medium transition-all flex flex-col items-center gap-1
-                                                    ${isSelected
-                                                        ? 'bg-amber-500 text-white shadow-md'
-                                                        : 'bg-white dark:bg-gray-700 border border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/30'
-                                                    }`}
-                                            >
-                                                <div className="flex gap-0.5">
-                                                    {[...Array(stars)].map((_, i) => (
-                                                        <i key={i} className={`fa-solid fa-star text-xs ${isSelected ? 'text-white' : 'text-amber-400'}`}></i>
-                                                    ))}
-                                                </div>
-                                                {isAchieved && <i className="fa-solid fa-check text-xs text-green-500"></i>}
-                                            </button>
-                                        );
-                                    })}
+                                <div className="relative">
+                                    <select
+                                        value={targetStarRating}
+                                        onChange={(e) => setTargetStarRating(Number(e.target.value))}
+                                        className="w-full py-2 px-3 pr-8 rounded-lg border-2 border-amber-300 dark:border-amber-600 bg-white dark:bg-gray-700 text-amber-700 dark:text-amber-300 text-sm font-medium appearance-none cursor-pointer hover:border-amber-400 dark:hover:border-amber-500 transition-all"
+                                    >
+                                        <option value={4}>⭐⭐⭐⭐ 4 Star (15+ pts)</option>
+                                        <option value={5}>⭐⭐⭐⭐⭐ 5 Star (35+ pts)</option>
+                                        <option value={6}>⭐⭐⭐⭐⭐⭐ 6 Star (70+ pts)</option>
+                                    </select>
+                                    <i className="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 dark:text-amber-400 text-xs pointer-events-none"></i>
                                 </div>
                                 {(() => {
                                     const targetPoints = targetStarRating === 4 ? 15 : targetStarRating === 5 ? 35 : 70;
