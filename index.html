@@ -4668,6 +4668,147 @@
             );
         }
 
+        // Documentation View Component - Shows required documentation for selected credits
+        function DocumentationView({ categories, selectedCredits, creditDocs, onDocsChange, onViewCreditDetails }) {
+            // Get all selected credits with their documentation
+            const selectedCreditsList = [];
+            categories.forEach(category => {
+                category.credits.forEach(credit => {
+                    const creditKey = `${category.id}-${credit.id}`;
+                    if (selectedCredits[creditKey] && credit.documentation && credit.documentation.length > 0) {
+                        selectedCreditsList.push({ credit, category, creditKey });
+                    }
+                });
+            });
+
+            // Calculate overall progress
+            const totalDocs = selectedCreditsList.reduce((sum, { credit }) => sum + credit.documentation.length, 0);
+            const completedDocs = selectedCreditsList.reduce((sum, { creditKey, credit }) => {
+                const docs = creditDocs[creditKey] || {};
+                return sum + credit.documentation.filter((_, idx) => docs[idx]).length;
+            }, 0);
+
+            const handleDocToggle = (creditKey, docIndex) => {
+                const currentDocs = creditDocs[creditKey] || {};
+                const newDocs = { ...currentDocs, [docIndex]: !currentDocs[docIndex] };
+                onDocsChange(creditKey, newDocs);
+            };
+
+            return (
+                <div className="glass-card rounded-2xl p-6 shadow-lg dark:bg-gray-800/80">
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                            <i className="fa-solid fa-file-lines text-2xl text-purple-500"></i>
+                            <div>
+                                <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">Documentation Checklist</h2>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Track required documentation for your selected credits</p>
+                            </div>
+                        </div>
+                        {totalDocs > 0 && (
+                            <div className="text-right">
+                                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                                    {Math.round((completedDocs / totalDocs) * 100)}%
+                                </div>
+                                <div className="text-xs text-gray-500">{completedDocs} of {totalDocs} complete</div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Overall Progress Bar */}
+                    {totalDocs > 0 && (
+                        <div className="mb-6">
+                            <div className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                <div
+                                    className="h-full bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-500"
+                                    style={{ width: `${(completedDocs / totalDocs) * 100}%` }}
+                                ></div>
+                            </div>
+                        </div>
+                    )}
+
+                    {selectedCreditsList.length === 0 ? (
+                        <div className="text-center py-12">
+                            <i className="fa-solid fa-folder-open text-4xl text-gray-300 mb-3"></i>
+                            <p className="text-gray-500">No credits selected yet</p>
+                            <p className="text-sm text-gray-400">Select credits from the Credits view to see required documentation</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-6">
+                            {selectedCreditsList.map(({ credit, category, creditKey }) => {
+                                const docs = creditDocs[creditKey] || {};
+                                const creditCompleted = credit.documentation.filter((_, idx) => docs[idx]).length;
+                                const creditTotal = credit.documentation.length;
+                                const isComplete = creditCompleted === creditTotal;
+
+                                return (
+                                    <div key={creditKey} className={`rounded-xl border-2 overflow-hidden transition-all ${isComplete ? 'border-green-300 bg-green-50/50 dark:border-green-700 dark:bg-green-900/20' : 'border-gray-200 dark:border-gray-700'}`}>
+                                        {/* Credit Header */}
+                                        <div
+                                            className={`p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${isComplete ? 'bg-green-50 dark:bg-green-900/30' : 'bg-gray-50 dark:bg-gray-800'}`}
+                                            onClick={() => onViewCreditDetails(credit, category)}
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                    <span className="text-2xl">{category.icon}</span>
+                                                    <div>
+                                                        <h3 className="font-semibold text-gray-800 dark:text-white">{credit.name}</h3>
+                                                        <p className="text-xs text-gray-500">{category.name}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <span className={`text-sm font-medium ${isComplete ? 'text-green-600 dark:text-green-400' : 'text-gray-500'}`}>
+                                                        {creditCompleted}/{creditTotal}
+                                                    </span>
+                                                    {isComplete && <i className="fa-solid fa-circle-check text-green-500 text-xl"></i>}
+                                                </div>
+                                            </div>
+                                            {/* Mini progress bar */}
+                                            <div className="mt-2 w-full h-1.5 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                                                <div
+                                                    className={`h-full transition-all ${isComplete ? 'bg-green-500' : 'bg-purple-500'}`}
+                                                    style={{ width: `${(creditCompleted / creditTotal) * 100}%` }}
+                                                ></div>
+                                            </div>
+                                        </div>
+
+                                        {/* Documentation Items */}
+                                        <div className="p-4 pt-2 space-y-2">
+                                            {credit.documentation.map((doc, idx) => {
+                                                const isChecked = docs[idx];
+                                                return (
+                                                    <div
+                                                        key={idx}
+                                                        onClick={() => handleDocToggle(creditKey, idx)}
+                                                        className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all
+                                                            ${isChecked
+                                                                ? 'bg-green-100 dark:bg-green-900/40'
+                                                                : 'bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600'
+                                                            }`}
+                                                    >
+                                                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all
+                                                            ${isChecked
+                                                                ? 'bg-green-500 border-green-500'
+                                                                : 'border-gray-300 dark:border-gray-500'
+                                                            }`}
+                                                        >
+                                                            {isChecked && <i className="fa-solid fa-check text-white text-xs"></i>}
+                                                        </div>
+                                                        <span className={`text-sm ${isChecked ? 'text-green-700 dark:text-green-300 line-through' : 'text-gray-700 dark:text-gray-300'}`}>
+                                                            {doc}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
         // Calculators Modal Component
         function CalculatorsModal({ isOpen, onClose }) {
             if (!isOpen) return null;
@@ -5119,11 +5260,12 @@
                             {/* View Toggle */}
                             <div className="mb-4">
                                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">View</label>
-                                <div className="grid grid-cols-3 gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                                <div className="grid grid-cols-4 gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
                                     {[
                                         { id: 'credits', icon: 'fa-grip', label: 'Cards' },
                                         { id: 'timeline', icon: 'fa-timeline', label: 'Timeline' },
-                                        { id: 'matrix', icon: 'fa-table-cells', label: 'Matrix' }
+                                        { id: 'matrix', icon: 'fa-table-cells', label: 'Matrix' },
+                                        { id: 'docs', icon: 'fa-file-lines', label: 'Docs' }
                                     ].map(view => (
                                         <button
                                             key={view.id}
@@ -5268,6 +5410,16 @@
                                         onAssignmentChange={(creditKey, assignment) => {
                                             setCreditAssignments(prev => ({ ...prev, [creditKey]: assignment }));
                                         }}
+                                        onViewCreditDetails={handleViewCreditDetails}
+                                    />
+                                )}
+
+                                {activeView === 'docs' && (
+                                    <DocumentationView
+                                        categories={categoriesData}
+                                        selectedCredits={selectedCredits}
+                                        creditDocs={creditDocs}
+                                        onDocsChange={(key, docs) => setCreditDocs(prev => ({ ...prev, [key]: docs }))}
                                         onViewCreditDetails={handleViewCreditDetails}
                                     />
                                 )}
