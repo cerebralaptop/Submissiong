@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Green Star Submission Assistant</title>
+    <title>Green Star Buildings | Submission Assistant</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts - Clean modern fonts like GBCA -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -29,19 +29,27 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        'display': ['Outfit', 'sans-serif'],
+                        'display': ['Plus Jakarta Sans', 'sans-serif'],
                         'body': ['Inter', 'system-ui', 'sans-serif'],
-                        'mono': ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
-                        'forest': {
-                            50: '#ecfdf5',
-                            100: '#d1fae5',
-                            500: '#10b981',
-                            600: '#059669',
-                            700: '#047857',
-                            800: '#065f46',
-                            900: '#064e3b',
+                        // GBCA Brand Colors
+                        'gbca': {
+                            'green': '#1B4D3E',      // Primary dark green
+                            'green-light': '#2D7A5F', // Lighter green
+                            'teal': '#0D9488',       // Accent teal
+                            'dark': '#1A1A2E',       // Dark text
+                        },
+                        // Category Colors (matching Green Star Buildings)
+                        'cat': {
+                            'responsible': '#D97706',  // Amber/Orange
+                            'healthy': '#059669',      // Green
+                            'resilient': '#2563EB',    // Blue
+                            'positive': '#DC2626',     // Red
+                            'places': '#7C3AED',       // Purple
+                            'people': '#DB2777',       // Pink
+                            'nature': '#0D9488',       // Teal
+                            'leadership': '#4F46E5',   // Indigo
                         }
                     }
                 }
@@ -56,14 +64,24 @@
 
         body {
             font-family: 'Inter', system-ui, sans-serif;
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 50%, #f0f9ff 100%);
+            background: #F8FAFC;
             min-height: 100vh;
         }
 
+        .font-display {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* GBCA-style gradient header */
+        .gbca-header {
+            background: linear-gradient(135deg, #1B4D3E 0%, #2D7A5F 50%, #0D9488 100%);
+        }
+
+        /* Clean card style */
         .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .category-badge {
@@ -72,20 +90,22 @@
 
         .category-badge:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .credit-card {
             transition: all 0.2s ease-in-out;
+            border: 1px solid #E2E8F0;
         }
 
         .credit-card:hover {
-            background-color: rgba(243, 244, 246, 0.8);
+            border-color: #CBD5E1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .credit-card.selected {
-            background-color: rgba(16, 185, 129, 0.1);
-            border-color: #10b981;
+            background-color: rgba(27, 77, 62, 0.05);
+            border-color: #1B4D3E;
         }
 
         .circular-progress {
@@ -465,14 +485,15 @@
             {
                 id: 'responsible',
                 name: 'Responsible',
-                icon: '🏗️',
-                color: 'blue',
+                icon: '🔧',
+                faIcon: 'fa-solid fa-gear',
+                color: 'amber',
                 colorClasses: {
-                    bg: 'bg-blue-500',
-                    bgLight: 'bg-blue-100',
-                    text: 'text-blue-600',
-                    border: 'border-blue-500',
-                    hover: 'hover:bg-blue-50'
+                    bg: 'bg-amber-500',
+                    bgLight: 'bg-amber-50',
+                    text: 'text-amber-600',
+                    border: 'border-amber-500',
+                    hover: 'hover:bg-amber-50'
                 },
                 maxPoints: 35,
                 description: 'Responsible sourcing, construction practices, and materials',
@@ -1132,14 +1153,15 @@
             {
                 id: 'healthy',
                 name: 'Healthy',
-                icon: '💚',
-                color: 'red',
+                icon: '❤️',
+                faIcon: 'fa-solid fa-heart-pulse',
+                color: 'green',
                 colorClasses: {
-                    bg: 'bg-red-500',
-                    bgLight: 'bg-red-100',
-                    text: 'text-red-600',
-                    border: 'border-red-500',
-                    hover: 'hover:bg-red-50'
+                    bg: 'bg-emerald-500',
+                    bgLight: 'bg-emerald-50',
+                    text: 'text-emerald-600',
+                    border: 'border-emerald-500',
+                    hover: 'hover:bg-emerald-50'
                 },
                 maxPoints: 25,
                 description: 'Indoor environment quality and occupant health',
@@ -1553,13 +1575,14 @@
                 id: 'resilient',
                 name: 'Resilient',
                 icon: '🛡️',
-                color: 'orange',
+                faIcon: 'fa-solid fa-shield-halved',
+                color: 'blue',
                 colorClasses: {
-                    bg: 'bg-orange-500',
-                    bgLight: 'bg-orange-100',
-                    text: 'text-orange-600',
-                    border: 'border-orange-500',
-                    hover: 'hover:bg-orange-50'
+                    bg: 'bg-blue-500',
+                    bgLight: 'bg-blue-50',
+                    text: 'text-blue-600',
+                    border: 'border-blue-500',
+                    hover: 'hover:bg-blue-50'
                 },
                 maxPoints: 15,
                 description: 'Climate adaptation and resilience',
@@ -1900,13 +1923,14 @@
                 id: 'positive',
                 name: 'Positive',
                 icon: '⚡',
-                color: 'green',
+                faIcon: 'fa-solid fa-bolt',
+                color: 'red',
                 colorClasses: {
-                    bg: 'bg-green-500',
-                    bgLight: 'bg-green-100',
-                    text: 'text-green-600',
-                    border: 'border-green-500',
-                    hover: 'hover:bg-green-50'
+                    bg: 'bg-red-500',
+                    bgLight: 'bg-red-50',
+                    text: 'text-red-600',
+                    border: 'border-red-500',
+                    hover: 'hover:bg-red-50'
                 },
                 maxPoints: 40,
                 description: 'Energy, carbon, and resource efficiency',
@@ -2451,11 +2475,12 @@
             {
                 id: 'places',
                 name: 'Places',
-                icon: '🏛️',
+                icon: '📍',
+                faIcon: 'fa-solid fa-location-dot',
                 color: 'purple',
                 colorClasses: {
                     bg: 'bg-purple-500',
-                    bgLight: 'bg-purple-100',
+                    bgLight: 'bg-purple-50',
                     text: 'text-purple-600',
                     border: 'border-purple-500',
                     hover: 'hover:bg-purple-50'
@@ -2734,10 +2759,11 @@
                 id: 'people',
                 name: 'People',
                 icon: '👥',
+                faIcon: 'fa-solid fa-users',
                 color: 'pink',
                 colorClasses: {
                     bg: 'bg-pink-500',
-                    bgLight: 'bg-pink-100',
+                    bgLight: 'bg-pink-50',
                     text: 'text-pink-600',
                     border: 'border-pink-500',
                     hover: 'hover:bg-pink-50'
@@ -3016,13 +3042,14 @@
                 id: 'nature',
                 name: 'Nature',
                 icon: '🌿',
-                color: 'emerald',
+                faIcon: 'fa-solid fa-leaf',
+                color: 'teal',
                 colorClasses: {
-                    bg: 'bg-emerald-500',
-                    bgLight: 'bg-emerald-100',
-                    text: 'text-emerald-600',
-                    border: 'border-emerald-500',
-                    hover: 'hover:bg-emerald-50'
+                    bg: 'bg-teal-500',
+                    bgLight: 'bg-teal-50',
+                    text: 'text-teal-600',
+                    border: 'border-teal-500',
+                    hover: 'hover:bg-teal-50'
                 },
                 maxPoints: 20,
                 description: 'Ecological impact and biodiversity',
@@ -3365,13 +3392,14 @@
                 id: 'leadership',
                 name: 'Leadership',
                 icon: '🏆',
-                color: 'yellow',
+                faIcon: 'fa-solid fa-trophy',
+                color: 'indigo',
                 colorClasses: {
-                    bg: 'bg-yellow-500',
-                    bgLight: 'bg-yellow-100',
-                    text: 'text-yellow-600',
-                    border: 'border-yellow-500',
-                    hover: 'hover:bg-yellow-50'
+                    bg: 'bg-indigo-500',
+                    bgLight: 'bg-indigo-50',
+                    text: 'text-indigo-600',
+                    border: 'border-indigo-500',
+                    hover: 'hover:bg-indigo-50'
                 },
                 maxPoints: 5,
                 description: 'Innovation and market leadership',
@@ -6184,31 +6212,35 @@
             };
 
             return (
-                <header className="glass-card rounded-2xl p-4 shadow-lg mb-6">
+                <header className="gbca-header rounded-2xl p-5 shadow-lg mb-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
-                                <i className="fa-solid fa-leaf text-white text-xl"></i>
+                            {/* Green Star Logo */}
+                            <div className="flex items-center gap-1">
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M24 4L28.5 17.5H42L31 26.5L35.5 40L24 31L12.5 40L17 26.5L6 17.5H19.5L24 4Z" fill="white" opacity="0.9"/>
+                                    <circle cx="24" cy="24" r="8" fill="white" opacity="0.3"/>
+                                </svg>
                             </div>
                             <div>
-                                <h1 className="font-display text-xl font-bold text-gray-800">Green Star Assistant</h1>
-                                <p className="text-sm text-gray-500">Buildings v1.1 Submission Guide</p>
+                                <h1 className="font-display text-xl font-bold text-white tracking-tight">Green Star Buildings</h1>
+                                <p className="text-sm text-white/70">Submission Assistant v1.1</p>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                             {isEditing ? (
                                 <div className="flex items-center gap-2">
                                     <input
                                         type="text"
                                         value={tempName}
                                         onChange={(e) => setTempName(e.target.value)}
-                                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-green-500"
+                                        className="px-3 py-2 bg-white/20 border border-white/30 rounded-lg text-sm text-white placeholder-white/50 focus:outline-none focus:border-white/60"
                                         autoFocus
                                     />
                                     <button
                                         onClick={handleSave}
-                                        className="px-3 py-2 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600"
+                                        className="px-4 py-2 bg-white text-gbca-green rounded-lg text-sm font-semibold hover:bg-white/90 transition-colors"
                                     >
                                         Save
                                     </button>
@@ -6216,11 +6248,11 @@
                             ) : (
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                                    className="flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 transition-colors"
                                 >
-                                    <i className="fa-solid fa-building text-gray-600"></i>
-                                    <span className="font-medium text-gray-700">{projectName}</span>
-                                    <i className="fa-solid fa-pen text-xs text-gray-400"></i>
+                                    <i className="fa-solid fa-building text-white/80"></i>
+                                    <span className="font-medium text-white">{projectName}</span>
+                                    <i className="fa-solid fa-pen text-xs text-white/50"></i>
                                 </button>
                             )}
                         </div>
@@ -6686,11 +6718,13 @@
                         <div className="p-4">
                             {/* Logo & Project Name */}
                             <div className="flex items-center gap-3 mb-6">
-                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
-                                    <i className="fa-solid fa-leaf text-white text-lg"></i>
+                                <div className="w-10 h-10 rounded-xl gbca-header flex items-center justify-center shadow-lg">
+                                    <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M24 4L28.5 17.5H42L31 26.5L35.5 40L24 31L12.5 40L17 26.5L6 17.5H19.5L24 4Z" fill="white" opacity="0.9"/>
+                                    </svg>
                                 </div>
                                 <div className="flex-grow min-w-0">
-                                    <h1 className="font-display font-bold text-gray-800 dark:text-white text-sm">Green Star Assistant</h1>
+                                    <h1 className="font-display font-bold text-gray-800 dark:text-white text-sm">Green Star</h1>
                                     <input
                                         type="text"
                                         value={projectName}
@@ -6701,41 +6735,41 @@
                                 </div>
                             </div>
 
-                            {/* Score Display */}
-                            <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-xl p-4 mb-4">
+                            {/* Score Display - GBCA Style */}
+                            <div className="bg-gradient-to-br from-[#1B4D3E]/5 to-[#0D9488]/10 dark:from-[#1B4D3E]/30 dark:to-[#0D9488]/20 rounded-xl p-4 mb-4 border border-[#1B4D3E]/10">
                                 <div className="flex items-center justify-between mb-2">
                                     <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Current Score</span>
-                                    <span className="text-xs text-gray-500">{currentRating.label}</span>
+                                    <span className="text-xs font-semibold text-[#1B4D3E] dark:text-teal-400">{currentRating.label}</span>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <span className="text-3xl font-bold text-green-600 dark:text-green-400 font-mono">{totalPoints}</span>
+                                    <span className="text-3xl font-bold text-[#1B4D3E] dark:text-teal-400">{totalPoints}</span>
                                     <div className="flex gap-0.5">
                                         {[1,2,3,4,5,6].map(star => (
-                                            <i key={star} className={`fa-solid fa-star text-sm ${star <= currentRating.stars ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600'}`}></i>
+                                            <i key={star} className={`fa-solid fa-star text-sm ${star <= currentRating.stars ? 'text-[#1B4D3E] dark:text-teal-400' : 'text-gray-300 dark:text-gray-600'}`}></i>
                                         ))}
                                     </div>
                                 </div>
                                 <div className="mt-2 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                    <div className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all" style={{ width: `${Math.min(100, (totalPoints / 100) * 100)}%` }}></div>
+                                    <div className="h-full bg-gradient-to-r from-[#1B4D3E] to-[#0D9488] transition-all" style={{ width: `${Math.min(100, (totalPoints / 100) * 100)}%` }}></div>
                                 </div>
                             </div>
 
-                            {/* Target Star Rating Selector */}
-                            <div className="mb-4 p-3 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl border border-amber-200 dark:border-amber-800">
+                            {/* Target Star Rating Selector - GBCA Style */}
+                            <div className="mb-4 p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                                 <div className="mb-2">
-                                    <span className="text-xs font-medium text-amber-700 dark:text-amber-300">Target Rating</span>
+                                    <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Target Rating</span>
                                 </div>
                                 <div className="relative">
                                     <select
                                         value={targetStarRating}
                                         onChange={(e) => setTargetStarRating(Number(e.target.value))}
-                                        className="w-full py-2 px-3 pr-8 rounded-lg border-2 border-amber-300 dark:border-amber-600 bg-white dark:bg-gray-700 text-amber-700 dark:text-amber-300 text-sm font-medium appearance-none cursor-pointer hover:border-amber-400 dark:hover:border-amber-500 transition-all"
+                                        className="w-full py-2 px-3 pr-8 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-medium appearance-none cursor-pointer hover:border-[#1B4D3E] dark:hover:border-teal-500 transition-all focus:ring-2 focus:ring-[#1B4D3E]/20 focus:border-[#1B4D3E]"
                                     >
-                                        <option value={4}>⭐⭐⭐⭐ 4 Star (15+ pts)</option>
-                                        <option value={5}>⭐⭐⭐⭐⭐ 5 Star (35+ pts)</option>
-                                        <option value={6}>⭐⭐⭐⭐⭐⭐ 6 Star (70+ pts)</option>
+                                        <option value={4}>★★★★ 4 Star (15+ pts)</option>
+                                        <option value={5}>★★★★★ 5 Star (35+ pts)</option>
+                                        <option value={6}>★★★★★★ 6 Star (70+ pts)</option>
                                     </select>
-                                    <i className="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 dark:text-amber-400 text-xs pointer-events-none"></i>
+                                    <i className="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
                                 </div>
                                 {(() => {
                                     const targetPoints = targetStarRating === 4 ? 15 : targetStarRating === 5 ? 35 : 70;
@@ -6744,14 +6778,14 @@
                                     return (
                                         <div className="mt-3">
                                             <div className="flex justify-between text-xs mb-1">
-                                                <span className="text-amber-600 dark:text-amber-400">{totalPoints} / {targetPoints} pts</span>
-                                                <span className={remaining <= 0 ? 'text-green-600 dark:text-green-400 font-medium' : 'text-amber-600 dark:text-amber-400'}>
+                                                <span className="text-gray-600 dark:text-gray-400">{totalPoints} / {targetPoints} pts</span>
+                                                <span className={remaining <= 0 ? 'text-[#1B4D3E] dark:text-teal-400 font-semibold' : 'text-gray-500 dark:text-gray-400'}>
                                                     {remaining <= 0 ? 'Target Achieved!' : `${remaining} pts needed`}
                                                 </span>
                                             </div>
-                                            <div className="h-2 bg-amber-100 dark:bg-amber-900/30 rounded-full overflow-hidden">
+                                            <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
                                                 <div
-                                                    className={`h-full transition-all rounded-full ${remaining <= 0 ? 'bg-green-500' : 'bg-gradient-to-r from-amber-400 to-yellow-500'}`}
+                                                    className={`h-full transition-all rounded-full ${remaining <= 0 ? 'bg-[#1B4D3E]' : 'bg-gradient-to-r from-[#1B4D3E] to-[#0D9488]'}`}
                                                     style={{ width: `${progress}%` }}
                                                 ></div>
                                             </div>
