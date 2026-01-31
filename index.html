@@ -302,6 +302,150 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 320px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.95) 100%);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(0,0,0,0.1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 40;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-320px);
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            left: 320px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 48px;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s;
+            z-index: 41;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-toggle:hover {
+            background: #f0fdf4;
+        }
+
+        .sidebar-toggle.collapsed {
+            left: 0;
+        }
+
+        .main-content {
+            margin-left: 320px;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 100vh;
+        }
+
+        .main-content.sidebar-collapsed {
+            margin-left: 0;
+        }
+
+        body.dark-mode .sidebar {
+            background: linear-gradient(180deg, rgba(30,41,59,0.98) 0%, rgba(15,23,42,0.98) 100%);
+            border-right-color: rgba(255,255,255,0.1);
+        }
+
+        body.dark-mode .sidebar-toggle {
+            background: #1e293b;
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        body.dark-mode .sidebar-toggle:hover {
+            background: #334155;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 280px;
+            }
+            .sidebar.collapsed {
+                transform: translateX(-280px);
+            }
+            .sidebar-toggle {
+                left: 280px;
+            }
+            .sidebar-toggle.collapsed {
+                left: 0;
+            }
+            .main-content {
+                margin-left: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                max-width: 320px;
+            }
+            .sidebar.collapsed {
+                transform: translateX(-100%);
+            }
+            .sidebar-toggle {
+                left: 320px;
+            }
+            .sidebar-toggle.collapsed {
+                left: 0;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .main-content.sidebar-open {
+                margin-left: 0;
+            }
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 39;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s;
+            }
+            .sidebar-overlay.visible {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+
+        /* Scrollbar for sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.2);
+            border-radius: 3px;
+        }
+
+        body.dark-mode .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+        }
     </style>
 </head>
 <body>
@@ -4504,6 +4648,7 @@
             const [creditDocs, setCreditDocs] = useState({});
             const [creditAssignments, setCreditAssignments] = useState({});
             const [activeView, setActiveView] = useState('credits'); // 'credits' | 'timeline' | 'matrix'
+            const [sidebarOpen, setSidebarOpen] = useState(true);
 
             // Project phases for filtering
             const projectPhases = [
@@ -4614,213 +4759,278 @@
                 ? !!selectedCredits[`${creditDetailModal.category.id}-${creditDetailModal.credit.id}`]
                 : false;
 
-            return (
-                <div className={`min-h-screen p-4 md:p-6 lg:p-8 ${darkMode ? 'dark' : ''}`}>
-                    <div className="max-w-6xl mx-auto">
-                        <Header
-                            projectName={projectName}
-                            onProjectNameChange={setProjectName}
-                        />
+            // Get star rating
+            const getStarRating = (points) => {
+                if (points >= 100) return { stars: 6, label: 'World Leadership' };
+                if (points >= 85) return { stars: 5, label: 'Australian Excellence' };
+                if (points >= 60) return { stars: 4, label: 'Best Practice' };
+                if (points >= 45) return { stars: 3, label: 'Good Practice' };
+                if (points >= 30) return { stars: 2, label: 'Average Practice' };
+                if (points >= 15) return { stars: 1, label: 'Minimum Practice' };
+                return { stars: 0, label: 'Not Certified' };
+            };
 
-                        {/* Control Bar: Search, Filters, View Toggle, Dark Mode */}
-                        <div className="glass-card rounded-xl p-4 mt-6 dark:bg-gray-800/80">
-                            <div className="flex flex-col lg:flex-row gap-4">
-                                {/* Search */}
-                                <div className="flex-grow relative">
-                                    <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            const currentRating = getStarRating(totalPoints);
+
+            return (
+                <div className={`${darkMode ? 'dark' : ''}`}>
+                    {/* Mobile Overlay */}
+                    <div
+                        className={`sidebar-overlay ${sidebarOpen ? 'visible' : ''}`}
+                        onClick={() => setSidebarOpen(false)}
+                    />
+
+                    {/* Sidebar Toggle Button */}
+                    <button
+                        onClick={() => setSidebarOpen(!sidebarOpen)}
+                        className={`sidebar-toggle ${!sidebarOpen ? 'collapsed' : ''}`}
+                    >
+                        <i className={`fa-solid ${sidebarOpen ? 'fa-chevron-left' : 'fa-chevron-right'} text-gray-500 text-sm`}></i>
+                    </button>
+
+                    {/* Collapsible Sidebar */}
+                    <aside className={`sidebar ${!sidebarOpen ? 'collapsed' : ''}`}>
+                        <div className="p-4">
+                            {/* Logo & Project Name */}
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+                                    <i className="fa-solid fa-leaf text-white text-lg"></i>
+                                </div>
+                                <div className="flex-grow min-w-0">
+                                    <h1 className="font-display font-bold text-gray-800 dark:text-white text-sm">Green Star Assistant</h1>
                                     <input
                                         type="text"
-                                        placeholder="Search credits by name, description, or keyword..."
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                        value={projectName}
+                                        onChange={(e) => setProjectName(e.target.value)}
+                                        className="text-xs text-gray-500 dark:text-gray-400 bg-transparent border-none p-0 w-full focus:ring-0 truncate"
+                                        placeholder="Project name..."
                                     />
-                                    {searchQuery && (
-                                        <button
-                                            onClick={() => setSearchQuery('')}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                        >
-                                            <i className="fa-solid fa-xmark"></i>
-                                        </button>
-                                    )}
                                 </div>
+                            </div>
 
-                                {/* Quick Wins Toggle */}
+                            {/* Score Display */}
+                            <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-xl p-4 mb-4">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Current Score</span>
+                                    <span className="text-xs text-gray-500">{currentRating.label}</span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-3xl font-bold text-green-600 dark:text-green-400 font-mono">{totalPoints}</span>
+                                    <div className="flex gap-0.5">
+                                        {[1,2,3,4,5,6].map(star => (
+                                            <i key={star} className={`fa-solid fa-star text-sm ${star <= currentRating.stars ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600'}`}></i>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="mt-2 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                    <div className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all" style={{ width: `${Math.min(100, (totalPoints / 100) * 100)}%` }}></div>
+                                </div>
+                            </div>
+
+                            {/* Search */}
+                            <div className="relative mb-4">
+                                <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                                <input
+                                    type="text"
+                                    placeholder="Search credits..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="w-full pl-9 pr-8 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-green-500 focus:ring-1 focus:ring-green-200"
+                                />
+                                {searchQuery && (
+                                    <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                        <i className="fa-solid fa-xmark text-sm"></i>
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* View Toggle */}
+                            <div className="mb-4">
+                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">View</label>
+                                <div className="grid grid-cols-3 gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                                    {[
+                                        { id: 'credits', icon: 'fa-grip', label: 'Cards' },
+                                        { id: 'timeline', icon: 'fa-timeline', label: 'Timeline' },
+                                        { id: 'matrix', icon: 'fa-table-cells', label: 'Matrix' }
+                                    ].map(view => (
+                                        <button
+                                            key={view.id}
+                                            onClick={() => setActiveView(view.id)}
+                                            className={`py-2 px-2 rounded-md text-xs font-medium transition-all flex flex-col items-center gap-1
+                                                ${activeView === view.id ? 'bg-white dark:bg-gray-600 shadow-sm text-green-600 dark:text-green-400' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'}`}
+                                        >
+                                            <i className={`fa-solid ${view.icon}`}></i>
+                                            <span>{view.label}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Filters */}
+                            <div className="mb-4">
+                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Filters</label>
                                 <button
                                     onClick={() => setShowQuickWins(!showQuickWins)}
-                                    className={`px-4 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 whitespace-nowrap
+                                    className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
                                         ${showQuickWins
                                             ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md'
-                                            : 'bg-white border border-gray-200 text-gray-600 hover:bg-amber-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300'
+                                            : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-amber-50'
                                         }`}
                                 >
                                     <i className="fa-solid fa-bolt"></i>
-                                    <span>Quick Wins</span>
+                                    <span>Quick Wins (Easy Credits)</span>
+                                    {showQuickWins && <i className="fa-solid fa-check ml-auto"></i>}
                                 </button>
+                            </div>
 
-                                {/* View Toggle */}
-                                <div className="flex rounded-lg border border-gray-200 overflow-hidden dark:border-gray-600">
+                            {/* Project Phase Filter */}
+                            <div className="mb-4">
+                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Project Phase</label>
+                                <div className="space-y-1">
+                                    {projectPhases.map(phase => (
+                                        <button
+                                            key={phase.id}
+                                            onClick={() => setPhaseFilter(phase.id)}
+                                            className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2 text-left
+                                                ${phaseFilter === phase.id
+                                                    ? 'bg-purple-500 text-white shadow-md'
+                                                    : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-600'
+                                                }`}
+                                        >
+                                            <i className={`fa-solid ${phase.icon} text-xs w-4`}></i>
+                                            <span className="truncate">{phase.name}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Categories */}
+                            <div className="mb-4">
+                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Categories</label>
+                                <div className="space-y-1">
+                                    {categoriesData.map(category => (
+                                        <button
+                                            key={category.id}
+                                            onClick={() => setActiveCategory(category.id)}
+                                            className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
+                                                ${activeCategory === category.id
+                                                    ? `${category.colorClasses.bgLight} ${category.colorClasses.text} shadow-sm`
+                                                    : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
+                                                }`}
+                                        >
+                                            <span className="text-lg">{category.icon}</span>
+                                            <span className="flex-grow text-left truncate">{category.name}</span>
+                                            <span className="text-xs font-mono opacity-70">{getCategoryPoints(category.id)}/{category.maxPoints}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Quick Actions */}
+                            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                                <div className="grid grid-cols-2 gap-2">
                                     <button
-                                        onClick={() => setActiveView('credits')}
-                                        className={`px-4 py-2.5 font-medium transition-all flex items-center gap-2
-                                            ${activeView === 'credits' ? 'bg-green-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300'}`}
-                                        title="Credit Cards View"
+                                        onClick={() => setShowCalculators(true)}
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
                                     >
-                                        <i className="fa-solid fa-grip"></i>
-                                        <span className="hidden sm:inline">Credits</span>
+                                        <i className="fa-solid fa-calculator text-green-500"></i>
+                                        <span>Calcs</span>
                                     </button>
                                     <button
-                                        onClick={() => setActiveView('timeline')}
-                                        className={`px-4 py-2.5 font-medium transition-all flex items-center gap-2
-                                            ${activeView === 'timeline' ? 'bg-green-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300'}`}
-                                        title="Timeline View"
+                                        onClick={() => setShowExport(true)}
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
                                     >
-                                        <i className="fa-solid fa-timeline"></i>
-                                        <span className="hidden sm:inline">Timeline</span>
-                                    </button>
-                                    <button
-                                        onClick={() => setActiveView('matrix')}
-                                        className={`px-4 py-2.5 font-medium transition-all flex items-center gap-2
-                                            ${activeView === 'matrix' ? 'bg-green-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300'}`}
-                                        title="Responsibility Matrix"
-                                    >
-                                        <i className="fa-solid fa-table-cells"></i>
-                                        <span className="hidden sm:inline">Matrix</span>
+                                        <i className="fa-solid fa-download text-blue-500"></i>
+                                        <span>Export</span>
                                     </button>
                                 </div>
+                            </div>
 
-                                {/* Dark Mode Toggle */}
+                            {/* Dark Mode Toggle */}
+                            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
                                 <button
                                     onClick={() => setDarkMode(!darkMode)}
-                                    className={`px-4 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2
-                                        ${darkMode
-                                            ? 'bg-gray-700 text-yellow-400 border border-gray-600'
-                                            : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-                                        }`}
-                                    title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                                    className="w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300"
                                 >
-                                    <i className={`fa-solid ${darkMode ? 'fa-sun' : 'fa-moon'}`}></i>
+                                    <i className={`fa-solid ${darkMode ? 'fa-sun text-yellow-400' : 'fa-moon text-gray-400'}`}></i>
+                                    <span>{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
+                                    <div className={`ml-auto w-10 h-5 rounded-full transition-colors ${darkMode ? 'bg-green-500' : 'bg-gray-300'} relative`}>
+                                        <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${darkMode ? 'left-5' : 'left-0.5'}`}></div>
+                                    </div>
                                 </button>
                             </div>
                         </div>
+                    </aside>
 
-                        <ScoreDashboard
-                            totalPoints={totalPoints}
-                            selectedCredits={selectedCredits}
-                            categories={categoriesData}
-                        />
+                    {/* Main Content */}
+                    <main className={`main-content ${!sidebarOpen ? 'sidebar-collapsed' : ''}`}>
+                        <div className="p-4 md:p-6 lg:p-8">
+                            <div className="max-w-5xl mx-auto">
+                                {/* Main Content Area - Credits, Timeline, or Matrix */}
+                                {activeView === 'credits' && (
+                                    <CreditsList
+                                        category={activeCateg}
+                                        selectedCredits={selectedCredits}
+                                        onSelectCreditLevel={handleSelectCreditLevel}
+                                        onViewCreditDetails={handleViewCreditDetails}
+                                        phaseFilter={phaseFilter}
+                                        searchQuery={searchQuery}
+                                        showQuickWins={showQuickWins}
+                                    />
+                                )}
 
-                        <div className="mt-6">
-                            <QuickActions
-                                onOpenCalculators={() => setShowCalculators(true)}
-                                onOpenExport={() => setShowExport(true)}
-                            />
-                        </div>
+                                {activeView === 'timeline' && (
+                                    <TimelineView
+                                        categories={categoriesData}
+                                        selectedCredits={selectedCredits}
+                                        onViewCreditDetails={handleViewCreditDetails}
+                                        projectPhases={projectPhases.filter(p => p.id !== 'all')}
+                                    />
+                                )}
 
-                        {/* Category Navigation */}
-                        <div className="flex gap-3 overflow-x-auto pb-4 mt-6">
-                            {categoriesData.map(category => (
-                                <CategoryBadge
-                                    key={category.id}
-                                    category={category}
-                                    isActive={activeCategory === category.id}
-                                    onClick={() => setActiveCategory(category.id)}
-                                    selectedPoints={getCategoryPoints(category.id)}
-                                />
-                            ))}
-                        </div>
+                                {activeView === 'matrix' && (
+                                    <ResponsibilityMatrix
+                                        categories={categoriesData}
+                                        selectedCredits={selectedCredits}
+                                        creditAssignments={creditAssignments}
+                                        onAssignmentChange={(creditKey, assignment) => {
+                                            setCreditAssignments(prev => ({ ...prev, [creditKey]: assignment }));
+                                        }}
+                                        onViewCreditDetails={handleViewCreditDetails}
+                                    />
+                                )}
 
-                        {/* Project Phase Filter */}
-                        <div className="glass-card rounded-xl p-4 mt-6">
-                            <div className="flex items-center gap-2 mb-3">
-                                <i className="fa-solid fa-clock text-purple-500"></i>
-                                <span className="font-medium text-gray-700">Filter by Project Phase</span>
-                                <span className="text-xs text-gray-400 ml-2">Focus on credits relevant to your current stage</span>
-                            </div>
-                            <div className="flex flex-wrap gap-2">
-                                {projectPhases.map(phase => (
-                                    <button
-                                        key={phase.id}
-                                        onClick={() => setPhaseFilter(phase.id)}
-                                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2
-                                            ${phaseFilter === phase.id
-                                                ? 'bg-purple-500 text-white shadow-md'
-                                                : 'bg-white border border-gray-200 text-gray-600 hover:bg-purple-50 hover:border-purple-300'
-                                            }`}
-                                    >
-                                        <i className={`fa-solid ${phase.icon} text-xs`}></i>
-                                        <span className="hidden sm:inline">{phase.name}</span>
-                                        <span className="sm:hidden">{phase.id === 'all' ? 'All' : phase.id}</span>
-                                    </button>
-                                ))}
+                                {/* Footer */}
+                                <footer className="mt-8 text-center text-sm text-gray-400">
+                                    <p>Green Star Buildings v1.1 Submission Assistant</p>
+                                    <p className="mt-1">Based on GBCA Green Star Buildings Submission Guidelines</p>
+                                </footer>
                             </div>
                         </div>
+                    </main>
 
-                        {/* Main Content Area - Credits, Timeline, or Matrix */}
-                        <div className="mt-6">
-                            {activeView === 'credits' && (
-                                <CreditsList
-                                    category={activeCateg}
-                                    selectedCredits={selectedCredits}
-                                    onSelectCreditLevel={handleSelectCreditLevel}
-                                    onViewCreditDetails={handleViewCreditDetails}
-                                    phaseFilter={phaseFilter}
-                                    searchQuery={searchQuery}
-                                    showQuickWins={showQuickWins}
-                                />
-                            )}
-
-                            {activeView === 'timeline' && (
-                                <TimelineView
-                                    categories={categoriesData}
-                                    selectedCredits={selectedCredits}
-                                    onViewCreditDetails={handleViewCreditDetails}
-                                    projectPhases={projectPhases.filter(p => p.id !== 'all')}
-                                />
-                            )}
-
-                            {activeView === 'matrix' && (
-                                <ResponsibilityMatrix
-                                    categories={categoriesData}
-                                    selectedCredits={selectedCredits}
-                                    creditAssignments={creditAssignments}
-                                    onAssignmentChange={(creditKey, assignment) => {
-                                        setCreditAssignments(prev => ({ ...prev, [creditKey]: assignment }));
-                                    }}
-                                    onViewCreditDetails={handleViewCreditDetails}
-                                />
-                            )}
-                        </div>
-
-                        {/* Footer */}
-                        <footer className="mt-8 text-center text-sm text-gray-400">
-                            <p>Green Star Buildings v1.1 Submission Assistant</p>
-                            <p className="mt-1">Based on GBCA Green Star Buildings Submission Guidelines</p>
-                        </footer>
-
-                        {/* Modals */}
-                        <CalculatorsModal
-                            isOpen={showCalculators}
-                            onClose={() => setShowCalculators(false)}
-                        />
-                        <ExportModal
-                            isOpen={showExport}
-                            onClose={() => setShowExport(false)}
-                            projectData={{ projectName, totalPoints, selectedCredits }}
-                        />
-                        <CreditDetailModal
-                            isOpen={creditDetailModal.isOpen}
-                            onClose={handleCloseCreditDetail}
-                            credit={creditDetailModal.credit}
-                            category={creditDetailModal.category}
-                            isSelected={isModalCreditSelected}
-                            onToggle={handleToggleCreditFromModal}
-                            creditNotes={creditNotes}
-                            onNotesChange={(key, note) => setCreditNotes(prev => ({ ...prev, [key]: note }))}
-                            creditDocs={creditDocs}
-                            onDocsChange={(key, docs) => setCreditDocs(prev => ({ ...prev, [key]: docs }))}
-                        />
-                    </div>
+                    {/* Modals */}
+                    <CalculatorsModal
+                        isOpen={showCalculators}
+                        onClose={() => setShowCalculators(false)}
+                    />
+                    <ExportModal
+                        isOpen={showExport}
+                        onClose={() => setShowExport(false)}
+                        projectData={{ projectName, totalPoints, selectedCredits }}
+                    />
+                    <CreditDetailModal
+                        isOpen={creditDetailModal.isOpen}
+                        onClose={handleCloseCreditDetail}
+                        credit={creditDetailModal.credit}
+                        category={creditDetailModal.category}
+                        isSelected={isModalCreditSelected}
+                        onToggle={handleToggleCreditFromModal}
+                        creditNotes={creditNotes}
+                        onNotesChange={(key, note) => setCreditNotes(prev => ({ ...prev, [key]: note }))}
+                        creditDocs={creditDocs}
+                        onDocsChange={(key, docs) => setCreditDocs(prev => ({ ...prev, [key]: docs }))}
+                    />
                 </div>
             );
         }
