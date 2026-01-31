@@ -273,53 +273,135 @@
         ];
 
         const defaultCredits = [
-            { id: "resp-01", name: "Responsible Construction", category: "responsible", shortDescription: "Sustainable construction practices", description: "Demonstrates responsible construction practices including waste management, pollution prevention, and sustainable material sourcing.", required: true, maxPoints: 3, order: 1 },
-            { id: "resp-02", name: "Metering and Monitoring", category: "responsible", shortDescription: "Building performance monitoring", description: "Implementation of comprehensive metering and monitoring systems to track building performance.", required: false, maxPoints: 2, order: 2 },
-            { id: "health-01", name: "Clean Air", category: "healthy", shortDescription: "Indoor air quality", description: "Ensuring high indoor air quality through ventilation and material selection.", required: true, maxPoints: 3, order: 1 },
-            { id: "health-02", name: "Lighting Comfort", category: "healthy", shortDescription: "Visual comfort and daylight", description: "Providing comfortable lighting conditions with good daylight access.", required: false, maxPoints: 2, order: 2 },
-            { id: "pos-01", name: "Energy Source", category: "positive", shortDescription: "Renewable energy use", description: "Use of renewable energy sources to power the building.", required: true, maxPoints: 4, order: 1 },
-            { id: "pos-02", name: "Energy Use", category: "positive", shortDescription: "Energy efficiency", description: "Reducing energy consumption through efficient design.", required: true, maxPoints: 4, order: 2 },
-            { id: "pos-03", name: "Upfront Carbon Reduction", category: "positive", shortDescription: "Embodied carbon", description: "Reducing embodied carbon in construction materials.", required: true, maxPoints: 4, order: 3 },
-            { id: "lead-01", name: "Market Transformation", category: "leadership", shortDescription: "Industry leadership", description: "Demonstrating leadership and innovation in the industry.", required: true, maxPoints: 4, order: 1 },
+            // Responsible Category (10 credits)
+            { id: "ind-dev", name: "Industry Development", category: "responsible", shortDescription: "Supporting green building industry", description: "Supporting the development of the green building industry through training, research, and knowledge sharing.", aims: "", tips: "", required: false, maxPoints: 2, difficulty: "Easy", projectPhases: "Concept, Schematic, Design Dev", order: 1 },
+            { id: "resp-const", name: "Responsible Construction", category: "responsible", shortDescription: "Environmental management during construction", description: "Implementing environmental management practices during construction.", aims: "", tips: "", required: true, maxPoints: 5, difficulty: "Medium", projectPhases: "Construction, Handover", order: 2 },
+            { id: "verify-hand", name: "Verification and Handover", category: "responsible", shortDescription: "Commissioning and handover", description: "Comprehensive commissioning and handover processes.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Medium", projectPhases: "Documentation, Construction, Handover", order: 3 },
+            { id: "resp-resource", name: "Responsible Resource Management", category: "responsible", shortDescription: "Waste management and resources", description: "Responsible management of resources and construction waste.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Medium", projectPhases: "Construction, Handover", order: 4 },
+            { id: "resp-proc", name: "Responsible Procurement", category: "responsible", shortDescription: "Sustainable procurement", description: "Sustainable procurement practices for construction materials.", aims: "", tips: "", required: false, maxPoints: 2, difficulty: "Medium", projectPhases: "Design Dev, Documentation, Construction", order: 5 },
+            { id: "resp-struct", name: "Responsible Structure", category: "responsible", shortDescription: "Sustainable structural materials", description: "Use of responsible and sustainable structural materials.", aims: "", tips: "", required: false, maxPoints: 5, difficulty: "Hard", projectPhases: "Schematic, Design Dev, Documentation", order: 6 },
+            { id: "resp-envelope", name: "Responsible Envelope", category: "responsible", shortDescription: "Sustainable building envelope", description: "Sustainable building envelope materials and design.", aims: "", tips: "", required: false, maxPoints: 5, difficulty: "Hard", projectPhases: "Schematic, Design Dev, Documentation", order: 7 },
+            { id: "resp-systems", name: "Responsible Systems", category: "responsible", shortDescription: "Sustainable building systems", description: "Sustainable building systems and services.", aims: "", tips: "", required: false, maxPoints: 5, difficulty: "Hard", projectPhases: "Design Dev, Documentation, Construction", order: 8 },
+            { id: "resp-finishes", name: "Responsible Finishes", category: "responsible", shortDescription: "Sustainable interior finishes", description: "Sustainable interior finishes and materials.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Medium", projectPhases: "Design Dev, Documentation, Construction", order: 9 },
+            { id: "impacts-disc", name: "Impacts Disclosure", category: "responsible", shortDescription: "Environmental impact reporting", description: "Disclosure of environmental impacts and sustainability performance.", aims: "", tips: "", required: false, maxPoints: 2, difficulty: "Hard", projectPhases: "Documentation, Handover", order: 10 },
+            // Healthy Category (6 credits)
+            { id: "clean-air", name: "Clean Air", category: "healthy", shortDescription: "Indoor air quality", description: "Ensuring high indoor air quality through ventilation and material selection.", aims: "", tips: "", required: true, maxPoints: 6, difficulty: "Medium", projectPhases: "Schematic, Design Dev, Documentation", order: 1 },
+            { id: "light-quality", name: "Light Quality", category: "healthy", shortDescription: "Daylight and lighting", description: "Quality lighting design with good daylight access.", aims: "", tips: "", required: false, maxPoints: 5, difficulty: "Medium", projectPhases: "Concept, Schematic, Design Dev", order: 2 },
+            { id: "acoustic", name: "Acoustic Comfort", category: "healthy", shortDescription: "Acoustic environment", description: "Comfortable acoustic environment for occupants.", aims: "", tips: "", required: false, maxPoints: 5, difficulty: "Medium", projectPhases: "Schematic, Design Dev, Documentation", order: 3 },
+            { id: "toxins", name: "Exposure to Toxins", category: "healthy", shortDescription: "Reducing toxic materials", description: "Minimising occupant exposure to toxic materials.", aims: "", tips: "", required: false, maxPoints: 4, difficulty: "Hard", projectPhases: "Design Dev, Documentation, Construction", order: 4 },
+            { id: "amenity", name: "Amenity and Comfort", category: "healthy", shortDescription: "Occupant amenities", description: "Providing quality amenities and comfort for occupants.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Medium", projectPhases: "Schematic, Design Dev, Documentation", order: 5 },
+            { id: "nature-conn", name: "Connection to Nature", category: "healthy", shortDescription: "Biophilic design", description: "Creating connections to nature through biophilic design.", aims: "", tips: "", required: false, maxPoints: 2, difficulty: "Easy", projectPhases: "Concept, Schematic, Design Dev", order: 6 },
+            // Resilient Category (5 credits)
+            { id: "climate-res", name: "Climate Resilience", category: "resilient", shortDescription: "Climate adaptation", description: "Building resilience to climate change impacts.", aims: "", tips: "", required: true, maxPoints: 4, difficulty: "Hard", projectPhases: "Concept, Schematic", order: 1 },
+            { id: "ops-res", name: "Operations Resilience", category: "resilient", shortDescription: "Operational continuity", description: "Ensuring operational resilience and continuity.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Hard", projectPhases: "Schematic, Design Dev, Documentation", order: 2 },
+            { id: "comm-res", name: "Community Resilience", category: "resilient", shortDescription: "Community support", description: "Supporting community resilience during emergencies.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Medium", projectPhases: "Concept, Schematic, Design Dev", order: 3 },
+            { id: "heat-res", name: "Heat Resilience", category: "resilient", shortDescription: "Heat stress mitigation", description: "Mitigating heat stress for occupants.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Medium", projectPhases: "Concept, Schematic, Design Dev", order: 4 },
+            { id: "grid-res", name: "Grid Resilience", category: "resilient", shortDescription: "Energy independence", description: "Building energy independence and grid resilience.", aims: "", tips: "", required: false, maxPoints: 2, difficulty: "Hard", projectPhases: "Design Dev, Documentation, Construction", order: 5 },
+            // Positive Category (8 credits)
+            { id: "energy-source", name: "Energy Source", category: "positive", shortDescription: "Renewable energy", description: "Use of renewable energy sources.", aims: "", tips: "", required: true, maxPoints: 6, difficulty: "Medium", projectPhases: "Schematic, Design Dev, Documentation", order: 1 },
+            { id: "energy-use", name: "Energy Use", category: "positive", shortDescription: "Energy efficiency", description: "Reducing energy consumption through efficient design.", aims: "", tips: "", required: true, maxPoints: 10, difficulty: "Hard", projectPhases: "Concept, Schematic, Design Dev, Documentation", order: 2 },
+            { id: "upfront-carbon-red", name: "Upfront Carbon Reduction", category: "positive", shortDescription: "Embodied carbon", description: "Reducing embodied carbon in construction.", aims: "", tips: "", required: true, maxPoints: 10, difficulty: "Hard", projectPhases: "Concept, Schematic, Design Dev", order: 3 },
+            { id: "upfront-carbon-comp", name: "Upfront Carbon Compensation", category: "positive", shortDescription: "Carbon offsets", description: "Compensating for upfront carbon emissions.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Easy", projectPhases: "Documentation, Construction, Handover", order: 4 },
+            { id: "refrigerant", name: "Refrigerant Systems Impacts", category: "positive", shortDescription: "Low-GWP refrigerants", description: "Using low global warming potential refrigerants.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Medium", projectPhases: "Design Dev, Documentation", order: 5 },
+            { id: "low-emissions", name: "Low-Emissions Transport", category: "positive", shortDescription: "EV charging infrastructure", description: "Supporting low-emissions transport.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Easy", projectPhases: "Schematic, Design Dev, Documentation", order: 6 },
+            { id: "circularity", name: "Design for Circularity", category: "positive", shortDescription: "Circular economy", description: "Designing for material reuse and circularity.", aims: "", tips: "", required: false, maxPoints: 2, difficulty: "Medium", projectPhases: "Concept, Schematic, Design Dev", order: 7 },
+            { id: "water-use", name: "Water Use", category: "positive", shortDescription: "Water efficiency", description: "Reducing water consumption.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Medium", projectPhases: "Schematic, Design Dev, Documentation", order: 8 },
+            // Places Category (4 credits)
+            { id: "movement", name: "Movement and Place", category: "places", shortDescription: "Sustainable transport", description: "Supporting sustainable transport and movement.", aims: "", tips: "", required: true, maxPoints: 5, difficulty: "Medium", projectPhases: "Concept, Schematic", order: 1 },
+            { id: "enjoyable", name: "Enjoyable Places", category: "places", shortDescription: "Quality public spaces", description: "Creating enjoyable and quality public spaces.", aims: "", tips: "", required: false, maxPoints: 4, difficulty: "Medium", projectPhases: "Concept, Schematic, Design Dev", order: 2 },
+            { id: "contribution", name: "Contribution to Place", category: "places", shortDescription: "Community contribution", description: "Contributing positively to the local area.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Easy", projectPhases: "Concept, Schematic, Design Dev", order: 3 },
+            { id: "culture", name: "Culture, Heritage and Identity", category: "places", shortDescription: "Cultural recognition", description: "Recognising and celebrating local culture and heritage.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Medium", projectPhases: "Concept, Schematic, Design Dev", order: 4 },
+            // People Category (4 credits)
+            { id: "inclusive-const", name: "Inclusive Construction Practices", category: "people", shortDescription: "Safe and inclusive sites", description: "Inclusive and safe construction practices.", aims: "", tips: "", required: true, maxPoints: 4, difficulty: "Medium", projectPhases: "Construction, Handover", order: 1 },
+            { id: "first-nations", name: "First Nations Inclusion", category: "people", shortDescription: "Indigenous engagement", description: "Meaningful engagement with First Nations peoples.", aims: "", tips: "", required: false, maxPoints: 4, difficulty: "Medium", projectPhases: "Concept, Schematic, Construction", order: 2 },
+            { id: "proc-workforce", name: "Procurement and Workforce Inclusion", category: "people", shortDescription: "Social procurement", description: "Inclusive procurement and workforce practices.", aims: "", tips: "", required: false, maxPoints: 4, difficulty: "Medium", projectPhases: "Documentation, Construction", order: 3 },
+            { id: "design-equity", name: "Design for Equity", category: "people", shortDescription: "Accessible design", description: "Designing for equity and accessibility.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Medium", projectPhases: "Concept, Schematic, Design Dev", order: 4 },
+            // Nature Category (5 credits)
+            { id: "impacts-nature", name: "Impacts to Nature", category: "nature", shortDescription: "Minimising ecological impact", description: "Minimising impacts to natural systems.", aims: "", tips: "", required: true, maxPoints: 6, difficulty: "Medium", projectPhases: "Concept, Schematic, Construction", order: 1 },
+            { id: "biodiversity", name: "Biodiversity Enhancement", category: "nature", shortDescription: "Ecological restoration", description: "Enhancing biodiversity on site.", aims: "", tips: "", required: false, maxPoints: 6, difficulty: "Medium", projectPhases: "Schematic, Design Dev, Documentation", order: 2 },
+            { id: "nature-connectivity", name: "Nature Connectivity", category: "nature", shortDescription: "Green corridors", description: "Creating connections between natural areas.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Medium", projectPhases: "Concept, Schematic, Design Dev", order: 3 },
+            { id: "nature-steward", name: "Nature Stewardship", category: "nature", shortDescription: "Long-term nature care", description: "Long-term stewardship of natural areas.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Medium", projectPhases: "Design Dev, Documentation, Handover", order: 4 },
+            { id: "waterway", name: "Waterway Protection", category: "nature", shortDescription: "Stormwater management", description: "Protecting waterways from pollution.", aims: "", tips: "", required: false, maxPoints: 2, difficulty: "Medium", projectPhases: "Schematic, Design Dev, Documentation", order: 5 },
+            // Leadership Category (2 credits)
+            { id: "market-transform", name: "Market Transformation", category: "leadership", shortDescription: "Industry innovation", description: "Demonstrating leadership and innovation.", aims: "", tips: "", required: true, maxPoints: 2, difficulty: "Hard", projectPhases: "Concept, Schematic, Handover", order: 1 },
+            { id: "leadership-challenge", name: "Leadership Challenges", category: "leadership", shortDescription: "Going beyond requirements", description: "Addressing leadership challenges and innovation.", aims: "", tips: "", required: false, maxPoints: 3, difficulty: "Hard", projectPhases: "Concept, Schematic, Handover", order: 2 },
         ];
 
         const defaultLevels = [
-            { creditId: "resp-01", level: "minimum", points: 0, summary: "Basic compliance", description: "Meet basic responsible construction requirements" },
-            { creditId: "resp-01", level: "credit", points: 2, summary: "Good practices", description: "Implement good responsible construction practices" },
-            { creditId: "resp-01", level: "exceptional", points: 3, summary: "Best in class", description: "Demonstrate industry-leading responsible construction" },
-            { creditId: "health-01", level: "minimum", points: 0, summary: "Basic air quality", description: "Meet minimum ventilation and air quality standards" },
-            { creditId: "health-01", level: "credit", points: 2, summary: "Enhanced air quality", description: "Exceed minimum air quality requirements" },
-            { creditId: "health-01", level: "exceptional", points: 3, summary: "Premium air quality", description: "Achieve premium indoor air quality standards" },
-            { creditId: "pos-01", level: "minimum", points: 0, summary: "Grid connection", description: "Standard grid electricity connection" },
-            { creditId: "pos-01", level: "credit", points: 2, summary: "Partial renewable", description: "30-60% renewable energy" },
-            { creditId: "pos-01", level: "exceptional", points: 4, summary: "Net zero energy", description: "100% renewable or net zero energy" },
+            // Industry Development
+            { creditId: "ind-dev", level: "minimum", points: 0, summary: "No specific requirements", description: "No minimum expectation for this credit" },
+            { creditId: "ind-dev", level: "credit", points: 1, summary: "Training and events", description: "Team training and industry event participation" },
+            { creditId: "ind-dev", level: "exceptional", points: 2, summary: "Leadership", description: "Multiple events and research contribution" },
+            // Responsible Construction
+            { creditId: "resp-const", level: "minimum", points: 0, summary: "Basic EMP", description: "Basic Environmental Management Plan" },
+            { creditId: "resp-const", level: "credit", points: 3, summary: "80% waste diversion", description: "80% construction waste diverted from landfill" },
+            { creditId: "resp-const", level: "exceptional", points: 5, summary: "95% waste diversion", description: "95% construction waste diverted from landfill" },
+            // Clean Air
+            { creditId: "clean-air", level: "minimum", points: 0, summary: "Code compliance", description: "Meet minimum ventilation rates per AS 1668.2" },
+            { creditId: "clean-air", level: "credit", points: 4, summary: "Enhanced ventilation", description: "50% improvement on code minimum fresh air" },
+            { creditId: "clean-air", level: "exceptional", points: 6, summary: "Premium air quality", description: "100% improvement plus air quality monitoring" },
+            // Energy Source
+            { creditId: "energy-source", level: "minimum", points: 0, summary: "Grid connection", description: "Standard grid electricity connection" },
+            { creditId: "energy-source", level: "credit", points: 4, summary: "Partial renewable", description: "50% renewable energy" },
+            { creditId: "energy-source", level: "exceptional", points: 6, summary: "100% renewable", description: "100% renewable energy or better" },
+            // Energy Use
+            { creditId: "energy-use", level: "minimum", points: 0, summary: "Code compliance", description: "Meet NCC Section J requirements" },
+            { creditId: "energy-use", level: "credit", points: 6, summary: "30% improvement", description: "30% improvement on reference building" },
+            { creditId: "energy-use", level: "exceptional", points: 10, summary: "Net zero ready", description: "50%+ improvement, net zero carbon ready" },
+            // Upfront Carbon Reduction
+            { creditId: "upfront-carbon-red", level: "minimum", points: 0, summary: "LCA completed", description: "Life Cycle Assessment completed" },
+            { creditId: "upfront-carbon-red", level: "credit", points: 6, summary: "20% reduction", description: "20% reduction in upfront carbon" },
+            { creditId: "upfront-carbon-red", level: "exceptional", points: 10, summary: "40%+ reduction", description: "40%+ reduction in upfront carbon" },
         ];
 
         const defaultCriteria = [
-            { creditId: "resp-01", level: "minimum", criteriaNum: 1, text: "Complete an Environmental Management Plan (EMP)", mandatory: true, evidenceType: "Document" },
-            { creditId: "resp-01", level: "minimum", criteriaNum: 2, text: "Implement waste management procedures", mandatory: true, evidenceType: "Document" },
-            { creditId: "resp-01", level: "credit", criteriaNum: 1, text: "Achieve 80% construction waste diversion from landfill", mandatory: true, evidenceType: "Report" },
-            { creditId: "resp-01", level: "exceptional", criteriaNum: 1, text: "Achieve 95% construction waste diversion", mandatory: true, evidenceType: "Report" },
-            { creditId: "health-01", level: "minimum", criteriaNum: 1, text: "Meet minimum ventilation rates per AS 1668.2", mandatory: true, evidenceType: "Calculation" },
-            { creditId: "health-01", level: "credit", criteriaNum: 1, text: "Provide 50% more fresh air than code minimum", mandatory: true, evidenceType: "Calculation" },
+            // Responsible Construction
+            { creditId: "resp-const", level: "minimum", criteriaNum: 1, text: "Complete an Environmental Management Plan (EMP)", mandatory: true, evidenceType: "Document" },
+            { creditId: "resp-const", level: "minimum", criteriaNum: 2, text: "Implement waste management procedures", mandatory: true, evidenceType: "Document" },
+            { creditId: "resp-const", level: "credit", criteriaNum: 1, text: "Achieve 80% construction waste diversion from landfill", mandatory: true, evidenceType: "Report" },
+            { creditId: "resp-const", level: "exceptional", criteriaNum: 1, text: "Achieve 95% construction waste diversion", mandatory: true, evidenceType: "Report" },
+            // Clean Air
+            { creditId: "clean-air", level: "minimum", criteriaNum: 1, text: "Meet minimum ventilation rates per AS 1668.2", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "clean-air", level: "credit", criteriaNum: 1, text: "Provide 50% more fresh air than code minimum", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "clean-air", level: "exceptional", criteriaNum: 1, text: "Provide 100% more fresh air than code minimum", mandatory: true, evidenceType: "Calculation" },
+            // Energy Source
+            { creditId: "energy-source", level: "minimum", criteriaNum: 1, text: "Demonstrate compliance with NCC energy requirements", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "energy-source", level: "credit", criteriaNum: 1, text: "50% of energy from renewable sources", mandatory: true, evidenceType: "Report" },
+            { creditId: "energy-source", level: "exceptional", criteriaNum: 1, text: "100% of energy from renewable sources", mandatory: true, evidenceType: "Report" },
         ];
 
         const defaultDocumentation = [
-            { creditId: "resp-01", level: "all", name: "Environmental Management Plan", type: "Report", description: "Comprehensive EMP covering construction phase", templateAvailable: true, templateLink: "templates/EMP_template.docx" },
-            { creditId: "resp-01", level: "all", name: "Waste Management Report", type: "Report", description: "Monthly waste tracking and diversion rates", templateAvailable: true, templateLink: "templates/waste_report.xlsx" },
-            { creditId: "health-01", level: "all", name: "Ventilation Calculations", type: "Calculation", description: "Fresh air rates per AS 1668.2", templateAvailable: true, templateLink: "templates/ventilation_calc.xlsx" },
+            // Responsible Construction
+            { creditId: "resp-const", level: "all", name: "Environmental Management Plan", type: "Report", description: "Comprehensive EMP covering construction phase", templateAvailable: true, templateLink: "templates/EMP_template.docx" },
+            { creditId: "resp-const", level: "all", name: "Waste Management Report", type: "Report", description: "Monthly waste tracking and diversion rates", templateAvailable: true, templateLink: "templates/waste_report.xlsx" },
+            // Clean Air
+            { creditId: "clean-air", level: "all", name: "Ventilation Calculations", type: "Calculation", description: "Fresh air rates per AS 1668.2", templateAvailable: true, templateLink: "templates/ventilation_calc.xlsx" },
+            { creditId: "clean-air", level: "all", name: "HVAC Design Report", type: "Report", description: "Mechanical ventilation system design", templateAvailable: false, templateLink: "" },
+            // Energy Source
+            { creditId: "energy-source", level: "all", name: "Energy Source Report", type: "Report", description: "Documentation of renewable energy systems", templateAvailable: false, templateLink: "" },
+            // Energy Use
+            { creditId: "energy-use", level: "all", name: "Energy Model Report", type: "Calculation", description: "Building energy modelling results", templateAvailable: false, templateLink: "" },
+            // Upfront Carbon
+            { creditId: "upfront-carbon-red", level: "all", name: "Life Cycle Assessment", type: "Calculation", description: "Whole building LCA report", templateAvailable: false, templateLink: "" },
         ];
 
         const defaultTemplates = [
-            { id: "tpl-office-5", name: "Commercial Office - 5 Star", type: "Office", description: "Standard commercial office targeting 5 Star rating", targetRating: "5 Star", credits: "resp-01,resp-02,health-01,health-02,pos-01,pos-02,pos-03,lead-01", active: true },
-            { id: "tpl-office-6", name: "Premium Office - 6 Star", type: "Office", description: "Premium office development targeting 6 Star", targetRating: "6 Star", credits: "resp-01,resp-02,health-01,health-02,pos-01,pos-02,pos-03,lead-01", active: true },
-            { id: "tpl-resi-5", name: "Residential - 5 Star", type: "Residential", description: "Multi-residential building targeting 5 Star", targetRating: "5 Star", credits: "resp-01,health-01,health-02,pos-01,pos-02", active: true },
+            { id: "tpl-office-5", name: "Commercial Office - 5 Star", type: "Office", description: "Standard commercial office targeting 5 Star rating", targetRating: "5 Star", credits: "ind-dev,resp-const,clean-air,light-quality,energy-source,energy-use,upfront-carbon-red,movement,market-transform", active: true },
+            { id: "tpl-office-6", name: "Premium Office - 6 Star", type: "Office", description: "Premium office development targeting 6 Star", targetRating: "6 Star", credits: "ind-dev,resp-const,verify-hand,resp-struct,clean-air,light-quality,acoustic,climate-res,energy-source,energy-use,upfront-carbon-red,movement,enjoyable,inclusive-const,impacts-nature,market-transform,leadership-challenge", active: true },
+            { id: "tpl-resi-5", name: "Residential - 5 Star", type: "Residential", description: "Multi-residential building targeting 5 Star", targetRating: "5 Star", credits: "resp-const,clean-air,light-quality,amenity,nature-conn,energy-source,energy-use,upfront-carbon-red,water-use,enjoyable,design-equity", active: true },
+            { id: "tpl-education-5", name: "Education - 5 Star", type: "Education", description: "School or university building targeting 5 Star", targetRating: "5 Star", credits: "resp-const,clean-air,light-quality,acoustic,amenity,nature-conn,energy-source,energy-use,movement,enjoyable,contribution,design-equity", active: true },
+            { id: "tpl-healthcare-5", name: "Healthcare - 5 Star", type: "Healthcare", description: "Hospital or healthcare facility targeting 5 Star", targetRating: "5 Star", credits: "resp-const,verify-hand,clean-air,light-quality,acoustic,toxins,climate-res,ops-res,energy-source,energy-use,water-use,design-equity", active: true },
         ];
 
         const defaultSynergies = [
-            { id: "syn-001", credit1: "pos-01", credit2: "pos-02", type: "Strong", description: "Energy source and energy use are directly related", recommendation: "Pursuing both credits together maximizes energy strategy effectiveness" },
-            { id: "syn-002", credit1: "pos-02", credit2: "pos-03", type: "Strong", description: "Energy efficiency reduces both operational and embodied carbon", recommendation: "Consider holistic carbon strategy addressing both credits" },
-            { id: "syn-003", credit1: "health-01", credit2: "health-02", type: "Moderate", description: "Ventilation strategy affects both air quality and lighting comfort", recommendation: "Coordinate HVAC and lighting design" },
+            { id: "syn-001", credit1: "energy-source", credit2: "energy-use", type: "Strong", description: "Energy source and energy use are directly related", recommendation: "Pursuing both credits together maximizes energy strategy effectiveness" },
+            { id: "syn-002", credit1: "energy-use", credit2: "upfront-carbon-red", type: "Strong", description: "Energy efficiency reduces both operational and embodied carbon", recommendation: "Consider holistic carbon strategy addressing both credits" },
+            { id: "syn-003", credit1: "clean-air", credit2: "light-quality", type: "Moderate", description: "Ventilation strategy affects both air quality and lighting comfort", recommendation: "Coordinate HVAC and lighting design" },
+            { id: "syn-004", credit1: "resp-struct", credit2: "upfront-carbon-red", type: "Strong", description: "Structural materials have major impact on embodied carbon", recommendation: "Select low-carbon structural systems early in design" },
+            { id: "syn-005", credit1: "climate-res", credit2: "heat-res", type: "Strong", description: "Climate and heat resilience share adaptation strategies", recommendation: "Develop integrated climate adaptation plan" },
+            { id: "syn-006", credit1: "biodiversity", credit2: "nature-connectivity", type: "Strong", description: "Biodiversity enhancement supports nature connectivity", recommendation: "Plan landscape for both biodiversity and connectivity" },
+            { id: "syn-007", credit1: "ind-dev", credit2: "market-transform", type: "Moderate", description: "Industry development contributes to market transformation", recommendation: "Document industry contributions for both credits" },
+            { id: "syn-008", credit1: "movement", credit2: "low-emissions", type: "Strong", description: "Sustainable transport and EV charging are complementary", recommendation: "Develop integrated transport strategy" },
         ];
 
         // ============================================================
@@ -641,25 +723,31 @@
         // Credits Editor
         function CreditsEditor({ data, onUpdate, categories }) {
             const categoryOptions = categories.map(c => ({ value: c.id, label: c.name }));
+            const difficultyOptions = ['Easy', 'Medium', 'Hard'];
+            const phaseOptions = ['Concept', 'Schematic', 'Design Dev', 'Documentation', 'Construction', 'Handover'];
 
             const columns = [
-                { key: 'id', label: 'Credit ID', width: '120px', placeholder: 'e.g., resp-01' },
-                { key: 'name', label: 'Credit Name', width: '200px' },
-                { key: 'category', label: 'Category', type: 'select', width: '140px', options: categoryOptions },
-                { key: 'shortDescription', label: 'Short Desc', width: '200px' },
-                { key: 'description', label: 'Full Description', type: 'textarea', width: '300px' },
-                { key: 'required', label: 'Required?', type: 'checkbox', width: '80px' },
-                { key: 'maxPoints', label: 'Max Pts', type: 'number', width: '80px', min: 0, max: 10 },
-                { key: 'order', label: 'Order', type: 'number', width: '70px', min: 1 },
+                { key: 'id', label: 'Credit ID', width: '100px', placeholder: 'e.g., resp-01' },
+                { key: 'name', label: 'Credit Name', width: '180px' },
+                { key: 'category', label: 'Category', type: 'select', width: '120px', options: categoryOptions },
+                { key: 'shortDescription', label: 'Short Desc', width: '180px' },
+                { key: 'description', label: 'Full Description', type: 'textarea', width: '250px' },
+                { key: 'aims', label: 'Credit Aims', type: 'textarea', width: '200px' },
+                { key: 'tips', label: 'Tips', type: 'textarea', width: '200px' },
+                { key: 'required', label: 'Required?', type: 'checkbox', width: '70px' },
+                { key: 'maxPoints', label: 'Max Pts', type: 'number', width: '70px', min: 0, max: 10 },
+                { key: 'difficulty', label: 'Difficulty', type: 'select', width: '100px', options: difficultyOptions },
+                { key: 'projectPhases', label: 'Project Phases', width: '180px', placeholder: 'Concept, Design Dev' },
+                { key: 'order', label: 'Order', type: 'number', width: '60px', min: 1 },
             ];
 
-            const emptyRow = { id: '', name: '', category: '', shortDescription: '', description: '', required: false, maxPoints: 2, order: 1 };
+            const emptyRow = { id: '', name: '', category: '', shortDescription: '', description: '', aims: '', tips: '', required: false, maxPoints: 2, difficulty: 'Medium', projectPhases: '', order: 1 };
 
             return (
                 <div className="p-8">
                     <div className="mb-6">
                         <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Credits</h2>
-                        <p className="text-gray-500">Manage individual credits. Each credit belongs to a category.</p>
+                        <p className="text-gray-500">Manage individual credits. Set difficulty to "Easy" for Quick Wins. Project phases are comma-separated.</p>
                     </div>
                     <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
                 </div>
@@ -856,8 +944,12 @@
                             category: row['Category']?.toLowerCase(),
                             shortDescription: row['Short Description'],
                             description: row['Full Description'],
+                            aims: row['Credit Aims'] || '',
+                            tips: row['Tips'] || '',
                             required: row['Is Required?'] === 'Yes',
                             maxPoints: row['Max Points'],
+                            difficulty: row['Difficulty (Easy/Medium/Hard)'] || 'Medium',
+                            projectPhases: row['Project Phases'] || '',
                             order: row['Display Order'],
                         }));
                     }
@@ -1112,8 +1204,12 @@
                     'Category': c.category?.charAt(0).toUpperCase() + c.category?.slice(1),
                     'Short Description': c.shortDescription,
                     'Full Description': c.description,
+                    'Credit Aims': c.aims || '',
+                    'Tips': c.tips || '',
                     'Is Required?': c.required ? 'Yes' : 'No',
                     'Max Points': c.maxPoints,
+                    'Difficulty (Easy/Medium/Hard)': c.difficulty || 'Medium',
+                    'Project Phases': c.projectPhases || '',
                     'Display Order': c.order,
                 }));
                 XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(credData), 'Credits');
