@@ -3864,9 +3864,9 @@
                 (hasLevels ? credit.performanceLevels.find(l => l.level === selectedLevel)?.points || 0 : credit.points) : 0;
 
             const levelColors = {
-                minimum: { bg: 'bg-gray-100', border: 'border-gray-400', text: 'text-gray-600', hover: 'hover:bg-gray-200' },
-                credit: { bg: 'bg-blue-100', border: 'border-blue-500', text: 'text-blue-700', hover: 'hover:bg-blue-200' },
-                exceptional: { bg: 'bg-green-100', border: 'border-green-500', text: 'text-green-700', hover: 'hover:bg-green-200' }
+                minimum: { bg: 'bg-gray-100 dark:bg-gray-700', border: 'border-gray-400', text: 'text-gray-600 dark:text-gray-300', gradient: 'from-gray-50 to-white dark:from-gray-800 dark:to-gray-800' },
+                credit: { bg: 'bg-blue-100 dark:bg-blue-900/30', border: 'border-blue-500', text: 'text-blue-700 dark:text-blue-300', gradient: 'from-blue-50 to-white dark:from-blue-900/20 dark:to-gray-800' },
+                exceptional: { bg: 'bg-green-100 dark:bg-green-900/30', border: 'border-green-500', text: 'text-green-700 dark:text-green-300', gradient: 'from-green-50 to-white dark:from-green-900/20 dark:to-gray-800' }
             };
 
             const levelIcons = {
@@ -3875,16 +3875,34 @@
                 exceptional: 'fa-star'
             };
 
-            const levelLabels = {
-                minimum: 'Min',
-                credit: 'Credit',
-                exceptional: 'Exceptional'
+            const levelFullNames = {
+                minimum: 'Minimum Expectation',
+                credit: 'Credit Achievement',
+                exceptional: 'Exceptional Performance'
+            };
+
+            // Get colors based on selected level
+            const currentLevelColors = selectedLevel ? levelColors[selectedLevel] : null;
+
+            // Handle dropdown change
+            const handleSelectChange = (e) => {
+                const value = e.target.value;
+                if (value === '') {
+                    onSelectLevel(null, 0);
+                } else {
+                    const level = credit.performanceLevels.find(l => l.level === value);
+                    if (level) {
+                        onSelectLevel(level.level, level.points);
+                    }
+                }
             };
 
             return (
                 <div
-                    className={`credit-card rounded-xl border-2 transition-all bg-white dark:bg-gray-800 dark:border-gray-700
-                        ${selectedLevel ? `border-green-500 bg-gradient-to-r from-green-50 to-white dark:from-green-900/30 dark:to-gray-800` : 'border-gray-200'}`}
+                    className={`credit-card rounded-xl border-2 transition-all bg-white dark:bg-gray-800
+                        ${selectedLevel
+                            ? `${currentLevelColors.border} bg-gradient-to-r ${currentLevelColors.gradient}`
+                            : 'border-gray-200 dark:border-gray-700'}`}
                 >
                     {/* Clickable Header row */}
                     <div
@@ -3893,7 +3911,7 @@
                     >
                         <div className="flex-grow min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                                <h3 className={`font-medium ${selectedLevel ? 'text-green-700 dark:text-green-400' : 'text-gray-800 dark:text-gray-200'}`}>
+                                <h3 className={`font-medium ${selectedLevel ? currentLevelColors.text : 'text-gray-800 dark:text-gray-200'}`}>
                                     {credit.name}
                                 </h3>
                                 {credit.required && (
@@ -3923,44 +3941,52 @@
                         </div>
 
                         <div className="flex items-center gap-3 flex-shrink-0">
-                            <div className={`font-mono text-xl font-bold min-w-[50px] text-right ${selectedLevel ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`}>
+                            <div className={`font-mono text-xl font-bold min-w-[50px] text-right ${selectedLevel ? currentLevelColors.text : 'text-gray-400'}`}>
                                 +{currentPoints}
                             </div>
                             <i className="fa-solid fa-chevron-right text-gray-400 dark:text-gray-500"></i>
                         </div>
                     </div>
 
-                    {/* Performance Level Selector */}
+                    {/* Performance Level Dropdown Selector */}
                     {hasLevels ? (
                         <div className="px-4 pb-4 pt-2">
-                            <div className="flex items-center gap-1 text-xs text-gray-500 mb-2">
-                                <i className="fa-solid fa-layer-group"></i>
-                                <span>Select target level:</span>
+                            <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                                    <i className="fa-solid fa-clipboard-check"></i>
+                                    <span>Claim:</span>
+                                </div>
+                                <div className="flex-grow relative">
+                                    <select
+                                        value={selectedLevel || ''}
+                                        onChange={handleSelectChange}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className={`w-full py-2 px-3 pr-8 rounded-lg border-2 transition-all text-sm font-medium appearance-none cursor-pointer
+                                            ${selectedLevel
+                                                ? `${levelColors[selectedLevel].bg} ${levelColors[selectedLevel].border} ${levelColors[selectedLevel].text}`
+                                                : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        <option value="">— Not Claimed —</option>
+                                        {credit.performanceLevels.map((level) => (
+                                            <option key={level.level} value={level.level}>
+                                                {levelFullNames[level.level]} ({level.points} pts)
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <i className={`fa-solid ${selectedLevel ? levelIcons[selectedLevel] : 'fa-chevron-down'} ${selectedLevel ? levelColors[selectedLevel].text : 'text-gray-400'}`}></i>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex gap-2">
-                                {credit.performanceLevels.filter(l => l.level !== 'minimum' || l.points > 0).map((level) => {
-                                    const isLevelSelected = selectedLevel === level.level;
-                                    const colors = levelColors[level.level] || levelColors.credit;
-
-                                    return (
-                                        <button
-                                            key={level.level}
-                                            onClick={() => onSelectLevel(isLevelSelected ? null : level.level, level.points)}
-                                            className={`flex-1 py-2 px-3 rounded-lg border-2 transition-all text-sm font-medium
-                                                ${isLevelSelected
-                                                    ? `${colors.bg} ${colors.border} ${colors.text} shadow-sm`
-                                                    : `bg-white border-gray-200 text-gray-600 ${colors.hover}`
-                                                }`}
-                                        >
-                                            <div className="flex items-center justify-center gap-1 sm:gap-2">
-                                                <i className={`fa-solid ${levelIcons[level.level]} text-xs`}></i>
-                                                <span className="hidden sm:inline">{levelLabels[level.level]}</span>
-                                                <span className="font-mono text-xs">({level.points})</span>
-                                            </div>
-                                        </button>
-                                    );
-                                })}
-                            </div>
+                            {selectedLevel && (
+                                <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                                    <i className="fa-solid fa-circle-info"></i>
+                                    {selectedLevel === 'exceptional' && <span>Includes Credit Achievement + Minimum Expectation compliance</span>}
+                                    {selectedLevel === 'credit' && <span>Includes Minimum Expectation compliance</span>}
+                                    {selectedLevel === 'minimum' && <span>Meets Minimum Expectation requirements only</span>}
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <div className="px-4 pb-4 pt-2">
@@ -3968,8 +3994,8 @@
                                 onClick={() => onSelectLevel(selectedLevel ? null : 'credit', credit.points)}
                                 className={`w-full py-2 px-3 rounded-lg border-2 transition-all text-sm font-medium
                                     ${selectedLevel
-                                        ? 'bg-green-100 border-green-500 text-green-700'
-                                        : 'bg-white border-gray-200 text-gray-600 hover:bg-green-50'
+                                        ? 'bg-green-100 dark:bg-green-900/30 border-green-500 text-green-700 dark:text-green-300'
+                                        : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20'
                                     }`}
                             >
                                 <div className="flex items-center justify-center gap-2">
@@ -3985,11 +4011,32 @@
         }
 
         // Credit Detail Modal Component
-        function CreditDetailModal({ isOpen, onClose, credit, category, isSelected, onToggle, creditNotes, onNotesChange, creditDocs, onDocsChange }) {
+        function CreditDetailModal({ isOpen, onClose, credit, category, selectedCredits, onSelectLevel, creditNotes, onNotesChange, creditDocs, onDocsChange }) {
             const [activeTab, setActiveTab] = useState('overview');
             const [localNote, setLocalNote] = useState('');
 
             const creditKey = credit && category ? `${category.id}-${credit.id}` : '';
+            const selection = selectedCredits?.[creditKey];
+            const selectedLevel = selection?.level || null;
+            const hasLevels = credit?.performanceLevels && credit.performanceLevels.length > 0;
+
+            const levelColors = {
+                minimum: { bg: 'bg-gray-100', border: 'border-gray-400', text: 'text-gray-600' },
+                credit: { bg: 'bg-blue-100', border: 'border-blue-500', text: 'text-blue-700' },
+                exceptional: { bg: 'bg-green-100', border: 'border-green-500', text: 'text-green-700' }
+            };
+
+            const levelFullNames = {
+                minimum: 'Minimum Expectation',
+                credit: 'Credit Achievement',
+                exceptional: 'Exceptional Performance'
+            };
+
+            const levelIcons = {
+                minimum: 'fa-minus',
+                credit: 'fa-check',
+                exceptional: 'fa-star'
+            };
 
             useEffect(() => {
                 if (isOpen && creditKey) {
@@ -4024,6 +4071,22 @@
                 onNotesChange?.(creditKey, localNote);
             };
 
+            const handleLevelChange = (e) => {
+                const value = e.target.value;
+                if (value === '') {
+                    onSelectLevel(creditKey, null, 0);
+                } else {
+                    const level = credit.performanceLevels.find(l => l.level === value);
+                    if (level) {
+                        onSelectLevel(creditKey, level.level, level.points);
+                    }
+                }
+            };
+
+            const currentPoints = selectedLevel && hasLevels
+                ? credit.performanceLevels.find(l => l.level === selectedLevel)?.points || 0
+                : (selectedLevel ? credit.points : 0);
+
             return (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
                     <div
@@ -4057,35 +4120,75 @@
                                 </div>
 
                                 <div className="flex items-center gap-4 flex-wrap">
-                                    <div className="points-badge text-white px-4 py-2 rounded-xl flex items-center gap-2">
+                                    <div className={`points-badge text-white px-4 py-2 rounded-xl flex items-center gap-2 ${selectedLevel ? (selectedLevel === 'exceptional' ? 'bg-green-600' : selectedLevel === 'credit' ? 'bg-blue-600' : 'bg-gray-600') : ''}`}>
                                         <i className="fa-solid fa-star"></i>
-                                        <span className="font-mono font-bold text-lg">{credit.points}</span>
+                                        <span className="font-mono font-bold text-lg">{currentPoints}</span>
                                         <span className="text-sm opacity-90">points</span>
                                     </div>
                                     {credit.required && (
                                         <span className="bg-red-500 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2">
                                             <i className="fa-solid fa-exclamation-circle"></i>
-                                            Required for Rating
+                                            Required
                                         </span>
                                     )}
                                     {credit.calculatorRequired && (
                                         <span className="bg-blue-500 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2">
                                             <i className="fa-solid fa-calculator"></i>
-                                            Calculator Required
+                                            Calculator
                                         </span>
                                     )}
-                                    <button
-                                        onClick={onToggle}
-                                        className={`ml-auto px-4 py-2 rounded-xl font-medium flex items-center gap-2 transition-all ${
-                                            isSelected
-                                                ? 'bg-green-500 text-white hover:bg-green-600'
-                                                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                                        }`}
-                                    >
-                                        <i className={`fa-solid ${isSelected ? 'fa-check' : 'fa-plus'}`}></i>
-                                        {isSelected ? 'Selected' : 'Add Credit'}
-                                    </button>
                                 </div>
+
+                                {/* Level Selection Dropdown */}
+                                {hasLevels ? (
+                                    <div className="mt-4 flex items-center gap-3">
+                                        <span className="text-sm font-medium text-gray-700">Claim Level:</span>
+                                        <div className="flex-grow relative">
+                                            <select
+                                                value={selectedLevel || ''}
+                                                onChange={handleLevelChange}
+                                                className={`w-full py-2.5 px-4 pr-10 rounded-xl border-2 text-sm font-medium appearance-none cursor-pointer transition-all
+                                                    ${selectedLevel
+                                                        ? `${levelColors[selectedLevel].bg} ${levelColors[selectedLevel].border} ${levelColors[selectedLevel].text}`
+                                                        : 'bg-white border-gray-300 text-gray-600 hover:border-gray-400'
+                                                    }`}
+                                            >
+                                                <option value="">— Not Claimed —</option>
+                                                {credit.performanceLevels.map((level) => (
+                                                    <option key={level.level} value={level.level}>
+                                                        {levelFullNames[level.level]} ({level.points} pts)
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                                                <i className={`fa-solid ${selectedLevel ? levelIcons[selectedLevel] : 'fa-chevron-down'} ${selectedLevel ? levelColors[selectedLevel].text : 'text-gray-400'}`}></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="mt-4">
+                                        <button
+                                            onClick={() => onSelectLevel(creditKey, selectedLevel ? null : 'credit', selectedLevel ? 0 : credit.points)}
+                                            className={`w-full py-2.5 px-4 rounded-xl font-medium flex items-center justify-center gap-2 transition-all ${
+                                                selectedLevel
+                                                    ? 'bg-green-500 text-white hover:bg-green-600'
+                                                    : 'bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-300'
+                                            }`}
+                                        >
+                                            <i className={`fa-solid ${selectedLevel ? 'fa-check' : 'fa-plus'}`}></i>
+                                            {selectedLevel ? `Selected (${credit.points} pts)` : `Add Credit (${credit.points} pts)`}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {selectedLevel && (
+                                    <div className="mt-2 text-xs text-gray-600 flex items-center gap-1">
+                                        <i className="fa-solid fa-circle-info"></i>
+                                        {selectedLevel === 'exceptional' && <span>Includes Credit Achievement + Minimum Expectation compliance</span>}
+                                        {selectedLevel === 'credit' && <span>Includes Minimum Expectation compliance</span>}
+                                        {selectedLevel === 'minimum' && <span>Meets Minimum Expectation requirements only</span>}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -6127,17 +6230,6 @@
                 setCreditDetailModal({ isOpen: false, credit: null, category: null });
             };
 
-            const handleToggleCreditFromModal = () => {
-                if (creditDetailModal.credit && creditDetailModal.category) {
-                    const creditKey = `${creditDetailModal.category.id}-${creditDetailModal.credit.id}`;
-                    handleToggleCredit(creditKey, creditDetailModal.credit.points);
-                }
-            };
-
-            // Get if current modal credit is selected
-            const isModalCreditSelected = creditDetailModal.credit && creditDetailModal.category
-                ? !!selectedCredits[`${creditDetailModal.category.id}-${creditDetailModal.credit.id}`]
-                : false;
 
             // Get star rating
             const getStarRating = (points) => {
@@ -6511,8 +6603,8 @@
                         onClose={handleCloseCreditDetail}
                         credit={creditDetailModal.credit}
                         category={creditDetailModal.category}
-                        isSelected={isModalCreditSelected}
-                        onToggle={handleToggleCreditFromModal}
+                        selectedCredits={selectedCredits}
+                        onSelectLevel={handleSelectCreditLevel}
                         creditNotes={creditNotes}
                         onNotesChange={(key, note) => setCreditNotes(prev => ({ ...prev, [key]: note }))}
                         creditDocs={creditDocs}
