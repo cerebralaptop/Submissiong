@@ -1,0 +1,20 @@
+{
+    "name": "Green Star Submission Assistant",
+    "short_name": "Green Star",
+    "description": "Green Star Buildings v1.1 Submission Tracker and Assistant",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#1B4D3E",
+    "theme_color": "#1B4D3E",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%231B4D3E'/><polygon points='50,15 58,38 82,38 63,53 70,77 50,62 30,77 37,53 18,38 42,38' fill='white'/></svg>",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["productivity", "utilities"],
+    "lang": "en-AU"
+}
