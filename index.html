@@ -4571,11 +4571,103 @@
                             )}
 
                             {activeTab === 'criteria' && (
-                                <div className="space-y-4 fade-in">
-                                    <p className="text-gray-600 mb-4">
-                                        Meet the following criteria to achieve points for this credit:
+                                <div className="space-y-6 fade-in">
+                                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                        Requirements for each performance level. Higher levels include all requirements from lower levels.
                                     </p>
-                                    {credit.criteria && credit.criteria.length > 0 ? (
+
+                                    {credit.performanceLevels && credit.performanceLevels.length > 0 ? (
+                                        <div className="space-y-4">
+                                            {credit.performanceLevels.map((level, levelIndex) => {
+                                                const isThisLevelSelected = selectedLevel === level.level;
+                                                const isIncludedInSelection = selectedLevel && (
+                                                    (selectedLevel === 'exceptional') ||
+                                                    (selectedLevel === 'credit' && level.level !== 'exceptional') ||
+                                                    (selectedLevel === 'minimum' && level.level === 'minimum')
+                                                );
+
+                                                const levelStyles = {
+                                                    minimum: {
+                                                        header: 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600',
+                                                        icon: 'bg-gray-400',
+                                                        iconSymbol: 'fa-minus',
+                                                        text: 'text-gray-700 dark:text-gray-300'
+                                                    },
+                                                    credit: {
+                                                        header: 'bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700',
+                                                        icon: 'bg-blue-500',
+                                                        iconSymbol: 'fa-check',
+                                                        text: 'text-blue-700 dark:text-blue-300'
+                                                    },
+                                                    exceptional: {
+                                                        header: 'bg-green-50 dark:bg-green-900/30 border-green-300 dark:border-green-700',
+                                                        icon: 'bg-green-500',
+                                                        iconSymbol: 'fa-star',
+                                                        text: 'text-green-700 dark:text-green-300'
+                                                    }
+                                                };
+
+                                                const style = levelStyles[level.level] || levelStyles.credit;
+
+                                                return (
+                                                    <div key={level.level} className={`rounded-xl border-2 overflow-hidden transition-all ${isThisLevelSelected ? 'ring-2 ring-offset-2 ring-green-500 dark:ring-offset-gray-800' : 'border-gray-200 dark:border-gray-700'}`}>
+                                                        <div className={`${style.header} border-b px-4 py-3 flex items-center justify-between`}>
+                                                            <div className="flex items-center gap-3">
+                                                                <div className={`w-8 h-8 ${style.icon} rounded-lg flex items-center justify-center`}>
+                                                                    <i className={`fa-solid ${style.iconSymbol} text-white text-sm`}></i>
+                                                                </div>
+                                                                <div>
+                                                                    <h4 className={`font-semibold ${style.text}`}>{level.name}</h4>
+                                                                    <span className="text-xs text-gray-500 dark:text-gray-400">{level.points} points</span>
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex items-center gap-2">
+                                                                {isThisLevelSelected && (
+                                                                    <span className="text-xs bg-green-500 text-white px-2 py-1 rounded-full font-medium">
+                                                                        <i className="fa-solid fa-check mr-1"></i>CLAIMED
+                                                                    </span>
+                                                                )}
+                                                                {isIncludedInSelection && !isThisLevelSelected && (
+                                                                    <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded-full font-medium">
+                                                                        <i className="fa-solid fa-check mr-1"></i>INCLUDED
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="bg-white dark:bg-gray-800 p-4">
+                                                            {level.requirements && level.requirements.length > 0 ? (
+                                                                <ul className="space-y-2">
+                                                                    {level.requirements.map((req, reqIndex) => (
+                                                                        <li key={reqIndex} className="flex items-start gap-3">
+                                                                            <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                                                                                isIncludedInSelection
+                                                                                    ? 'bg-green-100 dark:bg-green-900/30'
+                                                                                    : 'bg-gray-100 dark:bg-gray-700'
+                                                                            }`}>
+                                                                                <i className={`fa-solid text-xs ${
+                                                                                    isIncludedInSelection
+                                                                                        ? 'fa-check text-green-600 dark:text-green-400'
+                                                                                        : 'fa-circle text-gray-400 dark:text-gray-500'
+                                                                                }`}></i>
+                                                                            </div>
+                                                                            <span className={`text-sm ${
+                                                                                isIncludedInSelection
+                                                                                    ? 'text-gray-800 dark:text-gray-200'
+                                                                                    : 'text-gray-600 dark:text-gray-400'
+                                                                            }`}>{req}</span>
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            ) : (
+                                                                <p className="text-sm text-gray-500 dark:text-gray-400 italic">No specific requirements at this level</p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    ) : credit.criteria && credit.criteria.length > 0 ? (
+                                        /* Fallback to old criteria format if no performance levels */
                                         credit.criteria.map((criterion, index) => {
                                             const [title, ...descParts] = criterion.split(':');
                                             const desc = descParts.join(':').trim();
@@ -4586,8 +4678,8 @@
                                                             <span className="text-white font-bold text-sm">{index + 1}</span>
                                                         </div>
                                                         <div>
-                                                            <h4 className="font-semibold text-gray-800">{title}</h4>
-                                                            {desc && <p className="text-gray-600 mt-1">{desc}</p>}
+                                                            <h4 className="font-semibold text-gray-800 dark:text-gray-200">{title}</h4>
+                                                            {desc && <p className="text-gray-600 dark:text-gray-400 mt-1">{desc}</p>}
                                                         </div>
                                                     </div>
                                                 </div>
