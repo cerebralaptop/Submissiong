@@ -250,6 +250,58 @@
         .scrollbar-thin::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .glass-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(71, 85, 105, 0.5);
+        }
+
+        body.dark-mode .modal-backdrop {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        body.dark-mode input,
+        body.dark-mode textarea,
+        body.dark-mode select {
+            background-color: #1e293b;
+            border-color: #475569;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode input::placeholder,
+        body.dark-mode textarea::placeholder {
+            color: #64748b;
+        }
+
+        body.dark-mode .section-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-color: #334155;
+        }
+
+        body.dark-mode .pathway-card {
+            background: linear-gradient(135deg, #1e3a5f 0%, #0f2d1f 100%);
+            border-color: #1e4976;
+        }
+
+        /* Timeline View Styles */
+        .timeline-phase {
+            min-width: 120px;
+        }
+
+        .timeline-credit {
+            transition: all 0.2s ease;
+        }
+
+        .timeline-credit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
     </style>
 </head>
 <body>
@@ -393,7 +445,15 @@
                             'Complaints register and response actions',
                             'Third-party audit reports (if applicable)'
                         ],
-                        tips: 'Implement robust systems from day one. Regular site inspections and photographic evidence are essential.'
+                        tips: 'Implement robust systems from day one. Regular site inspections and photographic evidence are essential.',
+                        projectPhases: ['Construction', 'Handover'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not having EMP ready before construction begins',
+                            'Inadequate monitoring and reporting systems',
+                            'Poor waste tracking documentation'
+                        ],
+                        relatedCredits: ['ind-dev', 'resp-resource', 'impacts-nature']
                     },
                     {
                         id: 'verify-hand',
@@ -451,7 +511,15 @@
                             'O&M manuals',
                             'Training records for building operators'
                         ],
-                        tips: 'Engage a commissioning agent early. Building tuning commitment should be included in contracts.'
+                        tips: 'Engage a commissioning agent early. Building tuning commitment should be included in contracts.',
+                        projectPhases: ['Documentation', 'Construction', 'Handover'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Engaging commissioning agent too late in design',
+                            'Insufficient time allocated for building tuning',
+                            'O&M manuals not completed before handover'
+                        ],
+                        relatedCredits: ['resp-const', 'energy-use', 'ops-res']
                     },
                     {
                         id: 'resp-resource',
@@ -637,7 +705,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'responsible-products',
-                        tips: 'Work with structural engineers early to optimise material quantities. Low-carbon concrete is increasingly available.'
+                        tips: 'Work with structural engineers early to optimise material quantities. Low-carbon concrete is increasingly available.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not engaging structural engineer early on material optimization',
+                            'Missing EPD collection during procurement',
+                            'Incomplete chain of custody documentation for timber'
+                        ],
+                        relatedCredits: ['resp-envelope', 'upfront-carbon-red', 'resp-proc']
                     },
                     {
                         id: 'resp-envelope',
@@ -696,7 +772,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'responsible-products',
-                        tips: 'Consider the whole envelope system including framing, insulation, and finishes.'
+                        tips: 'Consider the whole envelope system including framing, insulation, and finishes.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not tracking sustainability credentials of substituted products',
+                            'Overlooking thermal bridging from framing materials',
+                            'Insulation specifications changed without checking EPD availability'
+                        ],
+                        relatedCredits: ['resp-struct', 'clean-air', 'upfront-carbon-red']
                     },
                     {
                         id: 'resp-systems',
@@ -756,7 +840,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'responsible-products',
-                        tips: 'Engage MEP consultants early on responsible product requirements.'
+                        tips: 'Engage MEP consultants early on responsible product requirements.',
+                        projectPhases: ['Design Dev', 'Documentation', 'Construction'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Late engagement with MEP consultants on sustainability',
+                            'Equipment substitutions without checking refrigerant GWP',
+                            'Missing EPDs for major equipment items'
+                        ],
+                        relatedCredits: ['refrigerant', 'energy-use', 'verify-hand']
                     },
                     {
                         id: 'resp-finishes',
@@ -816,7 +908,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'responsible-products',
-                        tips: 'Coordinate with interior designers early. Many finish products now have sustainability certifications.'
+                        tips: 'Coordinate with interior designers early. Many finish products now have sustainability certifications.',
+                        projectPhases: ['Design Dev', 'Documentation', 'Construction'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Interior designer selections made without checking certifications',
+                            'VOC testing not specified in contracts',
+                            'Finish substitutions without re-checking sustainability credentials'
+                        ],
+                        relatedCredits: ['toxins', 'clean-air', 'resp-proc']
                     },
                     {
                         id: 'impacts-disc',
@@ -870,7 +970,15 @@
                             'Public disclosure documentation (website, report)',
                             'Third-party verification statement'
                         ],
-                        tips: 'Use LCA early in design to inform material selection decisions. Consider publishing an environmental disclosure report.'
+                        tips: 'Use LCA early in design to inform material selection decisions. Consider publishing an environmental disclosure report.',
+                        projectPhases: ['Documentation', 'Handover'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Starting LCA too late in design to influence decisions',
+                            'Using inconsistent data sources across LCA',
+                            'Not planning for public disclosure early enough'
+                        ],
+                        relatedCredits: ['upfront-carbon-red', 'resp-struct', 'ind-dev']
                     }
                 ]
             },
@@ -1016,7 +1124,15 @@
                             'Lighting control zone drawings',
                             'Commissioning reports for lighting systems'
                         ],
-                        tips: 'Use daylight modelling early in design. Consider automated blind systems for glare control.'
+                        tips: 'Use daylight modelling early in design. Consider automated blind systems for glare control.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not running daylight simulations until late in design',
+                            'Underestimating glare issues from large glazing areas',
+                            'Lighting control zones too large for effective user control'
+                        ],
+                        relatedCredits: ['clean-air', 'amenity', 'nature-conn']
                     },
                     {
                         id: 'acoustic',
@@ -1076,7 +1192,15 @@
                             'Sound insulation test results',
                             'Facade acoustic specifications'
                         ],
-                        tips: 'Engage an acoustic consultant early. Consider noise from all sources including HVAC, lifts, and external traffic.'
+                        tips: 'Engage an acoustic consultant early. Consider noise from all sources including HVAC, lifts, and external traffic.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not coordinating acoustic requirements with HVAC design',
+                            'Underspecifying wall and floor sound ratings',
+                            'Open plan areas lacking sufficient acoustic treatment'
+                        ],
+                        relatedCredits: ['clean-air', 'light-quality', 'amenity']
                     },
                     {
                         id: 'toxins',
@@ -1134,7 +1258,15 @@
                             'Hazardous materials survey (for refurbishments)',
                             'Furniture and fabric specifications'
                         ],
-                        tips: 'Use Declare labels and Health Product Declarations to verify product contents. Create a project Red List.'
+                        tips: 'Use Declare labels and Health Product Declarations to verify product contents. Create a project Red List.',
+                        projectPhases: ['Design Dev', 'Documentation', 'Construction'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not requesting HPDs early enough from suppliers',
+                            'Accepting product substitutions without checking declarations',
+                            'Missing Red List chemicals in furniture specifications'
+                        ],
+                        relatedCredits: ['clean-air', 'resp-finishes', 'resp-proc']
                     },
                     {
                         id: 'amenity',
@@ -1192,7 +1324,15 @@
                             'Amenity floor plans and specifications',
                             'Outdoor space design documentation'
                         ],
-                        tips: 'Consider operable windows where appropriate. Quality end-of-trip facilities encourage active transport.'
+                        tips: 'Consider operable windows where appropriate. Quality end-of-trip facilities encourage active transport.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Thermal comfort modelling not done until late in design',
+                            'End-of-trip facilities undersized or poorly located',
+                            'Limited outdoor amenity space for building occupants'
+                        ],
+                        relatedCredits: ['clean-air', 'light-quality', 'movement']
                     },
                     {
                         id: 'nature-conn',
@@ -1250,7 +1390,15 @@
                             'Material schedules highlighting natural materials',
                             'Photos of biophilic design elements'
                         ],
-                        tips: 'Biophilic design can be cost-effective. Even small interventions like indoor plants can make a difference.'
+                        tips: 'Biophilic design can be cost-effective. Even small interventions like indoor plants can make a difference.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Easy',
+                        commonMistakes: [
+                            'Not developing a biophilic design strategy early',
+                            'Indoor plants specified without maintenance plan',
+                            'Views to nature blocked by interior partitions'
+                        ],
+                        relatedCredits: ['light-quality', 'amenity', 'biodiversity']
                     }
                 ]
             },
@@ -1391,7 +1539,15 @@
                             'Water storage and alternative supply documentation',
                             'Passive survivability analysis'
                         ],
-                        tips: 'Consider battery storage with solar PV for resilient power. Passive design features improve survivability.'
+                        tips: 'Consider battery storage with solar PV for resilient power. Passive design features improve survivability.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not developing business continuity plan until late',
+                            'Backup power undersized for essential loads',
+                            'Passive survivability not tested through modelling'
+                        ],
+                        relatedCredits: ['climate-res', 'grid-res', 'energy-source']
                     },
                     {
                         id: 'comm-res',
@@ -1449,7 +1605,15 @@
                             'Emergency shelter capacity documentation',
                             'Resource sharing arrangements'
                         ],
-                        tips: 'Coordinate with local council on emergency planning. Consider building as a potential refuge during extreme events.'
+                        tips: 'Coordinate with local council on emergency planning. Consider building as a potential refuge during extreme events.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not engaging with local council early enough',
+                            'Community resilience features not planned from concept',
+                            'Missing formal agreements with emergency services'
+                        ],
+                        relatedCredits: ['climate-res', 'ops-res', 'contribution']
                     },
                     {
                         id: 'heat-res',
@@ -1507,7 +1671,15 @@
                             'Passive cooling analysis',
                             'Landscape design with vegetation coverage'
                         ],
-                        tips: 'Green roofs provide cooling and other benefits. Light-coloured surfaces significantly reduce heat absorption.'
+                        tips: 'Green roofs provide cooling and other benefits. Light-coloured surfaces significantly reduce heat absorption.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not modelling passive performance during heatwaves',
+                            'Roof color or SRI not specified in documentation',
+                            'Shading design not optimized for summer sun angles'
+                        ],
+                        relatedCredits: ['climate-res', 'biodiversity', 'energy-use']
                     },
                     {
                         id: 'grid-res',
@@ -1565,7 +1737,15 @@
                             'Smart metering and controls documentation',
                             'Peak demand management strategy'
                         ],
-                        tips: 'Battery storage with solar PV can provide grid services and backup power. Consider demand response program participation.'
+                        tips: 'Battery storage with solar PV can provide grid services and backup power. Consider demand response program participation.',
+                        projectPhases: ['Design Dev', 'Documentation', 'Construction'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not designing electrical infrastructure for future EV growth',
+                            'Missing demand response capability in BMS specification',
+                            'Battery storage not sized appropriately for grid services'
+                        ],
+                        relatedCredits: ['energy-source', 'ops-res', 'low-emissions']
                     }
                 ]
             },
@@ -1610,7 +1790,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'energy-reference',
-                        tips: 'Consider on-site solar PV as a priority. PPAs can provide cost-effective renewable energy for larger loads.'
+                        tips: 'Consider on-site solar PV as a priority. PPAs can provide cost-effective renewable energy for larger loads.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not maximizing rooftop solar PV potential',
+                            'PPA negotiations started too late',
+                            'Electrification requirements conflicting with gas cooking preferences'
+                        ],
+                        relatedCredits: ['energy-use', 'grid-res', 'upfront-carbon-red']
                     },
                     {
                         id: 'energy-use',
@@ -1640,7 +1828,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'energy-reference',
-                        tips: 'Start energy modelling early in design. Target at least 10% improvement over reference for 4 Star.'
+                        tips: 'Start energy modelling early in design. Target at least 10% improvement over reference for 4 Star.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Energy modelling not started until documentation phase',
+                            'Unrealistic assumptions in energy model',
+                            'NABERS Commitment Agreement not secured early'
+                        ],
+                        relatedCredits: ['energy-source', 'verify-hand', 'resp-systems']
                     },
                     {
                         id: 'upfront-carbon-red',
@@ -1668,7 +1864,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'upfront-carbon',
-                        tips: 'Focus on structure first - concrete and steel typically dominate upfront carbon. Low-carbon concrete can significantly reduce totals.'
+                        tips: 'Focus on structure first - concrete and steel typically dominate upfront carbon. Low-carbon concrete can significantly reduce totals.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'LCA not started until after structural design is fixed',
+                            'Incorrect system boundaries in carbon calculations',
+                            'Not collecting EPDs during procurement'
+                        ],
+                        relatedCredits: ['resp-struct', 'impacts-disc', 'circularity']
                     },
                     {
                         id: 'upfront-carbon-comp',
@@ -1691,7 +1895,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'carbon-compensation',
-                        tips: 'Prioritise reduction over offsets. If offsetting, choose high-quality offsets with co-benefits.'
+                        tips: 'Prioritise reduction over offsets. If offsetting, choose high-quality offsets with co-benefits.',
+                        projectPhases: ['Documentation', 'Construction', 'Handover'],
+                        difficulty: 'Easy',
+                        commonMistakes: [
+                            'Using poor quality carbon offsets without verification',
+                            'Not calculating total upfront carbon accurately',
+                            'Missing public disclosure requirements'
+                        ],
+                        relatedCredits: ['upfront-carbon-red', 'impacts-disc', 'market-transform']
                     },
                     {
                         id: 'refrigerant',
@@ -1715,7 +1927,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'refrigerant',
-                        tips: 'Low-GWP options like R-32 are now widely available. Consider VRF alternatives with lower refrigerant charges.'
+                        tips: 'Low-GWP options like R-32 are now widely available. Consider VRF alternatives with lower refrigerant charges.',
+                        projectPhases: ['Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not specifying low-GWP refrigerants in tender documents',
+                            'Equipment substitutions without checking refrigerant type',
+                            'Missing leak detection system specifications'
+                        ],
+                        relatedCredits: ['resp-systems', 'energy-use', 'climate-res']
                     },
                     {
                         id: 'low-emissions',
@@ -1736,7 +1956,15 @@
                             'End-of-trip facility floor plans',
                             'Site plan showing pedestrian and cyclist access'
                         ],
-                        tips: 'Plan for future EV uptake - install conduit and switchboard capacity even if not installing chargers now.'
+                        tips: 'Plan for future EV uptake - install conduit and switchboard capacity even if not installing chargers now.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Easy',
+                        commonMistakes: [
+                            'Not providing adequate electrical capacity for future EV growth',
+                            'Poor location of EV chargers in car park',
+                            'End-of-trip facilities undersized for cycling demand'
+                        ],
+                        relatedCredits: ['movement', 'grid-res', 'amenity']
                     },
                     {
                         id: 'circularity',
@@ -1757,7 +1985,15 @@
                             'Connection details showing reversibility',
                             'Material passport or register'
                         ],
-                        tips: 'Use mechanical connections where possible instead of adhesives. Document all materials for future recovery.'
+                        tips: 'Use mechanical connections where possible instead of adhesives. Document all materials for future recovery.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not considering future adaptability in structural design',
+                            'Using permanent adhesives where mechanical connections possible',
+                            'Missing material passport documentation'
+                        ],
+                        relatedCredits: ['upfront-carbon-red', 'resp-struct', 'resp-finishes']
                     },
                     {
                         id: 'water-use',
@@ -1781,7 +2017,15 @@
                         ],
                         calculatorRequired: true,
                         relatedCalculator: 'water',
-                        tips: 'Rainwater harvesting is often cost-effective for toilet flushing and irrigation. Consider waterless urinals.'
+                        tips: 'Rainwater harvesting is often cost-effective for toilet flushing and irrigation. Consider waterless urinals.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Rainwater tank undersized for demand',
+                            'Not considering recycled water early enough',
+                            'Irrigation designed without considering water efficiency'
+                        ],
+                        relatedCredits: ['waterway', 'biodiversity', 'ops-res']
                     }
                 ]
             },
@@ -1923,7 +2167,15 @@
                             'Public realm design documentation',
                             'Place quality assessment'
                         ],
-                        tips: 'Engage with urban designers and council early. Quality public spaces add value to projects.'
+                        tips: 'Engage with urban designers and council early. Quality public spaces add value to projects.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Ground floor retail designed without considering activation',
+                            'Outdoor spaces not designed for comfort and use',
+                            'Community spaces undersized or poorly located'
+                        ],
+                        relatedCredits: ['movement', 'contribution', 'culture']
                     },
                     {
                         id: 'contribution',
@@ -1981,7 +2233,15 @@
                             'Community benefit documentation',
                             'Local procurement evidence'
                         ],
-                        tips: 'Early engagement with community groups builds support. Consider long-term relationships with local organisations.'
+                        tips: 'Early engagement with community groups builds support. Consider long-term relationships with local organisations.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Easy',
+                        commonMistakes: [
+                            'Community engagement started too late to influence design',
+                            'Not documenting engagement activities properly',
+                            'Promises made to community not followed through'
+                        ],
+                        relatedCredits: ['enjoyable', 'culture', 'first-nations']
                     },
                     {
                         id: 'culture',
@@ -2039,7 +2299,15 @@
                             'Cultural design elements documentation',
                             'Interpretation strategy'
                         ],
-                        tips: 'Engage with Traditional Owners early and meaningfully. Heritage consultants can help identify opportunities.'
+                        tips: 'Engage with Traditional Owners early and meaningfully. Heritage consultants can help identify opportunities.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Traditional Owner engagement started too late',
+                            'Heritage interpretation treated as afterthought',
+                            'Cultural elements not integrated authentically'
+                        ],
+                        relatedCredits: ['first-nations', 'contribution', 'enjoyable']
                     }
                 ]
             },
@@ -2114,7 +2382,15 @@
                             'Training records',
                             'Diversity reporting and outcomes'
                         ],
-                        tips: 'Partner with industry bodies like NAWIC for best practice guidance. Mental health programs benefit workers and productivity.'
+                        tips: 'Partner with industry bodies like NAWIC for best practice guidance. Mental health programs benefit workers and productivity.',
+                        projectPhases: ['Construction', 'Handover'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Diversity policy not included in contractor requirements',
+                            'Mental health support not accessible to all workers',
+                            'Training outcomes not tracked or reported'
+                        ],
+                        relatedCredits: ['first-nations', 'proc-workforce', 'resp-const']
                     },
                     {
                         id: 'first-nations',
@@ -2172,7 +2448,15 @@
                             'First Nations procurement records',
                             'Partnership agreements'
                         ],
-                        tips: 'Engage with Traditional Owners early - relationships take time. Supply Nation can help identify First Nations businesses.'
+                        tips: 'Engage with Traditional Owners early - relationships take time. Supply Nation can help identify First Nations businesses.',
+                        projectPhases: ['Concept', 'Schematic', 'Construction'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Traditional Owner engagement treated as box-ticking',
+                            'First Nations procurement requirements not in contracts',
+                            'Insufficient time allowed for relationship building'
+                        ],
+                        relatedCredits: ['culture', 'proc-workforce', 'inclusive-const']
                     },
                     {
                         id: 'proc-workforce',
@@ -2231,7 +2515,15 @@
                             'Employment and training records'
                         ],
                         calculatorRequired: true,
-                        tips: 'Social Traders can help identify certified social enterprises. Include social procurement requirements in tender documents.'
+                        tips: 'Social Traders can help identify certified social enterprises. Include social procurement requirements in tender documents.',
+                        projectPhases: ['Documentation', 'Construction'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Social procurement targets not included in contracts',
+                            'Social enterprise capacity not verified before award',
+                            'Tracking systems not set up from project start'
+                        ],
+                        relatedCredits: ['first-nations', 'inclusive-const', 'resp-proc']
                     },
                     {
                         id: 'design-equity',
@@ -2289,7 +2581,15 @@
                             'User consultation records',
                             'Accessibility certification'
                         ],
-                        tips: 'Engage an accessibility consultant early. Consider the needs of neurodiverse users and families with young children.'
+                        tips: 'Engage an accessibility consultant early. Consider the needs of neurodiverse users and families with young children.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Accessibility consultant engaged too late',
+                            'Only designing to minimum code requirements',
+                            'Not consulting with diverse user groups'
+                        ],
+                        relatedCredits: ['amenity', 'movement', 'enjoyable']
                     }
                 ]
             },
@@ -2365,7 +2665,15 @@
                             'Erosion and sediment control plans',
                             'Construction environmental management plan'
                         ],
-                        tips: 'Engage an ecologist early to identify ecological constraints and opportunities. Protect trees with root zones during construction.'
+                        tips: 'Engage an ecologist early to identify ecological constraints and opportunities. Protect trees with root zones during construction.',
+                        projectPhases: ['Concept', 'Schematic', 'Construction'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Ecological assessment done too late to influence design',
+                            'Tree protection zones not maintained during construction',
+                            'Environmental permits not obtained early enough'
+                        ],
+                        relatedCredits: ['biodiversity', 'nature-connectivity', 'waterway']
                     },
                     {
                         id: 'biodiversity',
@@ -2424,7 +2732,15 @@
                             'Monitoring and maintenance plan'
                         ],
                         calculatorRequired: true,
-                        tips: 'Use local native species suited to the site conditions. Green roofs can provide valuable habitat in urban areas.'
+                        tips: 'Use local native species suited to the site conditions. Green roofs can provide valuable habitat in urban areas.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Using non-local or invasive species in planting',
+                            'Green roof not designed for biodiversity outcomes',
+                            'Habitat features not maintained post-construction'
+                        ],
+                        relatedCredits: ['impacts-nature', 'nature-connectivity', 'heat-res']
                     },
                     {
                         id: 'nature-connectivity',
@@ -2482,7 +2798,15 @@
                             'Lighting design addressing light pollution',
                             'Partnership agreements with conservation groups'
                         ],
-                        tips: 'Coordinate with council on regional wildlife corridors. Native planting strips can create valuable habitat links.'
+                        tips: 'Coordinate with council on regional wildlife corridors. Native planting strips can create valuable habitat links.',
+                        projectPhases: ['Concept', 'Schematic', 'Design Dev'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Not coordinating with council on regional corridors',
+                            'Lighting design creating barriers for nocturnal fauna',
+                            'Fencing blocking wildlife movement paths'
+                        ],
+                        relatedCredits: ['biodiversity', 'impacts-nature', 'light-quality']
                     },
                     {
                         id: 'nature-steward',
@@ -2540,7 +2864,15 @@
                             'Monitoring reports',
                             'Community engagement records'
                         ],
-                        tips: 'Conservation covenants can provide permanent protection. Partner with local Landcare groups for ongoing management.'
+                        tips: 'Conservation covenants can provide permanent protection. Partner with local Landcare groups for ongoing management.',
+                        projectPhases: ['Design Dev', 'Documentation', 'Handover'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'Long-term management not included in building operations budget',
+                            'Conservation commitments not legally secured',
+                            'Monitoring program not established before handover'
+                        ],
+                        relatedCredits: ['biodiversity', 'impacts-nature', 'comm-res']
                     },
                     {
                         id: 'waterway',
@@ -2598,7 +2930,15 @@
                             'Riparian management plan',
                             'Water quality monitoring data'
                         ],
-                        tips: 'WSUD treatment trains are effective for stormwater quality. Raingardens and wetlands can also provide habitat value.'
+                        tips: 'WSUD treatment trains are effective for stormwater quality. Raingardens and wetlands can also provide habitat value.',
+                        projectPhases: ['Schematic', 'Design Dev', 'Documentation'],
+                        difficulty: 'Medium',
+                        commonMistakes: [
+                            'WSUD elements undersized for pollutant targets',
+                            'Stormwater modelling not completed early enough',
+                            'Riparian buffer zones compromised by building footprint'
+                        ],
+                        relatedCredits: ['water-use', 'biodiversity', 'impacts-nature']
                     }
                 ]
             },
@@ -2673,7 +3013,15 @@
                             'Case study and presentation materials',
                             'Letters of support from industry partners'
                         ],
-                        tips: 'Document innovations from early in the project. Partner with GBCA or industry bodies to share learnings.'
+                        tips: 'Document innovations from early in the project. Partner with GBCA or industry bodies to share learnings.',
+                        projectPhases: ['Concept', 'Schematic', 'Handover'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not documenting innovations as they happen',
+                            'Failing to share learnings through case studies',
+                            'Innovation claims not supported by evidence'
+                        ],
+                        relatedCredits: ['leadership-challenge', 'ind-dev', 'impacts-disc']
                     },
                     {
                         id: 'leadership-challenge',
@@ -2738,7 +3086,15 @@
                             { name: 'Nature Positive', description: 'Achieving net positive biodiversity outcomes' },
                             { name: 'Custom Challenge', description: 'Project-specific challenge approved by GBCA' }
                         ],
-                        tips: 'Engage with GBCA early to discuss potential Leadership Challenges. Ensure robust measurement and verification.'
+                        tips: 'Engage with GBCA early to discuss potential Leadership Challenges. Ensure robust measurement and verification.',
+                        projectPhases: ['Concept', 'Schematic', 'Handover'],
+                        difficulty: 'Hard',
+                        commonMistakes: [
+                            'Not engaging GBCA early enough for challenge approval',
+                            'Challenge outcomes not robustly measured',
+                            'Missing third-party verification of outcomes'
+                        ],
+                        relatedCredits: ['market-transform', 'impacts-disc', 'ind-dev']
                     }
                 ]
             }
@@ -2949,53 +3305,50 @@
 
             return (
                 <div
-                    className={`credit-card rounded-xl border-2 transition-all bg-white
-                        ${selectedLevel ? `border-green-500 bg-gradient-to-r from-green-50 to-white` : 'border-gray-200'}`}
+                    className={`credit-card rounded-xl border-2 transition-all bg-white dark:bg-gray-800 dark:border-gray-700
+                        ${selectedLevel ? `border-green-500 bg-gradient-to-r from-green-50 to-white dark:from-green-900/30 dark:to-gray-800` : 'border-gray-200'}`}
                 >
-                    {/* Header row */}
-                    <div className="flex items-center gap-4 p-4 pb-2">
+                    {/* Clickable Header row */}
+                    <div
+                        className="flex items-center gap-4 p-4 pb-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-t-xl transition-colors"
+                        onClick={onViewDetails}
+                    >
                         <div className="flex-grow min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                                <h3 className={`font-medium ${selectedLevel ? 'text-green-700' : 'text-gray-800'}`}>
+                                <h3 className={`font-medium ${selectedLevel ? 'text-green-700 dark:text-green-400' : 'text-gray-800 dark:text-gray-200'}`}>
                                     {credit.name}
                                 </h3>
                                 {credit.required && (
-                                    <span className="required-badge bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-semibold uppercase">
+                                    <span className="required-badge bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-400 px-2 py-0.5 rounded-full font-semibold uppercase">
                                         Required
                                     </span>
                                 )}
+                                {credit.difficulty && (
+                                    <span className={`text-xs px-2 py-0.5 rounded-full ${
+                                        credit.difficulty === 'Easy' ? 'bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-400' :
+                                        credit.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/50 dark:text-yellow-400' :
+                                        'bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-400'
+                                    }`}>
+                                        {credit.difficulty}
+                                    </span>
+                                )}
                                 {credit.calculatorRequired && (
-                                    <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
+                                    <span className="text-xs bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400 px-2 py-0.5 rounded-full">
                                         <i className="fa-solid fa-calculator mr-1"></i>
                                         Calc
                                     </span>
                                 )}
-                                {credit.projectPhases && credit.projectPhases[0] && (
-                                    <span className="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full">
-                                        <i className="fa-solid fa-clock mr-1"></i>
-                                        {credit.projectPhases[0]}
-                                    </span>
-                                )}
                             </div>
                             {credit.description && (
-                                <p className="text-sm text-gray-500 mt-1 line-clamp-2">{credit.description}</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{credit.description}</p>
                             )}
                         </div>
 
                         <div className="flex items-center gap-3 flex-shrink-0">
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onViewDetails();
-                                }}
-                                className="info-button w-9 h-9 rounded-full bg-blue-100 hover:bg-blue-200 flex items-center justify-center"
-                                title="View credit details"
-                            >
-                                <i className="fa-solid fa-info text-blue-600"></i>
-                            </button>
-                            <div className={`font-mono text-xl font-bold min-w-[50px] text-right ${selectedLevel ? 'text-green-600' : 'text-gray-400'}`}>
+                            <div className={`font-mono text-xl font-bold min-w-[50px] text-right ${selectedLevel ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`}>
                                 +{currentPoints}
                             </div>
+                            <i className="fa-solid fa-chevron-right text-gray-400 dark:text-gray-500"></i>
                         </div>
                     </div>
 
@@ -3054,27 +3407,44 @@
         }
 
         // Credit Detail Modal Component
-        function CreditDetailModal({ isOpen, onClose, credit, category, isSelected, onToggle }) {
+        function CreditDetailModal({ isOpen, onClose, credit, category, isSelected, onToggle, creditNotes, onNotesChange, creditDocs, onDocsChange }) {
             const [activeTab, setActiveTab] = useState('overview');
+            const [localNote, setLocalNote] = useState('');
+
+            const creditKey = credit && category ? `${category.id}-${credit.id}` : '';
 
             useEffect(() => {
-                if (isOpen) {
+                if (isOpen && creditKey) {
                     setActiveTab('overview');
+                    setLocalNote(creditNotes?.[creditKey] || '');
                 }
-            }, [isOpen, credit]);
+            }, [isOpen, credit, creditNotes, creditKey]);
 
             if (!isOpen || !credit) return null;
 
             const tabs = [
                 { id: 'overview', label: 'Overview', icon: 'fa-eye' },
-                { id: 'levels', label: 'Performance Levels', icon: 'fa-layer-group' },
-                { id: 'criteria', label: 'Criteria', icon: 'fa-list-check' },
-                { id: 'documentation', label: 'Documentation', icon: 'fa-file-lines' }
+                { id: 'levels', label: 'Levels', icon: 'fa-layer-group' },
+                { id: 'checklist', label: 'Checklist', icon: 'fa-clipboard-check' },
+                { id: 'notes', label: 'Notes', icon: 'fa-sticky-note' },
+                { id: 'criteria', label: 'Criteria', icon: 'fa-list-check' }
             ];
 
             if (credit.pathways && credit.pathways.length > 0) {
-                tabs.splice(3, 0, { id: 'pathways', label: 'Pathways', icon: 'fa-route' });
+                tabs.push({ id: 'pathways', label: 'Pathways', icon: 'fa-route' });
             }
+
+            // Get completed docs for this credit
+            const completedDocs = creditDocs?.[creditKey] || {};
+
+            const handleDocToggle = (docIndex) => {
+                const newDocs = { ...completedDocs, [docIndex]: !completedDocs[docIndex] };
+                onDocsChange?.(creditKey, newDocs);
+            };
+
+            const handleNoteSave = () => {
+                onNotesChange?.(creditKey, localNote);
+            };
 
             return (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
@@ -3374,6 +3744,114 @@
                                 </div>
                             )}
 
+                            {activeTab === 'checklist' && (
+                                <div className="space-y-4 fade-in">
+                                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                        <i className="fa-solid fa-clipboard-check mr-2"></i>
+                                        Track your progress gathering required documentation:
+                                    </p>
+                                    {credit.documentation && credit.documentation.length > 0 ? (
+                                        <div className="space-y-2">
+                                            {credit.documentation.map((doc, index) => (
+                                                <div
+                                                    key={index}
+                                                    onClick={() => handleDocToggle(index)}
+                                                    className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all
+                                                        ${completedDocs[index]
+                                                            ? 'bg-green-50 border-green-300 dark:bg-green-900/30 dark:border-green-700'
+                                                            : 'bg-gray-50 border-gray-200 hover:border-gray-300 dark:bg-gray-700 dark:border-gray-600'
+                                                        }`}
+                                                >
+                                                    <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all
+                                                        ${completedDocs[index]
+                                                            ? 'bg-green-500 border-green-500'
+                                                            : 'border-gray-300 dark:border-gray-500'
+                                                        }`}
+                                                    >
+                                                        {completedDocs[index] && <i className="fa-solid fa-check text-white text-xs"></i>}
+                                                    </div>
+                                                    <span className={`flex-grow ${completedDocs[index] ? 'text-green-700 dark:text-green-400' : 'text-gray-700 dark:text-gray-300'}`}>
+                                                        {doc}
+                                                    </span>
+                                                    {completedDocs[index] && (
+                                                        <i className="fa-solid fa-circle-check text-green-500"></i>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-8 text-gray-500">
+                                            <i className="fa-solid fa-folder-open text-4xl mb-3 text-gray-300"></i>
+                                            <p>No documentation requirements specified</p>
+                                        </div>
+                                    )}
+
+                                    {/* Progress Summary */}
+                                    {credit.documentation && credit.documentation.length > 0 && (
+                                        <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Documentation Progress</span>
+                                                <span className="text-sm font-mono text-gray-600 dark:text-gray-400">
+                                                    {Object.values(completedDocs).filter(Boolean).length} / {credit.documentation.length}
+                                                </span>
+                                            </div>
+                                            <div className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                                                <div
+                                                    className="h-full bg-gradient-to-r from-green-400 to-green-600 transition-all"
+                                                    style={{ width: `${(Object.values(completedDocs).filter(Boolean).length / credit.documentation.length) * 100}%` }}
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {activeTab === 'notes' && (
+                                <div className="space-y-4 fade-in">
+                                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                        <i className="fa-solid fa-sticky-note mr-2"></i>
+                                        Add project-specific notes for this credit:
+                                    </p>
+                                    <textarea
+                                        value={localNote}
+                                        onChange={(e) => setLocalNote(e.target.value)}
+                                        onBlur={handleNoteSave}
+                                        placeholder="Enter your notes here... (e.g., responsible team member, specific requirements, deadlines, etc.)"
+                                        className="w-full h-48 p-4 border border-gray-200 dark:border-gray-600 rounded-xl resize-none focus:ring-2 focus:ring-green-200 focus:border-green-500 transition-all dark:bg-gray-700 dark:text-white"
+                                    />
+                                    <div className="flex justify-between items-center text-sm text-gray-500">
+                                        <span>Auto-saves when you click outside</span>
+                                        <button
+                                            onClick={handleNoteSave}
+                                            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center gap-2"
+                                        >
+                                            <i className="fa-solid fa-save"></i>
+                                            Save Note
+                                        </button>
+                                    </div>
+
+                                    {/* Related Credits */}
+                                    {credit.relatedCredits && credit.relatedCredits.length > 0 && (
+                                        <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-xl">
+                                            <h4 className="font-semibold text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
+                                                <i className="fa-solid fa-link"></i>
+                                                Related Credits (Synergies)
+                                            </h4>
+                                            <p className="text-sm text-blue-600 dark:text-blue-400 mb-3">
+                                                These credits have connections that may help or be affected by this credit:
+                                            </p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {credit.relatedCredits.map((relatedId, idx) => (
+                                                    <span key={idx} className="px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-300 rounded-full text-sm">
+                                                        {relatedId}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
                             {activeTab === 'criteria' && (
                                 <div className="space-y-4 fade-in">
                                     <p className="text-gray-600 mb-4">
@@ -3476,13 +3954,42 @@
         }
 
         // Credits List Component
-        function CreditsList({ category, selectedCredits, onSelectCreditLevel, onViewCreditDetails, phaseFilter }) {
-            // Filter credits by project phase if filter is active
-            const filteredCredits = phaseFilter && phaseFilter !== 'all'
-                ? category.credits.filter(credit =>
-                    credit.projectPhases && credit.projectPhases.includes(phaseFilter)
-                )
-                : category.credits;
+        function CreditsList({ category, selectedCredits, onSelectCreditLevel, onViewCreditDetails, phaseFilter, searchQuery, showQuickWins }) {
+            // Filter credits by multiple criteria
+            const filteredCredits = category.credits.filter(credit => {
+                // Phase filter
+                if (phaseFilter && phaseFilter !== 'all') {
+                    if (!credit.projectPhases || !credit.projectPhases.includes(phaseFilter)) {
+                        return false;
+                    }
+                }
+
+                // Quick wins filter (Easy difficulty or high points-to-difficulty ratio)
+                if (showQuickWins) {
+                    if (credit.difficulty !== 'Easy') {
+                        return false;
+                    }
+                }
+
+                // Search filter
+                if (searchQuery && searchQuery.trim()) {
+                    const query = searchQuery.toLowerCase();
+                    const searchableText = [
+                        credit.name,
+                        credit.description,
+                        credit.aims,
+                        ...(credit.criteria || []),
+                        ...(credit.tips ? [credit.tips] : []),
+                        ...(credit.commonMistakes || [])
+                    ].join(' ').toLowerCase();
+
+                    if (!searchableText.includes(query)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
 
             if (filteredCredits.length === 0) {
                 return (
@@ -3537,6 +4044,209 @@
                                 </div>
                             );
                         })}
+                    </div>
+                </div>
+            );
+        }
+
+        // Timeline View Component - Visual timeline of credits by project phase
+        function TimelineView({ categories, selectedCredits, onViewCreditDetails, projectPhases }) {
+            // Group all credits by their first project phase
+            const creditsByPhase = {};
+            projectPhases.forEach(phase => {
+                creditsByPhase[phase.id] = [];
+            });
+
+            categories.forEach(category => {
+                category.credits.forEach(credit => {
+                    if (credit.projectPhases && credit.projectPhases.length > 0) {
+                        const primaryPhase = credit.projectPhases[0];
+                        if (creditsByPhase[primaryPhase]) {
+                            creditsByPhase[primaryPhase].push({ credit, category });
+                        }
+                    }
+                });
+            });
+
+            return (
+                <div className="glass-card rounded-2xl p-6 shadow-lg dark:bg-gray-800/80">
+                    <div className="flex items-center gap-3 mb-6">
+                        <i className="fa-solid fa-timeline text-2xl text-purple-500"></i>
+                        <div>
+                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">Project Timeline</h2>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Credits organized by primary project phase</p>
+                        </div>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                        <div className="flex gap-4 pb-4" style={{ minWidth: 'max-content' }}>
+                            {projectPhases.map((phase, phaseIndex) => (
+                                <div key={phase.id} className="timeline-phase w-64 flex-shrink-0">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <div className={`w-8 h-8 rounded-full bg-purple-${100 + phaseIndex * 100} flex items-center justify-center`}>
+                                            <i className={`fa-solid ${phase.icon} text-purple-600 text-sm`}></i>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-gray-800 dark:text-white text-sm">{phase.name}</h3>
+                                            <span className="text-xs text-gray-500">{creditsByPhase[phase.id].length} credits</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="relative pl-4 border-l-2 border-purple-200 dark:border-purple-800 space-y-2">
+                                        {creditsByPhase[phase.id].map(({ credit, category }) => {
+                                            const creditKey = `${category.id}-${credit.id}`;
+                                            const isSelected = !!selectedCredits[creditKey];
+
+                                            return (
+                                                <div
+                                                    key={credit.id}
+                                                    onClick={() => onViewCreditDetails(credit, category)}
+                                                    className={`timeline-credit p-3 rounded-lg border cursor-pointer
+                                                        ${isSelected
+                                                            ? 'bg-green-50 border-green-300 dark:bg-green-900/30 dark:border-green-700'
+                                                            : 'bg-white border-gray-200 hover:border-purple-300 dark:bg-gray-700 dark:border-gray-600'
+                                                        }`}
+                                                >
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="text-lg">{category.icon}</span>
+                                                        <span className={`text-xs px-1.5 py-0.5 rounded ${
+                                                            credit.difficulty === 'Easy' ? 'bg-green-100 text-green-600 dark:bg-green-900/50' :
+                                                            credit.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/50' :
+                                                            'bg-red-100 text-red-600 dark:bg-red-900/50'
+                                                        }`}>
+                                                            {credit.difficulty}
+                                                        </span>
+                                                    </div>
+                                                    <h4 className="font-medium text-sm text-gray-800 dark:text-white">{credit.name}</h4>
+                                                    <div className="flex items-center justify-between mt-1">
+                                                        <span className="text-xs text-gray-500">{credit.points} pts</span>
+                                                        {isSelected && <i className="fa-solid fa-check text-green-500 text-xs"></i>}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+
+                                        {creditsByPhase[phase.id].length === 0 && (
+                                            <p className="text-xs text-gray-400 italic py-2">No credits in this phase</p>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Responsibility Matrix Component - Assign credits to team members
+        function ResponsibilityMatrix({ categories, selectedCredits, creditAssignments, onAssignmentChange, onViewCreditDetails }) {
+            const teamRoles = [
+                { id: 'architect', name: 'Architect', icon: 'fa-compass-drafting', color: 'blue' },
+                { id: 'services', name: 'Services Engineer', icon: 'fa-gears', color: 'orange' },
+                { id: 'structural', name: 'Structural Engineer', icon: 'fa-building', color: 'purple' },
+                { id: 'sustainability', name: 'Sustainability', icon: 'fa-leaf', color: 'green' },
+                { id: 'contractor', name: 'Contractor', icon: 'fa-helmet-safety', color: 'yellow' },
+                { id: 'client', name: 'Client', icon: 'fa-user-tie', color: 'gray' }
+            ];
+
+            // Get all selected credits
+            const selectedCreditsList = [];
+            categories.forEach(category => {
+                category.credits.forEach(credit => {
+                    const creditKey = `${category.id}-${credit.id}`;
+                    if (selectedCredits[creditKey]) {
+                        selectedCreditsList.push({ credit, category, creditKey });
+                    }
+                });
+            });
+
+            return (
+                <div className="glass-card rounded-2xl p-6 shadow-lg dark:bg-gray-800/80">
+                    <div className="flex items-center gap-3 mb-6">
+                        <i className="fa-solid fa-table-cells text-2xl text-blue-500"></i>
+                        <div>
+                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">Responsibility Matrix</h2>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Assign team responsibilities for selected credits</p>
+                        </div>
+                    </div>
+
+                    {selectedCreditsList.length === 0 ? (
+                        <div className="text-center py-12">
+                            <i className="fa-solid fa-clipboard-list text-4xl text-gray-300 mb-3"></i>
+                            <p className="text-gray-500">No credits selected yet</p>
+                            <p className="text-sm text-gray-400">Select credits from the Credits view to assign responsibilities</p>
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="border-b border-gray-200 dark:border-gray-700">
+                                        <th className="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">Credit</th>
+                                        {teamRoles.map(role => (
+                                            <th key={role.id} className="text-center py-3 px-2 font-semibold text-gray-700 dark:text-gray-300">
+                                                <div className="flex flex-col items-center gap-1">
+                                                    <i className={`fa-solid ${role.icon} text-${role.color}-500`}></i>
+                                                    <span className="text-xs">{role.name}</span>
+                                                </div>
+                                            </th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {selectedCreditsList.map(({ credit, category, creditKey }) => (
+                                        <tr key={creditKey} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                            <td className="py-3 px-4">
+                                                <button
+                                                    onClick={() => onViewCreditDetails(credit, category)}
+                                                    className="flex items-center gap-2 hover:text-green-600 transition-colors text-left"
+                                                >
+                                                    <span className="text-lg">{category.icon}</span>
+                                                    <div>
+                                                        <div className="font-medium text-gray-800 dark:text-white text-sm">{credit.name}</div>
+                                                        <div className="text-xs text-gray-500">{category.name}</div>
+                                                    </div>
+                                                </button>
+                                            </td>
+                                            {teamRoles.map(role => {
+                                                const assignment = creditAssignments[creditKey] || {};
+                                                const isAssigned = assignment[role.id];
+
+                                                return (
+                                                    <td key={role.id} className="text-center py-3 px-2">
+                                                        <button
+                                                            onClick={() => {
+                                                                const newAssignment = { ...assignment, [role.id]: !isAssigned };
+                                                                onAssignmentChange(creditKey, newAssignment);
+                                                            }}
+                                                            className={`w-8 h-8 rounded-lg transition-all
+                                                                ${isAssigned
+                                                                    ? `bg-${role.color}-100 border-2 border-${role.color}-500 text-${role.color}-600`
+                                                                    : 'bg-gray-100 border-2 border-transparent text-gray-300 hover:border-gray-300 dark:bg-gray-700'
+                                                                }`}
+                                                        >
+                                                            <i className={`fa-solid ${isAssigned ? 'fa-check' : 'fa-plus'} text-sm`}></i>
+                                                        </button>
+                                                    </td>
+                                                );
+                                            })}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+
+                    {/* Legend */}
+                    <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <p className="text-xs text-gray-500 mb-2">Team Roles:</p>
+                        <div className="flex flex-wrap gap-3">
+                            {teamRoles.map(role => (
+                                <div key={role.id} className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
+                                    <i className={`fa-solid ${role.icon} text-${role.color}-500`}></i>
+                                    <span>{role.name}</span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             );
@@ -3787,6 +4497,13 @@
             const [showExport, setShowExport] = useState(false);
             const [creditDetailModal, setCreditDetailModal] = useState({ isOpen: false, credit: null, category: null });
             const [phaseFilter, setPhaseFilter] = useState('all');
+            const [searchQuery, setSearchQuery] = useState('');
+            const [darkMode, setDarkMode] = useState(false);
+            const [showQuickWins, setShowQuickWins] = useState(false);
+            const [creditNotes, setCreditNotes] = useState({});
+            const [creditDocs, setCreditDocs] = useState({});
+            const [creditAssignments, setCreditAssignments] = useState({});
+            const [activeView, setActiveView] = useState('credits'); // 'credits' | 'timeline' | 'matrix'
 
             // Project phases for filtering
             const projectPhases = [
@@ -3818,6 +4535,10 @@
                             }
                         });
                         setSelectedCredits(normalizedCredits);
+                        setCreditNotes(data.creditNotes || {});
+                        setCreditDocs(data.creditDocs || {});
+                        setCreditAssignments(data.creditAssignments || {});
+                        setDarkMode(data.darkMode || false);
                     } catch (e) {
                         console.error('Failed to load saved project:', e);
                     }
@@ -3826,9 +4547,14 @@
 
             // Save to localStorage on change
             useEffect(() => {
-                const data = { projectName, selectedCredits };
+                const data = { projectName, selectedCredits, creditNotes, creditDocs, creditAssignments, darkMode };
                 localStorage.setItem('greenstar-project', JSON.stringify(data));
-            }, [projectName, selectedCredits]);
+            }, [projectName, selectedCredits, creditNotes, creditDocs, creditAssignments, darkMode]);
+
+            // Apply dark mode to body
+            useEffect(() => {
+                document.body.classList.toggle('dark-mode', darkMode);
+            }, [darkMode]);
 
             // Calculate totals
             const totalPoints = useMemo(() => {
@@ -3889,12 +4615,94 @@
                 : false;
 
             return (
-                <div className="min-h-screen p-4 md:p-6 lg:p-8">
+                <div className={`min-h-screen p-4 md:p-6 lg:p-8 ${darkMode ? 'dark' : ''}`}>
                     <div className="max-w-6xl mx-auto">
                         <Header
                             projectName={projectName}
                             onProjectNameChange={setProjectName}
                         />
+
+                        {/* Control Bar: Search, Filters, View Toggle, Dark Mode */}
+                        <div className="glass-card rounded-xl p-4 mt-6 dark:bg-gray-800/80">
+                            <div className="flex flex-col lg:flex-row gap-4">
+                                {/* Search */}
+                                <div className="flex-grow relative">
+                                    <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                    <input
+                                        type="text"
+                                        placeholder="Search credits by name, description, or keyword..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    />
+                                    {searchQuery && (
+                                        <button
+                                            onClick={() => setSearchQuery('')}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                        >
+                                            <i className="fa-solid fa-xmark"></i>
+                                        </button>
+                                    )}
+                                </div>
+
+                                {/* Quick Wins Toggle */}
+                                <button
+                                    onClick={() => setShowQuickWins(!showQuickWins)}
+                                    className={`px-4 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 whitespace-nowrap
+                                        ${showQuickWins
+                                            ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md'
+                                            : 'bg-white border border-gray-200 text-gray-600 hover:bg-amber-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300'
+                                        }`}
+                                >
+                                    <i className="fa-solid fa-bolt"></i>
+                                    <span>Quick Wins</span>
+                                </button>
+
+                                {/* View Toggle */}
+                                <div className="flex rounded-lg border border-gray-200 overflow-hidden dark:border-gray-600">
+                                    <button
+                                        onClick={() => setActiveView('credits')}
+                                        className={`px-4 py-2.5 font-medium transition-all flex items-center gap-2
+                                            ${activeView === 'credits' ? 'bg-green-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300'}`}
+                                        title="Credit Cards View"
+                                    >
+                                        <i className="fa-solid fa-grip"></i>
+                                        <span className="hidden sm:inline">Credits</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveView('timeline')}
+                                        className={`px-4 py-2.5 font-medium transition-all flex items-center gap-2
+                                            ${activeView === 'timeline' ? 'bg-green-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300'}`}
+                                        title="Timeline View"
+                                    >
+                                        <i className="fa-solid fa-timeline"></i>
+                                        <span className="hidden sm:inline">Timeline</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveView('matrix')}
+                                        className={`px-4 py-2.5 font-medium transition-all flex items-center gap-2
+                                            ${activeView === 'matrix' ? 'bg-green-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300'}`}
+                                        title="Responsibility Matrix"
+                                    >
+                                        <i className="fa-solid fa-table-cells"></i>
+                                        <span className="hidden sm:inline">Matrix</span>
+                                    </button>
+                                </div>
+
+                                {/* Dark Mode Toggle */}
+                                <button
+                                    onClick={() => setDarkMode(!darkMode)}
+                                    className={`px-4 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2
+                                        ${darkMode
+                                            ? 'bg-gray-700 text-yellow-400 border border-gray-600'
+                                            : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+                                        }`}
+                                    title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                                >
+                                    <i className={`fa-solid ${darkMode ? 'fa-sun' : 'fa-moon'}`}></i>
+                                </button>
+                            </div>
+                        </div>
 
                         <ScoreDashboard
                             totalPoints={totalPoints}
@@ -3948,15 +4756,40 @@
                             </div>
                         </div>
 
-                        {/* Credits List */}
+                        {/* Main Content Area - Credits, Timeline, or Matrix */}
                         <div className="mt-6">
-                            <CreditsList
-                                category={activeCateg}
-                                selectedCredits={selectedCredits}
-                                onSelectCreditLevel={handleSelectCreditLevel}
-                                onViewCreditDetails={handleViewCreditDetails}
-                                phaseFilter={phaseFilter}
-                            />
+                            {activeView === 'credits' && (
+                                <CreditsList
+                                    category={activeCateg}
+                                    selectedCredits={selectedCredits}
+                                    onSelectCreditLevel={handleSelectCreditLevel}
+                                    onViewCreditDetails={handleViewCreditDetails}
+                                    phaseFilter={phaseFilter}
+                                    searchQuery={searchQuery}
+                                    showQuickWins={showQuickWins}
+                                />
+                            )}
+
+                            {activeView === 'timeline' && (
+                                <TimelineView
+                                    categories={categoriesData}
+                                    selectedCredits={selectedCredits}
+                                    onViewCreditDetails={handleViewCreditDetails}
+                                    projectPhases={projectPhases.filter(p => p.id !== 'all')}
+                                />
+                            )}
+
+                            {activeView === 'matrix' && (
+                                <ResponsibilityMatrix
+                                    categories={categoriesData}
+                                    selectedCredits={selectedCredits}
+                                    creditAssignments={creditAssignments}
+                                    onAssignmentChange={(creditKey, assignment) => {
+                                        setCreditAssignments(prev => ({ ...prev, [creditKey]: assignment }));
+                                    }}
+                                    onViewCreditDetails={handleViewCreditDetails}
+                                />
+                            )}
                         </div>
 
                         {/* Footer */}
@@ -3982,6 +4815,10 @@
                             category={creditDetailModal.category}
                             isSelected={isModalCreditSelected}
                             onToggle={handleToggleCreditFromModal}
+                            creditNotes={creditNotes}
+                            onNotesChange={(key, note) => setCreditNotes(prev => ({ ...prev, [key]: note }))}
+                            creditDocs={creditDocs}
+                            onDocsChange={(key, docs) => setCreditDocs(prev => ({ ...prev, [key]: docs }))}
                         />
                     </div>
                 </div>
