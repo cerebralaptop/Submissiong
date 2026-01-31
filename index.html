@@ -537,7 +537,7 @@
                         id: 'resp-const',
                         name: 'Responsible Construction',
                         points: 5,
-                        required: false,
+                        required: true,
                         description: 'Implementing environmental management practices during construction.',
                         aims: 'To encourage and recognise construction practices that minimise environmental impacts and promote responsible site management.',
                         performanceLevels: [
@@ -1145,7 +1145,7 @@
                         id: 'clean-air',
                         name: 'Clean Air',
                         points: 6,
-                        required: false,
+                        required: true,
                         description: 'Ensuring high indoor air quality through ventilation and low-emission materials.',
                         aims: 'To ensure good indoor air quality that supports occupant health and wellbeing.',
                         performanceLevels: [
@@ -1565,7 +1565,7 @@
                         id: 'climate-res',
                         name: 'Climate Resilience',
                         points: 4,
-                        required: false,
+                        required: true,
                         description: 'Designing for current and future climate conditions.',
                         aims: 'To ensure buildings are designed to adapt to changing climate conditions and extreme weather events.',
                         performanceLevels: [
@@ -2464,7 +2464,7 @@
                         id: 'movement',
                         name: 'Movement and Place',
                         points: 5,
-                        required: false,
+                        required: true,
                         description: 'Supporting sustainable transport and walkability.',
                         aims: 'To encourage buildings that support sustainable transport choices and contribute to walkable neighbourhoods.',
                         performanceLevels: [
@@ -2746,7 +2746,7 @@
                         id: 'inclusive-const',
                         name: 'Inclusive Construction Practices',
                         points: 4,
-                        required: false,
+                        required: true,
                         description: 'Promoting diversity and inclusion in construction.',
                         aims: 'To promote diversity, inclusion, and safe working conditions in the construction industry.',
                         performanceLevels: [
@@ -3028,7 +3028,7 @@
                         id: 'impacts-nature',
                         name: 'Impacts to Nature',
                         points: 6,
-                        required: false,
+                        required: true,
                         description: 'Minimizing negative impacts on ecological values.',
                         aims: 'To minimise negative impacts on ecological values and protect existing natural features.',
                         performanceLevels: [
@@ -3377,7 +3377,7 @@
                         id: 'market-transform',
                         name: 'Market Transformation',
                         points: 2,
-                        required: false,
+                        required: true,
                         description: 'Initiatives that transform the market and inspire others.',
                         aims: 'To recognise projects that demonstrate market leadership and inspire positive change in the industry.',
                         performanceLevels: [
@@ -3528,6 +3528,168 @@
             { id: 'procurement', name: 'Procurement and Workforce', description: 'Calculate social procurement spend', icon: 'fa-handshake', type: 'social' },
             { id: 'biodiversity', name: 'Biodiversity Enhancement', description: 'Calculate biodiversity net gain', icon: 'fa-tree', type: 'biodiversity' }
         ];
+
+        // Project Templates for different building types
+        const projectTemplates = [
+            {
+                id: 'office',
+                name: 'Commercial Office',
+                icon: 'fa-building',
+                description: 'Standard office building with focus on occupant comfort and energy efficiency',
+                suggestedCredits: [
+                    'responsible-resp-const', 'responsible-verify-hand', 'responsible-resp-proc',
+                    'healthy-clean-air', 'healthy-light-quality', 'healthy-acoustic', 'healthy-amenity',
+                    'resilient-climate-res', 'resilient-ops-res',
+                    'positive-energy-source', 'positive-energy-use', 'positive-upfront-carbon-red',
+                    'places-movement', 'places-enjoyable',
+                    'people-inclusive-const', 'people-design-equity',
+                    'nature-impacts-nature',
+                    'leadership-market-transform'
+                ],
+                targetRating: 5
+            },
+            {
+                id: 'residential',
+                name: 'Residential / Multi-Unit',
+                icon: 'fa-house-chimney',
+                description: 'Apartment buildings and residential complexes',
+                suggestedCredits: [
+                    'responsible-resp-const', 'responsible-verify-hand',
+                    'healthy-clean-air', 'healthy-light-quality', 'healthy-amenity', 'healthy-nature-conn',
+                    'resilient-climate-res', 'resilient-heat-res',
+                    'positive-energy-source', 'positive-energy-use', 'positive-upfront-carbon-red', 'positive-water-use',
+                    'places-movement', 'places-enjoyable', 'places-contribution',
+                    'people-inclusive-const', 'people-design-equity',
+                    'nature-impacts-nature', 'nature-biodiversity',
+                    'leadership-market-transform'
+                ],
+                targetRating: 5
+            },
+            {
+                id: 'retail',
+                name: 'Retail / Shopping Centre',
+                icon: 'fa-store',
+                description: 'Shopping centres and retail spaces',
+                suggestedCredits: [
+                    'responsible-resp-const', 'responsible-verify-hand', 'responsible-resp-resource',
+                    'healthy-clean-air', 'healthy-light-quality', 'healthy-amenity',
+                    'resilient-climate-res', 'resilient-heat-res',
+                    'positive-energy-source', 'positive-energy-use', 'positive-upfront-carbon-red', 'positive-refrigerant',
+                    'places-movement', 'places-enjoyable', 'places-contribution',
+                    'people-inclusive-const',
+                    'nature-impacts-nature',
+                    'leadership-market-transform'
+                ],
+                targetRating: 5
+            },
+            {
+                id: 'education',
+                name: 'Education Facility',
+                icon: 'fa-school',
+                description: 'Schools, universities, and training facilities',
+                suggestedCredits: [
+                    'responsible-resp-const', 'responsible-verify-hand', 'responsible-ind-dev',
+                    'healthy-clean-air', 'healthy-light-quality', 'healthy-acoustic', 'healthy-amenity', 'healthy-nature-conn',
+                    'resilient-climate-res', 'resilient-comm-res',
+                    'positive-energy-source', 'positive-energy-use', 'positive-upfront-carbon-red',
+                    'places-movement', 'places-enjoyable', 'places-culture',
+                    'people-inclusive-const', 'people-first-nations', 'people-design-equity',
+                    'nature-impacts-nature', 'nature-biodiversity',
+                    'leadership-market-transform'
+                ],
+                targetRating: 5
+            },
+            {
+                id: 'healthcare',
+                name: 'Healthcare Facility',
+                icon: 'fa-hospital',
+                description: 'Hospitals, clinics, and medical centres',
+                suggestedCredits: [
+                    'responsible-resp-const', 'responsible-verify-hand', 'responsible-resp-proc',
+                    'healthy-clean-air', 'healthy-light-quality', 'healthy-acoustic', 'healthy-toxins', 'healthy-amenity',
+                    'resilient-climate-res', 'resilient-ops-res', 'resilient-grid-res',
+                    'positive-energy-source', 'positive-energy-use', 'positive-upfront-carbon-red',
+                    'places-movement', 'places-enjoyable',
+                    'people-inclusive-const', 'people-design-equity',
+                    'nature-impacts-nature', 'nature-nature-conn',
+                    'leadership-market-transform'
+                ],
+                targetRating: 5
+            },
+            {
+                id: 'industrial',
+                name: 'Industrial / Warehouse',
+                icon: 'fa-warehouse',
+                description: 'Warehouses, factories, and industrial facilities',
+                suggestedCredits: [
+                    'responsible-resp-const', 'responsible-verify-hand', 'responsible-resp-resource',
+                    'healthy-clean-air', 'healthy-toxins',
+                    'resilient-climate-res', 'resilient-ops-res',
+                    'positive-energy-source', 'positive-energy-use', 'positive-upfront-carbon-red', 'positive-low-emissions',
+                    'places-movement',
+                    'people-inclusive-const',
+                    'nature-impacts-nature', 'nature-waterway',
+                    'leadership-market-transform'
+                ],
+                targetRating: 4
+            }
+        ];
+
+        // Credit Synergies - credits that work well together
+        const creditSynergies = {
+            'responsible-resp-const': {
+                synergies: ['responsible-verify-hand', 'responsible-resp-resource', 'people-inclusive-const'],
+                reason: 'Good construction practices support verification, resource management, and inclusive workplaces'
+            },
+            'responsible-verify-hand': {
+                synergies: ['responsible-resp-const', 'resilient-ops-res'],
+                reason: 'Verification ensures construction quality and supports operational resilience'
+            },
+            'healthy-clean-air': {
+                synergies: ['healthy-toxins', 'healthy-amenity', 'responsible-resp-finishes'],
+                reason: 'Air quality is improved by low-toxin materials and good ventilation design'
+            },
+            'healthy-light-quality': {
+                synergies: ['healthy-amenity', 'healthy-nature-conn', 'positive-energy-use'],
+                reason: 'Good lighting supports comfort and can reduce energy use with daylighting'
+            },
+            'healthy-nature-conn': {
+                synergies: ['nature-biodiversity', 'healthy-amenity', 'places-enjoyable'],
+                reason: 'Biophilic design supports biodiversity, amenity, and place quality'
+            },
+            'resilient-climate-res': {
+                synergies: ['resilient-heat-res', 'resilient-ops-res', 'positive-energy-use'],
+                reason: 'Climate adaptation supports heat resilience and efficient operations'
+            },
+            'positive-energy-source': {
+                synergies: ['positive-energy-use', 'positive-upfront-carbon-red', 'resilient-grid-res'],
+                reason: 'Renewable energy works best with efficiency measures and grid resilience'
+            },
+            'positive-energy-use': {
+                synergies: ['positive-energy-source', 'healthy-light-quality', 'resilient-ops-res'],
+                reason: 'Energy efficiency supports renewables and operational resilience'
+            },
+            'positive-upfront-carbon-red': {
+                synergies: ['responsible-resp-struct', 'responsible-resp-envelope', 'positive-circularity'],
+                reason: 'Embodied carbon reduction works with responsible materials and circularity'
+            },
+            'places-movement': {
+                synergies: ['places-enjoyable', 'people-design-equity', 'positive-low-emissions'],
+                reason: 'Sustainable transport supports walkability, equity, and emissions reduction'
+            },
+            'people-inclusive-const': {
+                synergies: ['responsible-resp-const', 'people-proc-workforce', 'people-first-nations'],
+                reason: 'Inclusive practices extend to procurement and First Nations engagement'
+            },
+            'nature-impacts-nature': {
+                synergies: ['nature-biodiversity', 'nature-waterway', 'nature-nature-conn'],
+                reason: 'Ecological protection supports biodiversity and water quality'
+            },
+            'nature-biodiversity': {
+                synergies: ['nature-impacts-nature', 'healthy-nature-conn', 'places-enjoyable'],
+                reason: 'Biodiversity enhancement supports ecological value and amenity'
+            }
+        };
 
         // Star rating calculation (based on Green Star Buildings v1.1)
         function calculateStarRating(totalPoints) {
@@ -4884,24 +5046,36 @@
         function ExportModal({ isOpen, onClose, projectData }) {
             if (!isOpen) return null;
 
+            const rating = calculateStarRating(projectData.totalPoints);
+
             const handleExport = (format) => {
                 const data = {
                     projectName: projectData.projectName,
                     exportDate: new Date().toISOString(),
                     totalPoints: projectData.totalPoints,
-                    rating: calculateStarRating(projectData.totalPoints),
+                    rating: rating,
                     selectedCredits: projectData.selectedCredits,
+                    creditNotes: projectData.creditNotes || {},
+                    creditDocs: projectData.creditDocs || {},
+                    creditAssignments: projectData.creditAssignments || {},
                     categories: categoriesData.map(cat => ({
+                        id: cat.id,
                         name: cat.name,
                         maxPoints: cat.maxPoints,
                         earnedPoints: cat.credits.reduce((sum, credit) => {
                             const key = `${cat.id}-${credit.id}`;
-                            return sum + (projectData.selectedCredits[key] || 0);
+                            const selection = projectData.selectedCredits[key];
+                            return sum + (selection ? selection.points || 0 : 0);
                         }, 0),
                         selectedCredits: cat.credits.filter(credit => {
                             const key = `${cat.id}-${credit.id}`;
-                            return projectData.selectedCredits[key] > 0;
-                        }).map(c => c.name)
+                            return projectData.selectedCredits[key];
+                        }).map(c => ({
+                            id: c.id,
+                            name: c.name,
+                            points: projectData.selectedCredits[`${cat.id}-${c.id}`]?.points || 0,
+                            level: projectData.selectedCredits[`${cat.id}-${c.id}`]?.level || 'credit'
+                        }))
                     }))
                 };
 
@@ -4910,12 +5084,176 @@
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `green-star-submission-${Date.now()}.json`;
+                    a.download = `${projectData.projectName.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().split('T')[0]}.json`;
                     a.click();
                     URL.revokeObjectURL(url);
+                    onClose();
+                    return;
                 }
 
-                alert(`Export to ${format.toUpperCase()} - Full functionality coming in Phase 2`);
+                if (format === 'pdf') {
+                    // Generate printable HTML that can be saved as PDF
+                    const printWindow = window.open('', '_blank');
+                    const selectedCreditsList = [];
+                    categoriesData.forEach(cat => {
+                        cat.credits.forEach(credit => {
+                            const key = `${cat.id}-${credit.id}`;
+                            if (projectData.selectedCredits[key]) {
+                                selectedCreditsList.push({
+                                    category: cat,
+                                    credit,
+                                    selection: projectData.selectedCredits[key],
+                                    notes: projectData.creditNotes?.[key] || '',
+                                    docs: projectData.creditDocs?.[key] || {},
+                                    assignments: projectData.creditAssignments?.[key] || {}
+                                });
+                            }
+                        });
+                    });
+
+                    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>${projectData.projectName} - Green Star Submission Report</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 40px; color: #333; line-height: 1.6; }
+        .header { text-align: center; margin-bottom: 40px; border-bottom: 3px solid #22c55e; padding-bottom: 20px; }
+        .header h1 { color: #166534; font-size: 28px; margin-bottom: 10px; }
+        .header .rating { font-size: 24px; color: #22c55e; margin: 10px 0; }
+        .header .stars { color: #f59e0b; font-size: 20px; }
+        .header .meta { color: #666; font-size: 14px; }
+        .summary { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+        .summary-box { flex: 1; min-width: 150px; background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 15px; text-align: center; }
+        .summary-box h3 { color: #166534; font-size: 14px; margin-bottom: 5px; }
+        .summary-box .value { font-size: 24px; font-weight: bold; color: #22c55e; }
+        .category { margin-bottom: 30px; page-break-inside: avoid; }
+        .category-header { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 12px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; }
+        .category-header h2 { font-size: 18px; }
+        .category-header .points { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 14px; }
+        .credit { border: 1px solid #e5e7eb; border-top: none; padding: 15px 20px; }
+        .credit:last-child { border-radius: 0 0 8px 8px; }
+        .credit-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .credit-name { font-weight: 600; color: #1f2937; }
+        .credit-points { background: #dcfce7; color: #166534; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 500; }
+        .credit-level { font-size: 12px; color: #666; margin-top: 2px; }
+        .credit-required { background: #fee2e2; color: #dc2626; padding: 1px 6px; border-radius: 4px; font-size: 11px; margin-left: 8px; }
+        .credit-notes { background: #fef3c7; padding: 10px; border-radius: 6px; margin-top: 10px; font-size: 13px; }
+        .credit-notes strong { color: #92400e; }
+        .documentation { margin-top: 10px; font-size: 13px; }
+        .documentation h4 { color: #4b5563; margin-bottom: 5px; }
+        .doc-item { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+        .doc-item .checkbox { width: 14px; height: 14px; border: 2px solid #d1d5db; border-radius: 3px; display: inline-block; }
+        .doc-item .checkbox.checked { background: #22c55e; border-color: #22c55e; }
+        .no-credits { color: #9ca3af; font-style: italic; padding: 15px 20px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center; color: #9ca3af; font-size: 12px; }
+        @media print {
+            body { padding: 20px; }
+            .category { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>${projectData.projectName}</h1>
+        <div class="rating">${rating.name} - ${rating.description}</div>
+        <div class="stars">${'★'.repeat(rating.stars)}${'☆'.repeat(6 - rating.stars)}</div>
+        <div class="meta">Generated on ${new Date().toLocaleDateString('en-AU', { dateStyle: 'full' })}</div>
+    </div>
+
+    <div class="summary">
+        <div class="summary-box">
+            <h3>Total Points</h3>
+            <div class="value">${projectData.totalPoints}/170</div>
+        </div>
+        <div class="summary-box">
+            <h3>Credits Selected</h3>
+            <div class="value">${selectedCreditsList.length}</div>
+        </div>
+        <div class="summary-box">
+            <h3>Star Rating</h3>
+            <div class="value">${rating.stars} Star</div>
+        </div>
+    </div>
+
+    ${categoriesData.map(cat => {
+        const catCredits = selectedCreditsList.filter(c => c.category.id === cat.id);
+        const catPoints = catCredits.reduce((sum, c) => sum + (c.selection.points || 0), 0);
+        return `
+        <div class="category">
+            <div class="category-header" style="background: linear-gradient(135deg, ${cat.color === 'blue' ? '#3b82f6, #2563eb' : cat.color === 'red' ? '#ef4444, #dc2626' : cat.color === 'orange' ? '#f97316, #ea580c' : cat.color === 'green' ? '#22c55e, #16a34a' : cat.color === 'purple' ? '#a855f7, #9333ea' : cat.color === 'pink' ? '#ec4899, #db2777' : cat.color === 'emerald' ? '#10b981, #059669' : '#eab308, #ca8a04'});">
+                <h2>${cat.icon} ${cat.name}</h2>
+                <span class="points">${catPoints}/${cat.maxPoints} pts</span>
+            </div>
+            ${catCredits.length > 0 ? catCredits.map(({ credit, selection, notes, docs }) => `
+                <div class="credit">
+                    <div class="credit-header">
+                        <div>
+                            <span class="credit-name">${credit.name}</span>
+                            ${credit.required ? '<span class="credit-required">REQUIRED</span>' : ''}
+                            <div class="credit-level">Level: ${selection.level === 'minimum' ? 'Minimum Expectation' : selection.level === 'exceptional' ? 'Exceptional Performance' : 'Credit Achievement'}</div>
+                        </div>
+                        <span class="credit-points">${selection.points} pts</span>
+                    </div>
+                    ${notes ? `<div class="credit-notes"><strong>Notes:</strong> ${notes}</div>` : ''}
+                    ${credit.documentation && credit.documentation.length > 0 ? `
+                        <div class="documentation">
+                            <h4>Required Documentation:</h4>
+                            ${credit.documentation.map((doc, idx) => `
+                                <div class="doc-item">
+                                    <span class="checkbox ${docs[idx] ? 'checked' : ''}"></span>
+                                    <span>${doc}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('') : '<div class="no-credits">No credits selected in this category</div>'}
+        </div>
+        `;
+    }).join('')}
+
+    <div class="footer">
+        <p>Green Star Buildings v1.1 Submission Report</p>
+        <p>Generated by Green Star Submission Assistant</p>
+    </div>
+</body>
+</html>`;
+
+                    printWindow.document.write(html);
+                    printWindow.document.close();
+                    printWindow.onload = () => {
+                        printWindow.print();
+                    };
+                    onClose();
+                    return;
+                }
+
+                if (format === 'excel') {
+                    // Generate CSV as Excel-compatible format
+                    let csv = 'Category,Credit,Required,Level,Points,Notes\n';
+                    categoriesData.forEach(cat => {
+                        cat.credits.forEach(credit => {
+                            const key = `${cat.id}-${credit.id}`;
+                            const selection = projectData.selectedCredits[key];
+                            if (selection) {
+                                const notes = (projectData.creditNotes?.[key] || '').replace(/"/g, '""');
+                                csv += `"${cat.name}","${credit.name}","${credit.required ? 'Yes' : 'No'}","${selection.level}",${selection.points},"${notes}"\n`;
+                            }
+                        });
+                    });
+
+                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${projectData.projectName.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().split('T')[0]}.csv`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    onClose();
+                    return;
+                }
             };
 
             return (
@@ -4974,6 +5312,340 @@
                                 </div>
                             </button>
                         </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Project Manager Modal Component
+        function ProjectManagerModal({ isOpen, onClose, projects, activeProjectId, onCreateProject, onSwitchProject, onDeleteProject, onImport }) {
+            const [newProjectName, setNewProjectName] = useState('');
+
+            if (!isOpen) return null;
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
+                    <div className="glass-card dark:bg-gray-800 rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">
+                                <i className="fa-solid fa-folder-open text-blue-500 mr-2"></i>
+                                Project Manager
+                            </h2>
+                            <button onClick={onClose} className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors">
+                                <i className="fa-solid fa-xmark text-gray-600 dark:text-gray-300"></i>
+                            </button>
+                        </div>
+
+                        {/* New Project */}
+                        <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
+                            <h3 className="font-medium text-green-800 dark:text-green-300 mb-3">Create New Project</h3>
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={newProjectName}
+                                    onChange={(e) => setNewProjectName(e.target.value)}
+                                    placeholder="Project name..."
+                                    className="flex-1 px-3 py-2 border border-green-300 dark:border-green-700 rounded-lg text-sm dark:bg-gray-700 dark:text-white"
+                                />
+                                <button
+                                    onClick={() => {
+                                        onCreateProject(newProjectName || 'New Project');
+                                        setNewProjectName('');
+                                    }}
+                                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm font-medium"
+                                >
+                                    <i className="fa-solid fa-plus mr-1"></i> Create
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Import */}
+                        <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                            <h3 className="font-medium text-blue-800 dark:text-blue-300 mb-3">Import Project</h3>
+                            <label className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium cursor-pointer w-fit">
+                                <i className="fa-solid fa-upload"></i>
+                                <span>Import JSON File</span>
+                                <input type="file" accept=".json" onChange={onImport} className="hidden" />
+                            </label>
+                        </div>
+
+                        {/* Projects List */}
+                        <div className="flex-1 overflow-y-auto">
+                            <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-3">Your Projects ({projects.length})</h3>
+                            <div className="space-y-2">
+                                {projects.length === 0 ? (
+                                    <p className="text-gray-500 text-sm italic">No projects yet. Create your first project above.</p>
+                                ) : (
+                                    projects.map(project => (
+                                        <div
+                                            key={project.id}
+                                            className={`p-3 rounded-xl border-2 transition-all cursor-pointer ${
+                                                project.id === activeProjectId
+                                                    ? 'border-green-500 bg-green-50 dark:bg-green-900/30'
+                                                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                                            }`}
+                                            onClick={() => onSwitchProject(project.id)}
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <p className="font-medium text-gray-800 dark:text-white">{project.name}</p>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                        Created: {new Date(project.createdAt).toLocaleDateString()}
+                                                        {project.imported && ' (Imported)'}
+                                                    </p>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    {project.id === activeProjectId && (
+                                                        <span className="text-xs bg-green-500 text-white px-2 py-1 rounded-full">Active</span>
+                                                    )}
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            if (confirm('Delete this project?')) {
+                                                                onDeleteProject(project.id);
+                                                            }
+                                                        }}
+                                                        className="w-8 h-8 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 flex items-center justify-center text-red-500"
+                                                    >
+                                                        <i className="fa-solid fa-trash text-sm"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Templates Modal Component
+        function TemplatesModal({ isOpen, onClose, onApplyTemplate, onCreateWithTemplate }) {
+            if (!isOpen) return null;
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
+                    <div className="glass-card dark:bg-gray-800 rounded-2xl p-6 max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">
+                                <i className="fa-solid fa-wand-magic-sparkles text-purple-500 mr-2"></i>
+                                Project Templates
+                            </h2>
+                            <button onClick={onClose} className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors">
+                                <i className="fa-solid fa-xmark text-gray-600 dark:text-gray-300"></i>
+                            </button>
+                        </div>
+
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">Choose a template to pre-populate credits suitable for your building type.</p>
+
+                        <div className="flex-1 overflow-y-auto">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {projectTemplates.map(template => (
+                                    <div key={template.id} className="p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700 transition-all">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                                                <i className={`fa-solid ${template.icon} text-xl text-purple-600 dark:text-purple-400`}></i>
+                                            </div>
+                                            <div>
+                                                <h3 className="font-bold text-gray-800 dark:text-white">{template.name}</h3>
+                                                <p className="text-xs text-gray-500">Target: {template.targetRating} Star</p>
+                                            </div>
+                                        </div>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{template.description}</p>
+                                        <p className="text-xs text-gray-500 mb-3">{template.suggestedCredits.length} credits pre-selected</p>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => onApplyTemplate(template.id)}
+                                                className="flex-1 px-3 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium"
+                                            >
+                                                Apply to Current
+                                            </button>
+                                            <button
+                                                onClick={() => onCreateWithTemplate(template.name + ' Project', template.id)}
+                                                className="flex-1 px-3 py-2 border border-purple-500 text-purple-600 dark:text-purple-400 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors text-sm font-medium"
+                                            >
+                                                New Project
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Gap Analysis Modal Component
+        function GapAnalysisModal({ isOpen, onClose, gapAnalysis, onSelectCredit, onViewCredit }) {
+            if (!isOpen || !gapAnalysis) return null;
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
+                    <div className="glass-card dark:bg-gray-800 rounded-2xl p-6 max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">
+                                <i className="fa-solid fa-chart-line text-amber-500 mr-2"></i>
+                                Gap Analysis
+                            </h2>
+                            <button onClick={onClose} className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors">
+                                <i className="fa-solid fa-xmark text-gray-600 dark:text-gray-300"></i>
+                            </button>
+                        </div>
+
+                        {/* Target Summary */}
+                        <div className="mb-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border border-amber-200 dark:border-amber-800">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-amber-800 dark:text-amber-300 font-medium">Current: {gapAnalysis.currentPoints} points</p>
+                                    <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">
+                                        {gapAnalysis.remaining} more points needed for {gapAnalysis.name}
+                                    </p>
+                                </div>
+                                <div className="text-4xl">🎯</div>
+                            </div>
+                        </div>
+
+                        {/* Recommended Credits */}
+                        <div className="mb-4">
+                            <h3 className="font-bold text-gray-800 dark:text-white mb-3 flex items-center gap-2">
+                                <i className="fa-solid fa-lightbulb text-yellow-500"></i>
+                                Recommended Path ({gapAnalysis.recommended.length} credits)
+                            </h3>
+                            <div className="space-y-2 max-h-40 overflow-y-auto">
+                                {gapAnalysis.recommended.map(({ key, credit, category, points, difficulty }) => (
+                                    <div key={key} className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-lg">{category.icon}</span>
+                                            <div>
+                                                <p className="font-medium text-gray-800 dark:text-white text-sm">{credit.name}</p>
+                                                <p className="text-xs text-gray-500">{category.name} • {difficulty}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-green-600 font-bold">+{points}</span>
+                                            <button
+                                                onClick={() => onSelectCredit(key, 'credit', points)}
+                                                className="px-3 py-1 bg-green-500 text-white rounded-full text-xs font-medium hover:bg-green-600"
+                                            >
+                                                Add
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Other Suggestions */}
+                        <div className="flex-1 overflow-y-auto">
+                            <h3 className="font-bold text-gray-800 dark:text-white mb-3">All Suggestions (sorted by value)</h3>
+                            <div className="space-y-2">
+                                {gapAnalysis.suggestions.map(({ key, credit, category, points, difficulty, required }) => (
+                                    <div
+                                        key={key}
+                                        className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                                        onClick={() => onViewCredit(credit, category)}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-lg">{category.icon}</span>
+                                            <div>
+                                                <p className="font-medium text-gray-800 dark:text-white text-sm">
+                                                    {credit.name}
+                                                    {required && <span className="ml-2 text-xs bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2 py-0.5 rounded">Required</span>}
+                                                </p>
+                                                <p className="text-xs text-gray-500">{category.name}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <span className={`text-xs px-2 py-1 rounded-full ${
+                                                difficulty === 'Easy' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                                                difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                                                'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                                            }`}>{difficulty}</span>
+                                            <span className="font-bold text-gray-700 dark:text-gray-300">+{points}</span>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onSelectCredit(key, 'credit', points);
+                                                }}
+                                                className="px-3 py-1 bg-blue-500 text-white rounded-full text-xs font-medium hover:bg-blue-600"
+                                            >
+                                                Add
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Synergies Modal Component
+        function SynergiesModal({ isOpen, onClose, synergies, onSelectCredit, onViewCredit }) {
+            if (!isOpen) return null;
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
+                    <div className="glass-card dark:bg-gray-800 rounded-2xl p-6 max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">
+                                <i className="fa-solid fa-link text-cyan-500 mr-2"></i>
+                                Credit Synergies
+                            </h2>
+                            <button onClick={onClose} className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors">
+                                <i className="fa-solid fa-xmark text-gray-600 dark:text-gray-300"></i>
+                            </button>
+                        </div>
+
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">
+                            These credits complement your current selections and may be easier to achieve together.
+                        </p>
+
+                        {synergies.length === 0 ? (
+                            <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
+                                <i className="fa-solid fa-puzzle-piece text-4xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                                <p className="text-gray-500 dark:text-gray-400">No synergies found for your current selection.</p>
+                                <p className="text-sm text-gray-400 dark:text-gray-500">Select more credits to discover synergies.</p>
+                            </div>
+                        ) : (
+                            <div className="flex-1 overflow-y-auto space-y-3">
+                                {synergies.map(({ toKey, credit, category, reason }) => (
+                                    <div
+                                        key={toKey}
+                                        className="p-4 bg-cyan-50 dark:bg-cyan-900/20 rounded-xl border border-cyan-200 dark:border-cyan-800 hover:border-cyan-400 dark:hover:border-cyan-600 transition-colors cursor-pointer"
+                                        onClick={() => onViewCredit(credit, category)}
+                                    >
+                                        <div className="flex items-center justify-between mb-2">
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-xl">{category.icon}</span>
+                                                <div>
+                                                    <p className="font-bold text-gray-800 dark:text-white">{credit.name}</p>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400">{category.name}</p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    const points = credit.performanceLevels?.[1]?.points || credit.points;
+                                                    onSelectCredit(toKey, 'credit', points);
+                                                }}
+                                                className="px-4 py-2 bg-cyan-500 text-white rounded-lg text-sm font-medium hover:bg-cyan-600 transition-colors"
+                                            >
+                                                <i className="fa-solid fa-plus mr-1"></i> Add Credit
+                                            </button>
+                                        </div>
+                                        <p className="text-sm text-cyan-700 dark:text-cyan-300 flex items-start gap-2">
+                                            <i className="fa-solid fa-lightbulb text-cyan-500 mt-0.5"></i>
+                                            {reason}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             );
@@ -5086,6 +5758,16 @@
             const [activeView, setActiveView] = useState('credits'); // 'credits' | 'timeline' | 'matrix'
             const [sidebarOpen, setSidebarOpen] = useState(true);
 
+            // Multi-project support
+            const [projects, setProjects] = useState([]);
+            const [activeProjectId, setActiveProjectId] = useState(null);
+            const [showProjectManager, setShowProjectManager] = useState(false);
+
+            // Templates and analysis
+            const [showTemplates, setShowTemplates] = useState(false);
+            const [showGapAnalysis, setShowGapAnalysis] = useState(false);
+            const [showSynergies, setShowSynergies] = useState(false);
+
             // Project phases for filtering
             const projectPhases = [
                 { id: 'all', name: 'All Phases', icon: 'fa-layer-group' },
@@ -5097,29 +5779,44 @@
                 { id: 'Handover', name: 'Handover', icon: 'fa-handshake' }
             ];
 
+            // Helper to normalize credit format
+            const normalizeCredits = (credits) => {
+                const normalized = {};
+                Object.entries(credits || {}).forEach(([key, value]) => {
+                    if (typeof value === 'number') {
+                        normalized[key] = { level: 'credit', points: value };
+                    } else {
+                        normalized[key] = value;
+                    }
+                });
+                return normalized;
+            };
+
             // Load from localStorage on mount
             useEffect(() => {
+                // Load projects list
+                const savedProjects = localStorage.getItem('greenstar-projects');
+                if (savedProjects) {
+                    try {
+                        const projectsList = JSON.parse(savedProjects);
+                        setProjects(projectsList);
+                    } catch (e) {
+                        console.error('Failed to load projects list:', e);
+                    }
+                }
+
+                // Load current project
                 const saved = localStorage.getItem('greenstar-project');
                 if (saved) {
                     try {
                         const data = JSON.parse(saved);
                         setProjectName(data.projectName || 'My Green Star Project');
-                        // Handle both old format (points only) and new format (level + points)
-                        const credits = data.selectedCredits || {};
-                        const normalizedCredits = {};
-                        Object.entries(credits).forEach(([key, value]) => {
-                            if (typeof value === 'number') {
-                                // Old format - convert to new
-                                normalizedCredits[key] = { level: 'credit', points: value };
-                            } else {
-                                normalizedCredits[key] = value;
-                            }
-                        });
-                        setSelectedCredits(normalizedCredits);
+                        setSelectedCredits(normalizeCredits(data.selectedCredits));
                         setCreditNotes(data.creditNotes || {});
                         setCreditDocs(data.creditDocs || {});
                         setCreditAssignments(data.creditAssignments || {});
                         setDarkMode(data.darkMode || false);
+                        if (data.projectId) setActiveProjectId(data.projectId);
                     } catch (e) {
                         console.error('Failed to load saved project:', e);
                     }
@@ -5128,9 +5825,258 @@
 
             // Save to localStorage on change
             useEffect(() => {
-                const data = { projectName, selectedCredits, creditNotes, creditDocs, creditAssignments, darkMode };
+                const data = { projectName, selectedCredits, creditNotes, creditDocs, creditAssignments, darkMode, projectId: activeProjectId };
                 localStorage.setItem('greenstar-project', JSON.stringify(data));
-            }, [projectName, selectedCredits, creditNotes, creditDocs, creditAssignments, darkMode]);
+            }, [projectName, selectedCredits, creditNotes, creditDocs, creditAssignments, darkMode, activeProjectId]);
+
+            // Save projects list
+            useEffect(() => {
+                if (projects.length > 0) {
+                    localStorage.setItem('greenstar-projects', JSON.stringify(projects));
+                }
+            }, [projects]);
+
+            // Multi-project handlers
+            const createNewProject = (name, templateId = null) => {
+                const newProject = {
+                    id: Date.now().toString(),
+                    name: name || 'New Project',
+                    createdAt: new Date().toISOString(),
+                    templateId
+                };
+
+                // If template selected, apply it
+                let initialCredits = {};
+                if (templateId) {
+                    const template = projectTemplates.find(t => t.id === templateId);
+                    if (template) {
+                        template.suggestedCredits.forEach(creditKey => {
+                            const [catId, credId] = creditKey.split('-').slice(0, 2);
+                            const fullKey = creditKey.includes('-') ? creditKey : `${catId}-${credId}`;
+                            // Find the credit to get its points
+                            categoriesData.forEach(cat => {
+                                cat.credits.forEach(credit => {
+                                    if (`${cat.id}-${credit.id}` === fullKey) {
+                                        initialCredits[fullKey] = { level: 'credit', points: credit.performanceLevels?.[1]?.points || credit.points };
+                                    }
+                                });
+                            });
+                        });
+                    }
+                }
+
+                // Save current project to projects list before switching
+                if (activeProjectId) {
+                    setProjects(prev => prev.map(p =>
+                        p.id === activeProjectId
+                            ? { ...p, data: { projectName, selectedCredits, creditNotes, creditDocs, creditAssignments } }
+                            : p
+                    ));
+                }
+
+                setProjects(prev => [...prev, newProject]);
+                setActiveProjectId(newProject.id);
+                setProjectName(newProject.name);
+                setSelectedCredits(initialCredits);
+                setCreditNotes({});
+                setCreditDocs({});
+                setCreditAssignments({});
+                setShowProjectManager(false);
+                setShowTemplates(false);
+            };
+
+            const switchProject = (projectId) => {
+                // Save current project
+                if (activeProjectId) {
+                    setProjects(prev => prev.map(p =>
+                        p.id === activeProjectId
+                            ? { ...p, data: { projectName, selectedCredits, creditNotes, creditDocs, creditAssignments } }
+                            : p
+                    ));
+                }
+
+                // Load selected project
+                const project = projects.find(p => p.id === projectId);
+                if (project && project.data) {
+                    setProjectName(project.data.projectName || project.name);
+                    setSelectedCredits(normalizeCredits(project.data.selectedCredits));
+                    setCreditNotes(project.data.creditNotes || {});
+                    setCreditDocs(project.data.creditDocs || {});
+                    setCreditAssignments(project.data.creditAssignments || {});
+                }
+                setActiveProjectId(projectId);
+                setShowProjectManager(false);
+            };
+
+            const deleteProject = (projectId) => {
+                if (projects.length <= 1) {
+                    alert('Cannot delete the only project');
+                    return;
+                }
+                setProjects(prev => prev.filter(p => p.id !== projectId));
+                if (activeProjectId === projectId) {
+                    const remaining = projects.filter(p => p.id !== projectId);
+                    if (remaining.length > 0) {
+                        switchProject(remaining[0].id);
+                    }
+                }
+            };
+
+            // Import project from JSON file
+            const handleImportProject = (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        // Validate the data has expected structure
+                        if (data.projectName || data.selectedCredits) {
+                            setProjectName(data.projectName || 'Imported Project');
+                            setSelectedCredits(normalizeCredits(data.selectedCredits));
+                            setCreditNotes(data.creditNotes || {});
+                            setCreditDocs(data.creditDocs || {});
+                            setCreditAssignments(data.creditAssignments || {});
+
+                            // Add to projects list
+                            const importedProject = {
+                                id: Date.now().toString(),
+                                name: data.projectName || 'Imported Project',
+                                createdAt: new Date().toISOString(),
+                                imported: true
+                            };
+                            setProjects(prev => [...prev, importedProject]);
+                            setActiveProjectId(importedProject.id);
+
+                            alert('Project imported successfully!');
+                        } else {
+                            alert('Invalid project file format');
+                        }
+                    } catch (err) {
+                        alert('Failed to parse project file: ' + err.message);
+                    }
+                };
+                reader.readAsText(file);
+                event.target.value = ''; // Reset input
+            };
+
+            // Apply template to current project
+            const applyTemplate = (templateId) => {
+                const template = projectTemplates.find(t => t.id === templateId);
+                if (!template) return;
+
+                if (Object.keys(selectedCredits).length > 0) {
+                    if (!confirm('This will replace your current credit selections. Continue?')) {
+                        return;
+                    }
+                }
+
+                const newCredits = {};
+                template.suggestedCredits.forEach(creditKey => {
+                    categoriesData.forEach(cat => {
+                        cat.credits.forEach(credit => {
+                            if (`${cat.id}-${credit.id}` === creditKey) {
+                                newCredits[creditKey] = {
+                                    level: 'credit',
+                                    points: credit.performanceLevels?.[1]?.points || credit.points
+                                };
+                            }
+                        });
+                    });
+                });
+
+                setSelectedCredits(newCredits);
+                setShowTemplates(false);
+            };
+
+            // Get synergies for selected credits
+            const getActiveSynergies = useMemo(() => {
+                const synergies = [];
+                const selectedKeys = Object.keys(selectedCredits);
+
+                selectedKeys.forEach(key => {
+                    if (creditSynergies[key]) {
+                        const syn = creditSynergies[key];
+                        syn.synergies.forEach(synergyKey => {
+                            // Find the synergy credit info
+                            categoriesData.forEach(cat => {
+                                cat.credits.forEach(credit => {
+                                    if (`${cat.id}-${credit.id}` === synergyKey) {
+                                        const isSelected = selectedCredits[synergyKey];
+                                        synergies.push({
+                                            fromKey: key,
+                                            toKey: synergyKey,
+                                            credit,
+                                            category: cat,
+                                            isSelected,
+                                            reason: syn.reason
+                                        });
+                                    }
+                                });
+                            });
+                        });
+                    }
+                });
+
+                // Remove duplicates and filter to unselected
+                const uniqueSynergies = [];
+                const seen = new Set();
+                synergies.forEach(s => {
+                    if (!seen.has(s.toKey) && !s.isSelected) {
+                        seen.add(s.toKey);
+                        uniqueSynergies.push(s);
+                    }
+                });
+
+                return uniqueSynergies;
+            }, [selectedCredits]);
+
+            // Gap analysis - credits to reach next rating
+            const gapAnalysis = useMemo(() => {
+                const nextTarget = getNextRatingTarget(totalPoints);
+                if (!nextTarget) return null;
+
+                // Find unselected credits sorted by points/difficulty
+                const suggestions = [];
+                categoriesData.forEach(cat => {
+                    cat.credits.forEach(credit => {
+                        const key = `${cat.id}-${credit.id}`;
+                        if (!selectedCredits[key]) {
+                            const points = credit.performanceLevels?.[1]?.points || credit.points;
+                            suggestions.push({
+                                key,
+                                credit,
+                                category: cat,
+                                points,
+                                difficulty: credit.difficulty,
+                                required: credit.required,
+                                score: points * (credit.difficulty === 'Easy' ? 3 : credit.difficulty === 'Medium' ? 2 : 1)
+                            });
+                        }
+                    });
+                });
+
+                // Sort by score (easy high-point credits first)
+                suggestions.sort((a, b) => b.score - a.score);
+
+                // Find minimum set to reach target
+                let remaining = nextTarget.remaining;
+                const recommended = [];
+                for (const s of suggestions) {
+                    if (remaining <= 0) break;
+                    recommended.push(s);
+                    remaining -= s.points;
+                }
+
+                return {
+                    ...nextTarget,
+                    currentPoints: totalPoints,
+                    suggestions: suggestions.slice(0, 10),
+                    recommended,
+                    allUnselected: suggestions
+                };
+            }, [totalPoints, selectedCredits]);
 
             // Apply dark mode to body
             useEffect(() => {
@@ -5387,9 +6333,38 @@
                                 </div>
                             </div>
 
-                            {/* Quick Actions */}
+                            {/* Tools & Analysis */}
                             <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
-                                <div className="grid grid-cols-2 gap-2">
+                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Tools & Analysis</label>
+                                <div className="grid grid-cols-2 gap-2 mb-2">
+                                    <button
+                                        onClick={() => setShowTemplates(true)}
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <i className="fa-solid fa-wand-magic-sparkles text-purple-500"></i>
+                                        <span>Templates</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setShowGapAnalysis(true)}
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-amber-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                        disabled={!gapAnalysis}
+                                        style={{ opacity: gapAnalysis ? 1 : 0.5 }}
+                                    >
+                                        <i className="fa-solid fa-chart-line text-amber-500"></i>
+                                        <span>Gap</span>
+                                    </button>
+                                </div>
+                                <div className="grid grid-cols-2 gap-2 mb-2">
+                                    <button
+                                        onClick={() => setShowSynergies(true)}
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-cyan-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2 relative"
+                                    >
+                                        <i className="fa-solid fa-link text-cyan-500"></i>
+                                        <span>Synergies</span>
+                                        {getActiveSynergies.length > 0 && (
+                                            <span className="absolute -top-1 -right-1 w-5 h-5 bg-cyan-500 text-white text-xs rounded-full flex items-center justify-center">{getActiveSynergies.length}</span>
+                                        )}
+                                    </button>
                                     <button
                                         onClick={() => setShowCalculators(true)}
                                         className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
@@ -5397,11 +6372,20 @@
                                         <i className="fa-solid fa-calculator text-green-500"></i>
                                         <span>Calcs</span>
                                     </button>
+                                </div>
+                                <div className="grid grid-cols-2 gap-2">
                                     <button
-                                        onClick={() => setShowExport(true)}
+                                        onClick={() => setShowProjectManager(true)}
                                         className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
                                     >
-                                        <i className="fa-solid fa-download text-blue-500"></i>
+                                        <i className="fa-solid fa-folder-open text-blue-500"></i>
+                                        <span>Projects</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setShowExport(true)}
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <i className="fa-solid fa-download text-red-500"></i>
                                         <span>Export</span>
                                     </button>
                                 </div>
@@ -5490,7 +6474,37 @@
                     <ExportModal
                         isOpen={showExport}
                         onClose={() => setShowExport(false)}
-                        projectData={{ projectName, totalPoints, selectedCredits }}
+                        projectData={{ projectName, totalPoints, selectedCredits, creditNotes, creditDocs, creditAssignments }}
+                    />
+                    <ProjectManagerModal
+                        isOpen={showProjectManager}
+                        onClose={() => setShowProjectManager(false)}
+                        projects={projects}
+                        activeProjectId={activeProjectId}
+                        onCreateProject={createNewProject}
+                        onSwitchProject={switchProject}
+                        onDeleteProject={deleteProject}
+                        onImport={handleImportProject}
+                    />
+                    <TemplatesModal
+                        isOpen={showTemplates}
+                        onClose={() => setShowTemplates(false)}
+                        onApplyTemplate={applyTemplate}
+                        onCreateWithTemplate={createNewProject}
+                    />
+                    <GapAnalysisModal
+                        isOpen={showGapAnalysis}
+                        onClose={() => setShowGapAnalysis(false)}
+                        gapAnalysis={gapAnalysis}
+                        onSelectCredit={handleSelectCreditLevel}
+                        onViewCredit={handleViewCreditDetails}
+                    />
+                    <SynergiesModal
+                        isOpen={showSynergies}
+                        onClose={() => setShowSynergies(false)}
+                        synergies={getActiveSynergies}
+                        onSelectCredit={handleSelectCreditLevel}
+                        onViewCredit={handleViewCreditDetails}
                     />
                     <CreditDetailModal
                         isOpen={creditDetailModal.isOpen}
