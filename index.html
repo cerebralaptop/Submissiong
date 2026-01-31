@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Green Star Buildings | Submission Assistant</title>
 
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Green Star Buildings v1.1 Submission Tracker and Assistant">
+    <meta name="theme-color" content="#1B4D3E">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Green Star">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%231B4D3E'/><polygon points='50,15 58,38 82,38 63,53 70,77 50,62 30,77 37,53 18,38 42,38' fill='white'/></svg>">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -3687,8 +3696,125 @@
         // Load the categories data (from admin or defaults)
         const categoriesData = loadCategoriesData();
 
-        // Calculator data
-        const calculatorsData = [
+        // Load templates data from admin panel or use defaults
+        function loadTemplatesData() {
+            try {
+                const adminData = localStorage.getItem('greenstar_admin_data');
+                if (!adminData) {
+                    console.log('No admin data found, using default templates');
+                    return null; // Will use hardcoded defaults below
+                }
+
+                const parsed = JSON.parse(adminData);
+                if (!parsed.templates || parsed.templates.length === 0) {
+                    console.log('No templates in admin data, using defaults');
+                    return null;
+                }
+
+                // Icon mapping based on type
+                const typeIcons = {
+                    'Office': 'fa-building',
+                    'Residential': 'fa-house-chimney',
+                    'Retail': 'fa-store',
+                    'Education': 'fa-school',
+                    'Healthcare': 'fa-hospital',
+                    'Industrial': 'fa-warehouse',
+                    'Mixed Use': 'fa-city',
+                    'Other': 'fa-building-circle-check'
+                };
+
+                // Transform admin templates to app format
+                const transformedTemplates = parsed.templates
+                    .filter(t => t.active !== false) // Only active templates
+                    .map(template => {
+                        // Parse credits from comma-separated string to array
+                        const suggestedCredits = template.credits
+                            ? template.credits.split(',').map(c => c.trim()).filter(c => c)
+                            : [];
+
+                        // Parse target rating from string "5 Star" to number 5
+                        const targetRating = template.targetRating
+                            ? parseInt(template.targetRating.replace(/\D/g, '')) || 5
+                            : 5;
+
+                        return {
+                            id: template.id,
+                            name: template.name,
+                            icon: typeIcons[template.type] || 'fa-building',
+                            description: template.description || '',
+                            suggestedCredits: suggestedCredits,
+                            targetRating: targetRating
+                        };
+                    });
+
+                console.log(`Loaded ${transformedTemplates.length} project templates from admin data`);
+                return transformedTemplates;
+
+            } catch (error) {
+                console.error('Error loading templates from admin data:', error);
+                return null;
+            }
+        }
+
+        // Load calculators data from admin panel or use defaults
+        function loadCalculatorsData() {
+            try {
+                const adminData = localStorage.getItem('greenstar_admin_data');
+                if (!adminData) return null;
+
+                const parsed = JSON.parse(adminData);
+                if (!parsed.calculators || parsed.calculators.length === 0) return null;
+
+                console.log(`Loaded ${parsed.calculators.length} calculators from admin data`);
+                return parsed.calculators.filter(c => c.active !== false);
+            } catch (error) {
+                console.error('Error loading calculators from admin data:', error);
+                return null;
+            }
+        }
+
+        // Load common mistakes from admin panel
+        function loadCommonMistakesData() {
+            try {
+                const adminData = localStorage.getItem('greenstar_admin_data');
+                if (!adminData) return {};
+
+                const parsed = JSON.parse(adminData);
+                if (!parsed.commonMistakes || parsed.commonMistakes.length === 0) return {};
+
+                // Group by credit ID
+                const grouped = {};
+                parsed.commonMistakes.forEach(m => {
+                    if (!grouped[m.creditId]) grouped[m.creditId] = [];
+                    grouped[m.creditId].push({
+                        mistake: m.mistake,
+                        impact: m.impact,
+                        prevention: m.prevention
+                    });
+                });
+
+                console.log(`Loaded common mistakes for ${Object.keys(grouped).length} credits from admin data`);
+                return grouped;
+            } catch (error) {
+                console.error('Error loading common mistakes from admin data:', error);
+                return {};
+            }
+        }
+
+        // Get admin data timestamp
+        function getAdminDataTimestamp() {
+            try {
+                const adminData = localStorage.getItem('greenstar_admin_data');
+                if (!adminData) return null;
+                const parsed = JSON.parse(adminData);
+                return parsed.savedAt || null;
+            } catch {
+                return null;
+            }
+        }
+
+        // Calculator data (default)
+        const defaultCalculatorsData = [
             { id: 'responsible-products', name: 'Responsible Products Calculator', description: 'Calculate responsible products percentage', icon: 'fa-boxes-stacked', type: 'products' },
             { id: 'energy-reference', name: 'Energy Use - Reference Pathway', description: 'Calculate energy reduction vs reference', icon: 'fa-bolt', type: 'energy' },
             { id: 'upfront-carbon', name: 'Upfront Carbon Emissions', description: 'Calculate embodied carbon emissions', icon: 'fa-cloud', type: 'carbon' },
@@ -3700,8 +3826,11 @@
             { id: 'biodiversity', name: 'Biodiversity Enhancement', description: 'Calculate biodiversity net gain', icon: 'fa-tree', type: 'biodiversity' }
         ];
 
-        // Project Templates for different building types
-        const projectTemplates = [
+        // Load calculators (from admin or defaults)
+        const calculatorsData = loadCalculatorsData() || defaultCalculatorsData;
+
+        // Project Templates for different building types (defaults)
+        const defaultProjectTemplates = [
             {
                 id: 'office',
                 name: 'Commercial Office',
@@ -3805,6 +3934,9 @@
                 targetRating: 4
             }
         ];
+
+        // Load project templates (from admin or defaults)
+        const projectTemplates = loadTemplatesData() || defaultProjectTemplates;
 
         // Credit Synergies - credits that work well together
         const creditSynergies = {
@@ -5746,26 +5878,199 @@
                 }
 
                 if (format === 'excel') {
-                    // Generate CSV as Excel-compatible format
-                    let csv = 'Category,Credit,Required,Level,Points,Notes\n';
+                    // Generate proper Excel file with multiple sheets
+                    const wb = XLSX.utils.book_new();
+
+                    // Summary sheet
+                    const summaryData = [
+                        ['Green Star Submission Progress Report'],
+                        [],
+                        ['Project Name', projectData.projectName],
+                        ['Export Date', new Date().toLocaleDateString()],
+                        ['Total Points', projectData.totalPoints],
+                        ['Star Rating', `${rating.stars} Star - ${rating.name}`],
+                        [],
+                        ['Category Summary'],
+                        ['Category', 'Selected Credits', 'Earned Points', 'Max Points', 'Completion %']
+                    ];
+                    categoriesData.forEach(cat => {
+                        const catCredits = cat.credits.filter(credit => projectData.selectedCredits[`${cat.id}-${credit.id}`]);
+                        const catPoints = catCredits.reduce((sum, c) => sum + (projectData.selectedCredits[`${cat.id}-${c.id}`]?.points || 0), 0);
+                        summaryData.push([cat.name, catCredits.length, catPoints, cat.maxPoints, `${Math.round((catPoints/cat.maxPoints)*100)}%`]);
+                    });
+                    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(summaryData), 'Summary');
+
+                    // Credits detail sheet
+                    const creditsData = [['Category', 'Credit ID', 'Credit Name', 'Required', 'Level', 'Points', 'Assigned To', 'Due Date', 'Notes']];
                     categoriesData.forEach(cat => {
                         cat.credits.forEach(credit => {
                             const key = `${cat.id}-${credit.id}`;
                             const selection = projectData.selectedCredits[key];
                             if (selection) {
-                                const notes = (projectData.creditNotes?.[key] || '').replace(/"/g, '""');
-                                csv += `"${cat.name}","${credit.name}","${credit.required ? 'Yes' : 'No'}","${selection.level}",${selection.points},"${notes}"\n`;
+                                const assignment = projectData.creditAssignments?.[key] || {};
+                                creditsData.push([
+                                    cat.name,
+                                    credit.id,
+                                    credit.name,
+                                    credit.required ? 'Yes' : 'No',
+                                    selection.level === 'minimum' ? 'Minimum' : selection.level === 'exceptional' ? 'Exceptional' : 'Credit',
+                                    selection.points,
+                                    assignment.assignee || '',
+                                    assignment.dueDate || '',
+                                    projectData.creditNotes?.[key] || ''
+                                ]);
                             }
                         });
                     });
+                    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(creditsData), 'Selected Credits');
 
-                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `${projectData.projectName.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().split('T')[0]}.csv`;
-                    a.click();
-                    URL.revokeObjectURL(url);
+                    // Documentation checklist sheet
+                    const docsData = [['Category', 'Credit', 'Document', 'Status', 'Notes']];
+                    categoriesData.forEach(cat => {
+                        cat.credits.forEach(credit => {
+                            const key = `${cat.id}-${credit.id}`;
+                            if (projectData.selectedCredits[key] && credit.documentation) {
+                                credit.documentation.forEach((doc, idx) => {
+                                    const isComplete = projectData.creditDocs?.[key]?.[idx] || false;
+                                    docsData.push([
+                                        cat.name,
+                                        credit.name,
+                                        doc,
+                                        isComplete ? 'Complete' : 'Pending',
+                                        ''
+                                    ]);
+                                });
+                            }
+                        });
+                    });
+                    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(docsData), 'Documentation Checklist');
+
+                    // All credits sheet (for tracking which are not yet selected)
+                    const allCreditsData = [['Category', 'Credit ID', 'Credit Name', 'Required', 'Max Points', 'Status', 'Difficulty']];
+                    categoriesData.forEach(cat => {
+                        cat.credits.forEach(credit => {
+                            const key = `${cat.id}-${credit.id}`;
+                            const isSelected = !!projectData.selectedCredits[key];
+                            allCreditsData.push([
+                                cat.name,
+                                credit.id,
+                                credit.name,
+                                credit.required ? 'Yes' : 'No',
+                                credit.points,
+                                isSelected ? 'Selected' : 'Not Selected',
+                                credit.difficulty || 'Medium'
+                            ]);
+                        });
+                    });
+                    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(allCreditsData), 'All Credits');
+
+                    XLSX.writeFile(wb, `${projectData.projectName.replace(/\s+/g, '-').toLowerCase()}-progress-${new Date().toISOString().split('T')[0]}.xlsx`);
+                    onClose();
+                    return;
+                }
+
+                if (format === 'checklist') {
+                    // Generate submission checklist document
+                    const printWindow = window.open('', '_blank');
+                    const checklistHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>${projectData.projectName} - Submission Checklist</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 40px; color: #333; line-height: 1.4; font-size: 12px; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #1B4D3E; padding-bottom: 15px; }
+        .header h1 { color: #1B4D3E; font-size: 22px; margin-bottom: 5px; }
+        .header .meta { color: #666; font-size: 11px; }
+        .section { margin-bottom: 25px; page-break-inside: avoid; }
+        .section-title { background: #1B4D3E; color: white; padding: 8px 15px; font-size: 13px; font-weight: bold; margin-bottom: 0; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f5f5f5; font-weight: 600; font-size: 11px; }
+        td { font-size: 11px; }
+        .checkbox { width: 20px; text-align: center; }
+        .checkbox-box { width: 14px; height: 14px; border: 1.5px solid #999; display: inline-block; }
+        .priority-high { color: #dc2626; font-weight: bold; }
+        .priority-medium { color: #d97706; }
+        .status-complete { color: #16a34a; }
+        .notes-section { margin-top: 30px; }
+        .notes-section h3 { margin-bottom: 10px; }
+        .notes-lines { border-top: 1px solid #ddd; padding-top: 10px; }
+        .notes-line { border-bottom: 1px dotted #ccc; height: 25px; margin-bottom: 5px; }
+        @media print {
+            body { padding: 20px; }
+            .section { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Green Star Submission Checklist</h1>
+        <div class="meta">${projectData.projectName} | Target: ${rating.stars} Star | ${new Date().toLocaleDateString()}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Required Credits & Documentation</div>
+        <table>
+            <thead>
+                <tr>
+                    <th class="checkbox"></th>
+                    <th style="width:25%">Credit</th>
+                    <th style="width:40%">Required Documents</th>
+                    <th style="width:15%">Responsible</th>
+                    <th style="width:15%">Due Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${categoriesData.flatMap(cat =>
+                    cat.credits
+                        .filter(c => projectData.selectedCredits[`${cat.id}-${c.id}`])
+                        .map(credit => {
+                            const key = `${cat.id}-${credit.id}`;
+                            const assignment = projectData.creditAssignments?.[key] || {};
+                            const docs = credit.documentation || [];
+                            return `
+                                <tr>
+                                    <td class="checkbox"><span class="checkbox-box"></span></td>
+                                    <td><strong>${credit.name}</strong><br><span style="color:#666;font-size:10px">${cat.name}</span></td>
+                                    <td>${docs.length > 0 ? docs.map((d, i) => `<div><span class="checkbox-box" style="width:10px;height:10px;margin-right:5px"></span>${d}</div>`).join('') : '<em style="color:#999">No documents listed</em>'}</td>
+                                    <td>${assignment.assignee || ''}</td>
+                                    <td>${assignment.dueDate || ''}</td>
+                                </tr>
+                            `;
+                        })
+                ).join('')}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Submission Summary</div>
+        <table>
+            <tr><td style="width:200px"><strong>Total Credits Selected</strong></td><td>${Object.keys(projectData.selectedCredits).length}</td></tr>
+            <tr><td><strong>Total Points</strong></td><td>${projectData.totalPoints} / 170</td></tr>
+            <tr><td><strong>Target Rating</strong></td><td>${rating.stars} Star (${rating.name})</td></tr>
+            <tr><td><strong>Submission Date</strong></td><td></td></tr>
+            <tr><td><strong>Assessor</strong></td><td></td></tr>
+        </table>
+    </div>
+
+    <div class="notes-section">
+        <h3>Notes</h3>
+        <div class="notes-lines">
+            ${Array(8).fill('<div class="notes-line"></div>').join('')}
+        </div>
+    </div>
+
+    <div style="margin-top:30px;text-align:center;color:#999;font-size:10px;">
+        Generated by Green Star Submission Assistant
+    </div>
+</body>
+</html>`;
+                    printWindow.document.write(checklistHtml);
+                    printWindow.document.close();
+                    printWindow.onload = () => printWindow.print();
                     onClose();
                     return;
                 }
@@ -5822,8 +6127,21 @@
                                     <i className="fa-solid fa-file-excel text-xl text-green-600"></i>
                                 </div>
                                 <div className="text-left">
-                                    <p className="font-medium text-gray-800">Excel Spreadsheet</p>
-                                    <p className="text-sm text-gray-500">Detailed credit breakdown</p>
+                                    <p className="font-medium text-gray-800">Excel Progress Report</p>
+                                    <p className="text-sm text-gray-500">Multi-sheet workbook with full details</p>
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() => handleExport('checklist')}
+                                className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-purple-300 hover:bg-purple-50 transition-all"
+                            >
+                                <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center">
+                                    <i className="fa-solid fa-clipboard-list text-xl text-purple-600"></i>
+                                </div>
+                                <div className="text-left">
+                                    <p className="font-medium text-gray-800">Submission Checklist</p>
+                                    <p className="text-sm text-gray-500">Print-ready document checklist</p>
                                 </div>
                             </button>
                         </div>
@@ -6579,6 +6897,79 @@
             // FAQ data
             const [faqData, setFaqData] = useState([]);
 
+            // Admin data sync state
+            const [adminDataTimestamp, setAdminDataTimestamp] = useState(() => getAdminDataTimestamp());
+            const [showDataUpdateBanner, setShowDataUpdateBanner] = useState(false);
+            const [commonMistakesData, setCommonMistakesData] = useState(() => loadCommonMistakesData());
+            const [dataVersion, setDataVersion] = useState(0); // Used to trigger re-render after reload
+
+            // Check for admin data updates periodically
+            useEffect(() => {
+                const checkForUpdates = () => {
+                    const currentTimestamp = getAdminDataTimestamp();
+                    if (currentTimestamp && currentTimestamp !== adminDataTimestamp) {
+                        setShowDataUpdateBanner(true);
+                    }
+                };
+
+                // Check every 5 seconds for updates (useful when admin panel is open in another tab)
+                const interval = setInterval(checkForUpdates, 5000);
+                return () => clearInterval(interval);
+            }, [adminDataTimestamp]);
+
+            // Reload all data from admin panel
+            const reloadAdminData = () => {
+                // Force reload by refreshing the page with the new data
+                const newTimestamp = getAdminDataTimestamp();
+                setAdminDataTimestamp(newTimestamp);
+                setCommonMistakesData(loadCommonMistakesData());
+                setShowDataUpdateBanner(false);
+                setDataVersion(v => v + 1);
+
+                // Force full page reload to get updated categories, templates, etc.
+                window.location.reload();
+            };
+
+            // BroadcastChannel for syncing between browser tabs
+            const syncChannel = React.useRef(null);
+
+            useEffect(() => {
+                // Create broadcast channel for cross-tab sync
+                if ('BroadcastChannel' in window) {
+                    syncChannel.current = new BroadcastChannel('greenstar-sync');
+
+                    // Listen for updates from other tabs
+                    syncChannel.current.onmessage = (event) => {
+                        if (event.data.type === 'PROJECT_UPDATE') {
+                            const data = event.data.payload;
+                            setProjectName(data.projectName || 'My Green Star Project');
+                            setSelectedCredits(data.selectedCredits || {});
+                            setCreditNotes(data.creditNotes || {});
+                            setCreditDocs(data.creditDocs || {});
+                            setCreditAssignments(data.creditAssignments || {});
+                            console.log('Synced project data from another tab');
+                        }
+                    };
+                }
+
+                return () => {
+                    if (syncChannel.current) {
+                        syncChannel.current.close();
+                    }
+                };
+            }, []);
+
+            // Broadcast changes to other tabs
+            const broadcastUpdate = React.useCallback((data) => {
+                if (syncChannel.current) {
+                    syncChannel.current.postMessage({
+                        type: 'PROJECT_UPDATE',
+                        payload: data,
+                        timestamp: Date.now()
+                    });
+                }
+            }, []);
+
             // Project phases for filtering
             const projectPhases = [
                 { id: 'all', name: 'All Phases', icon: 'fa-layer-group' },
@@ -6667,11 +7058,14 @@
                 loadFAQs();
             }, []);
 
-            // Save to localStorage on change
+            // Save to localStorage on change and broadcast to other tabs
             useEffect(() => {
                 const data = { projectName, selectedCredits, creditNotes, creditDocs, creditAssignments, darkMode, projectId: activeProjectId };
                 localStorage.setItem('greenstar-project', JSON.stringify(data));
-            }, [projectName, selectedCredits, creditNotes, creditDocs, creditAssignments, darkMode, activeProjectId]);
+
+                // Broadcast to other tabs for sync
+                broadcastUpdate(data);
+            }, [projectName, selectedCredits, creditNotes, creditDocs, creditAssignments, darkMode, activeProjectId, broadcastUpdate]);
 
             // Save projects list
             useEffect(() => {
@@ -6803,6 +7197,99 @@
                 };
                 reader.readAsText(file);
                 event.target.value = ''; // Reset input
+            };
+
+            // Backup all data to a single file
+            const handleBackupData = () => {
+                const backup = {
+                    version: '1.0',
+                    createdAt: new Date().toISOString(),
+                    // Current project
+                    currentProject: {
+                        projectName,
+                        selectedCredits,
+                        creditNotes,
+                        creditDocs,
+                        creditAssignments,
+                        activeProjectId
+                    },
+                    // All projects
+                    projects,
+                    // Admin data (if available)
+                    adminData: localStorage.getItem('greenstar_admin_data')
+                        ? JSON.parse(localStorage.getItem('greenstar_admin_data'))
+                        : null,
+                    // Settings
+                    settings: {
+                        darkMode,
+                        targetStarRating
+                    }
+                };
+
+                const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `greenstar-backup-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            };
+
+            // Restore data from backup file
+            const handleRestoreBackup = (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const backup = JSON.parse(e.target.result);
+
+                        if (!backup.version || !backup.createdAt) {
+                            alert('Invalid backup file format');
+                            return;
+                        }
+
+                        if (!confirm(`Restore backup from ${new Date(backup.createdAt).toLocaleString()}?\n\nThis will replace all current data.`)) {
+                            return;
+                        }
+
+                        // Restore current project
+                        if (backup.currentProject) {
+                            setProjectName(backup.currentProject.projectName || 'My Green Star Project');
+                            setSelectedCredits(normalizeCredits(backup.currentProject.selectedCredits || {}));
+                            setCreditNotes(backup.currentProject.creditNotes || {});
+                            setCreditDocs(backup.currentProject.creditDocs || {});
+                            setCreditAssignments(backup.currentProject.creditAssignments || {});
+                            if (backup.currentProject.activeProjectId) {
+                                setActiveProjectId(backup.currentProject.activeProjectId);
+                            }
+                        }
+
+                        // Restore projects list
+                        if (backup.projects && backup.projects.length > 0) {
+                            setProjects(backup.projects);
+                        }
+
+                        // Restore admin data
+                        if (backup.adminData) {
+                            localStorage.setItem('greenstar_admin_data', JSON.stringify(backup.adminData));
+                        }
+
+                        // Restore settings
+                        if (backup.settings) {
+                            setDarkMode(backup.settings.darkMode || false);
+                            setTargetStarRating(backup.settings.targetStarRating || 5);
+                        }
+
+                        alert('Backup restored successfully! The page will reload to apply changes.');
+                        setTimeout(() => window.location.reload(), 500);
+                    } catch (err) {
+                        alert('Failed to restore backup: ' + err.message);
+                    }
+                };
+                reader.readAsText(file);
+                event.target.value = '';
             };
 
             // Apply template to current project
@@ -6987,6 +7474,30 @@
 
             return (
                 <div className={`${darkMode ? 'dark' : ''}`}>
+                    {/* Admin Data Update Notification Banner */}
+                    {showDataUpdateBanner && (
+                        <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-[#1B4D3E] to-[#0D9488] text-white py-3 px-4 flex items-center justify-between shadow-lg">
+                            <div className="flex items-center gap-3">
+                                <i className="fa-solid fa-sync-alt"></i>
+                                <span className="text-sm font-medium">Admin panel data has been updated. Reload to see changes.</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={reloadAdminData}
+                                    className="px-4 py-1.5 bg-white text-[#1B4D3E] rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors"
+                                >
+                                    Reload Now
+                                </button>
+                                <button
+                                    onClick={() => setShowDataUpdateBanner(false)}
+                                    className="p-1.5 hover:bg-white/20 rounded-lg transition-colors"
+                                >
+                                    <i className="fa-solid fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Mobile Overlay */}
                     <div
                         className={`sidebar-overlay ${sidebarOpen ? 'visible' : ''}`}
@@ -7266,7 +7777,7 @@
                                 </div>
 
                                 {/* Admin Section */}
-                                <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                                <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
                                     <a
                                         href="admin.html"
                                         className="w-full py-2 px-3 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-200 dark:border-indigo-700 rounded-lg text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-all flex items-center justify-center gap-2"
@@ -7274,6 +7785,27 @@
                                         <i className="fa-solid fa-cog text-indigo-500"></i>
                                         <span>Admin Panel</span>
                                     </a>
+                                    <button
+                                        onClick={reloadAdminData}
+                                        className="w-full py-2 px-3 bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700 rounded-lg text-sm font-medium text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <i className="fa-solid fa-sync-alt text-teal-500"></i>
+                                        <span>Reload Data</span>
+                                    </button>
+                                    <div className="grid grid-cols-2 gap-2 mt-2">
+                                        <button
+                                            onClick={handleBackupData}
+                                            className="py-2 px-3 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-lg text-sm font-medium text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-all flex items-center justify-center gap-1"
+                                        >
+                                            <i className="fa-solid fa-cloud-arrow-up text-amber-500 text-xs"></i>
+                                            <span>Backup</span>
+                                        </button>
+                                        <label className="py-2 px-3 bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-700 rounded-lg text-sm font-medium text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900/50 transition-all flex items-center justify-center gap-1 cursor-pointer">
+                                            <i className="fa-solid fa-cloud-arrow-down text-orange-500 text-xs"></i>
+                                            <span>Restore</span>
+                                            <input type="file" accept=".json" onChange={handleRestoreBackup} className="hidden" />
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 
@@ -7417,6 +7949,35 @@
         // Render the app
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
+    </script>
+
+    <!-- Service Worker Registration for PWA/Offline Mode -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered:', registration.scope);
+
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New content available, show update notification
+                                    if (confirm('New version available! Reload to update?')) {
+                                        newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>

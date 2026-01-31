@@ -404,6 +404,29 @@
             { id: "syn-008", credit1: "movement", credit2: "low-emissions", type: "Strong", description: "Sustainable transport and EV charging are complementary", recommendation: "Develop integrated transport strategy" },
         ];
 
+        const defaultCalculators = [
+            { id: "responsible-products", name: "Responsible Products Calculator", description: "Calculate responsible products percentage", icon: "fa-boxes-stacked", type: "products", active: true },
+            { id: "energy-reference", name: "Energy Use - Reference Pathway", description: "Calculate energy reduction vs reference", icon: "fa-bolt", type: "energy", active: true },
+            { id: "upfront-carbon", name: "Upfront Carbon Emissions", description: "Calculate embodied carbon emissions", icon: "fa-cloud", type: "carbon", active: true },
+            { id: "carbon-compensation", name: "Upfront Carbon Compensation", description: "Calculate carbon offset requirements", icon: "fa-leaf", type: "carbon", active: true },
+            { id: "refrigerant", name: "Refrigerant Systems GWP", description: "Calculate refrigerant GWP impact", icon: "fa-snowflake", type: "energy", active: true },
+            { id: "water", name: "Water Use Calculator", description: "Calculate water consumption reduction", icon: "fa-droplet", type: "water", active: true },
+            { id: "movement", name: "Movement and Place", description: "Calculate transport impact score", icon: "fa-person-walking", type: "transport", active: true },
+            { id: "procurement", name: "Procurement and Workforce", description: "Calculate social procurement spend", icon: "fa-handshake", type: "social", active: true },
+            { id: "biodiversity", name: "Biodiversity Enhancement", description: "Calculate biodiversity net gain", icon: "fa-tree", type: "biodiversity", active: true },
+        ];
+
+        const defaultCommonMistakes = [
+            { id: "cm-001", creditId: "energy-use", mistake: "Not engaging energy modeler early enough", impact: "High", prevention: "Engage NatHERS/Section J assessor at concept design" },
+            { id: "cm-002", creditId: "upfront-carbon-red", mistake: "Missing LCA consultant in early design", impact: "High", prevention: "Appoint LCA consultant before schematic design" },
+            { id: "cm-003", creditId: "clean-air", mistake: "Inadequate outdoor air rates in mechanical design", impact: "Medium", prevention: "Specify minimum outdoor air rates in brief" },
+            { id: "cm-004", creditId: "resp-const", mistake: "Late engagement with contractor on EMP", impact: "Medium", prevention: "Include EMP requirements in tender documents" },
+            { id: "cm-005", creditId: "movement", mistake: "Not completing transport assessment early", impact: "High", prevention: "Commission transport assessment at site selection" },
+            { id: "cm-006", creditId: "light-quality", mistake: "Insufficient daylight modeling", impact: "Medium", prevention: "Model daylight at concept stage before fixing facades" },
+            { id: "cm-007", creditId: "water-use", mistake: "Not considering rainwater harvesting potential", impact: "Medium", prevention: "Assess rainwater potential early in hydraulic design" },
+            { id: "cm-008", creditId: "climate-res", mistake: "Incomplete climate risk assessment", impact: "High", prevention: "Commission climate risk study in early design" },
+        ];
+
         // ============================================================
         // COMPONENTS
         // ============================================================
@@ -419,6 +442,8 @@
                 { id: 'documentation', icon: 'fa-file-lines', label: 'Documentation', count: dataStats.documentation },
                 { id: 'templates', icon: 'fa-copy', label: 'Templates', count: dataStats.templates },
                 { id: 'synergies', icon: 'fa-link', label: 'Synergies', count: dataStats.synergies },
+                { id: 'calculators', icon: 'fa-calculator', label: 'Calculators', count: dataStats.calculators },
+                { id: 'mistakes', icon: 'fa-triangle-exclamation', label: 'Common Mistakes', count: dataStats.mistakes },
             ];
 
             return (
@@ -486,7 +511,7 @@
         }
 
         // Header with actions
-        function Header({ title, subtitle, onImport, onExport, onSave }) {
+        function Header({ title, subtitle, onImport, onExport, onSave, onUndo, onRedo, canUndo, canRedo }) {
             return (
                 <header className="bg-white border-b border-gray-200 px-8 py-6">
                     <div className="flex items-center justify-between">
@@ -495,6 +520,25 @@
                             {subtitle && <p className="text-gray-500 mt-1">{subtitle}</p>}
                         </div>
                         <div className="flex items-center gap-3">
+                            {/* Undo/Redo buttons */}
+                            <div className="flex items-center gap-1 mr-2 border-r border-gray-200 pr-4">
+                                <button
+                                    onClick={onUndo}
+                                    disabled={!canUndo}
+                                    className={`p-2 rounded-lg transition-all flex items-center gap-1 ${canUndo ? 'text-gray-700 hover:bg-gray-100' : 'text-gray-300 cursor-not-allowed'}`}
+                                    title="Undo (Ctrl+Z)"
+                                >
+                                    <i className="fa-solid fa-undo"></i>
+                                </button>
+                                <button
+                                    onClick={onRedo}
+                                    disabled={!canRedo}
+                                    className={`p-2 rounded-lg transition-all flex items-center gap-1 ${canRedo ? 'text-gray-700 hover:bg-gray-100' : 'text-gray-300 cursor-not-allowed'}`}
+                                    title="Redo (Ctrl+Y)"
+                                >
+                                    <i className="fa-solid fa-redo"></i>
+                                </button>
+                            </div>
                             <button
                                 onClick={onImport}
                                 className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all flex items-center gap-2"
@@ -588,9 +632,38 @@
             );
         }
 
-        // Generic Table Editor
+        // Generic Table Editor with Search and Bulk Edit
         function TableEditor({ data, columns, onUpdate, onAdd, onDelete, emptyRow }) {
             const [editingId, setEditingId] = useState(null);
+            const [searchQuery, setSearchQuery] = useState('');
+            const [selectedRows, setSelectedRows] = useState(new Set());
+            const [showBulkEdit, setShowBulkEdit] = useState(false);
+            const [bulkEditField, setBulkEditField] = useState('');
+            const [bulkEditValue, setBulkEditValue] = useState('');
+
+            // Filter data based on search query
+            const filteredData = data.filter(row => {
+                if (!searchQuery.trim()) return true;
+                const query = searchQuery.toLowerCase();
+                return columns.some(col => {
+                    const value = row[col.key];
+                    if (value === null || value === undefined) return false;
+                    return String(value).toLowerCase().includes(query);
+                });
+            });
+
+            // Get original indices for filtered data
+            const filteredIndices = data.map((row, i) => ({ row, index: i }))
+                .filter(({ row }) => {
+                    if (!searchQuery.trim()) return true;
+                    const query = searchQuery.toLowerCase();
+                    return columns.some(col => {
+                        const value = row[col.key];
+                        if (value === null || value === undefined) return false;
+                        return String(value).toLowerCase().includes(query);
+                    });
+                })
+                .map(({ index }) => index);
 
             const handleChange = (index, field, value) => {
                 const newData = [...data];
@@ -609,12 +682,192 @@
                 }
             };
 
+            const toggleRowSelection = (index) => {
+                const newSelected = new Set(selectedRows);
+                if (newSelected.has(index)) {
+                    newSelected.delete(index);
+                } else {
+                    newSelected.add(index);
+                }
+                setSelectedRows(newSelected);
+            };
+
+            const selectAll = () => {
+                if (selectedRows.size === filteredIndices.length) {
+                    setSelectedRows(new Set());
+                } else {
+                    setSelectedRows(new Set(filteredIndices));
+                }
+            };
+
+            const handleBulkEdit = () => {
+                if (!bulkEditField || selectedRows.size === 0) return;
+                const newData = [...data];
+                selectedRows.forEach(index => {
+                    const col = columns.find(c => c.key === bulkEditField);
+                    let value = bulkEditValue;
+                    if (col?.type === 'checkbox') {
+                        value = bulkEditValue === 'true';
+                    } else if (col?.type === 'number') {
+                        value = parseInt(bulkEditValue) || 0;
+                    }
+                    newData[index] = { ...newData[index], [bulkEditField]: value };
+                });
+                onUpdate(newData);
+                setShowBulkEdit(false);
+                setBulkEditField('');
+                setBulkEditValue('');
+                setSelectedRows(new Set());
+            };
+
+            const handleBulkDelete = () => {
+                if (selectedRows.size === 0) return;
+                if (confirm(`Are you sure you want to delete ${selectedRows.size} rows?`)) {
+                    const newData = data.filter((_, i) => !selectedRows.has(i));
+                    onUpdate(newData);
+                    setSelectedRows(new Set());
+                }
+            };
+
             return (
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                    <div className="overflow-x-auto max-h-[calc(100vh-280px)] overflow-y-auto">
+                    {/* Search and Bulk Actions Bar */}
+                    <div className="p-4 border-b border-gray-200 bg-gray-50 flex flex-wrap items-center gap-3">
+                        <div className="flex-1 min-w-[200px]">
+                            <div className="relative">
+                                <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    placeholder="Search in table..."
+                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                />
+                                {searchQuery && (
+                                    <button
+                                        onClick={() => setSearchQuery('')}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    >
+                                        <i className="fa-solid fa-times"></i>
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                        <div className="text-sm text-gray-500">
+                            {searchQuery ? `${filteredData.length} of ${data.length} rows` : `${data.length} rows`}
+                        </div>
+                        {selectedRows.size > 0 && (
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm text-green-600 font-medium">{selectedRows.size} selected</span>
+                                <button
+                                    onClick={() => setShowBulkEdit(!showBulkEdit)}
+                                    className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
+                                >
+                                    <i className="fa-solid fa-edit mr-1"></i> Bulk Edit
+                                </button>
+                                <button
+                                    onClick={handleBulkDelete}
+                                    className="px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition-colors"
+                                >
+                                    <i className="fa-solid fa-trash mr-1"></i> Delete
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Bulk Edit Panel */}
+                    {showBulkEdit && selectedRows.size > 0 && (
+                        <div className="p-4 border-b border-gray-200 bg-blue-50 flex items-center gap-3">
+                            <span className="text-sm font-medium text-gray-700">Bulk edit {selectedRows.size} rows:</span>
+                            <select
+                                value={bulkEditField}
+                                onChange={(e) => setBulkEditField(e.target.value)}
+                                className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                            >
+                                <option value="">Select field...</option>
+                                {columns.filter(c => c.type !== 'textarea').map(col => (
+                                    <option key={col.key} value={col.key}>{col.label}</option>
+                                ))}
+                            </select>
+                            {bulkEditField && (() => {
+                                const col = columns.find(c => c.key === bulkEditField);
+                                if (col?.type === 'select') {
+                                    return (
+                                        <select
+                                            value={bulkEditValue}
+                                            onChange={(e) => setBulkEditValue(e.target.value)}
+                                            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                                        >
+                                            <option value="">Select value...</option>
+                                            {col.options.map(opt => (
+                                                <option key={opt.value || opt} value={opt.value || opt}>
+                                                    {opt.label || opt}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    );
+                                } else if (col?.type === 'checkbox') {
+                                    return (
+                                        <select
+                                            value={bulkEditValue}
+                                            onChange={(e) => setBulkEditValue(e.target.value)}
+                                            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                                        >
+                                            <option value="">Select...</option>
+                                            <option value="true">Yes / Checked</option>
+                                            <option value="false">No / Unchecked</option>
+                                        </select>
+                                    );
+                                } else if (col?.type === 'number') {
+                                    return (
+                                        <input
+                                            type="number"
+                                            value={bulkEditValue}
+                                            onChange={(e) => setBulkEditValue(e.target.value)}
+                                            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm w-24"
+                                            placeholder="Value"
+                                        />
+                                    );
+                                } else {
+                                    return (
+                                        <input
+                                            type="text"
+                                            value={bulkEditValue}
+                                            onChange={(e) => setBulkEditValue(e.target.value)}
+                                            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                                            placeholder="New value"
+                                        />
+                                    );
+                                }
+                            })()}
+                            <button
+                                onClick={handleBulkEdit}
+                                disabled={!bulkEditField || !bulkEditValue}
+                                className="px-4 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Apply
+                            </button>
+                            <button
+                                onClick={() => { setShowBulkEdit(false); setBulkEditField(''); setBulkEditValue(''); }}
+                                className="px-3 py-1.5 text-gray-600 hover:text-gray-800"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    )}
+
+                    <div className="overflow-x-auto max-h-[calc(100vh-380px)] overflow-y-auto">
                         <table className="data-table">
                             <thead>
                                 <tr>
+                                    <th style={{ width: '40px' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedRows.size === filteredIndices.length && filteredIndices.length > 0}
+                                            onChange={selectAll}
+                                            className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                        />
+                                    </th>
                                     {columns.map(col => (
                                         <th key={col.key} style={{ width: col.width }}>{col.label}</th>
                                     ))}
@@ -622,14 +875,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.map((row, index) => (
-                                    <tr key={row._id || row.id || index} className="animate-fade-in">
+                                {filteredIndices.map((originalIndex) => {
+                                    const row = data[originalIndex];
+                                    return (
+                                    <tr key={row._id || row.id || originalIndex} className={`animate-fade-in ${selectedRows.has(originalIndex) ? 'bg-green-50' : ''}`}>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedRows.has(originalIndex)}
+                                                onChange={() => toggleRowSelection(originalIndex)}
+                                                className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                            />
+                                        </td>
                                         {columns.map(col => (
                                             <td key={col.key}>
                                                 {col.type === 'select' ? (
                                                     <select
                                                         value={row[col.key] || ''}
-                                                        onChange={(e) => handleChange(index, col.key, e.target.value)}
+                                                        onChange={(e) => handleChange(originalIndex, col.key, e.target.value)}
                                                     >
                                                         <option value="">Select...</option>
                                                         {col.options.map(opt => (
@@ -642,20 +905,20 @@
                                                     <input
                                                         type="checkbox"
                                                         checked={row[col.key] || false}
-                                                        onChange={(e) => handleChange(index, col.key, e.target.checked)}
+                                                        onChange={(e) => handleChange(originalIndex, col.key, e.target.checked)}
                                                         className="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
                                                     />
                                                 ) : col.type === 'textarea' ? (
                                                     <textarea
                                                         value={row[col.key] || ''}
-                                                        onChange={(e) => handleChange(index, col.key, e.target.value)}
+                                                        onChange={(e) => handleChange(originalIndex, col.key, e.target.value)}
                                                         rows={2}
                                                     />
                                                 ) : col.type === 'number' ? (
                                                     <input
                                                         type="number"
                                                         value={row[col.key] || ''}
-                                                        onChange={(e) => handleChange(index, col.key, parseInt(e.target.value) || 0)}
+                                                        onChange={(e) => handleChange(originalIndex, col.key, parseInt(e.target.value) || 0)}
                                                         min={col.min || 0}
                                                         max={col.max}
                                                     />
@@ -663,7 +926,7 @@
                                                     <input
                                                         type="text"
                                                         value={row[col.key] || ''}
-                                                        onChange={(e) => handleChange(index, col.key, e.target.value)}
+                                                        onChange={(e) => handleChange(originalIndex, col.key, e.target.value)}
                                                         placeholder={col.placeholder}
                                                     />
                                                 )}
@@ -671,7 +934,7 @@
                                         ))}
                                         <td>
                                             <button
-                                                onClick={() => handleDelete(index)}
+                                                onClick={() => handleDelete(originalIndex)}
                                                 className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                                                 title="Delete row"
                                             >
@@ -905,6 +1168,58 @@
             );
         }
 
+        // Calculators Editor
+        function CalculatorsEditor({ data, onUpdate }) {
+            const typeOptions = ['products', 'energy', 'carbon', 'water', 'transport', 'social', 'biodiversity', 'other'];
+
+            const columns = [
+                { key: 'id', label: 'Calculator ID', width: '150px', placeholder: 'calculator-id' },
+                { key: 'name', label: 'Calculator Name', width: '200px' },
+                { key: 'description', label: 'Description', type: 'textarea', width: '250px' },
+                { key: 'icon', label: 'Icon (FA)', width: '130px', placeholder: 'fa-calculator' },
+                { key: 'type', label: 'Type', type: 'select', width: '120px', options: typeOptions },
+                { key: 'active', label: 'Active?', type: 'checkbox', width: '70px' },
+            ];
+
+            const emptyRow = { id: '', name: '', description: '', icon: 'fa-calculator', type: 'other', active: true };
+
+            return (
+                <div className="p-8">
+                    <div className="mb-6">
+                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Calculators</h2>
+                        <p className="text-gray-500">Manage the calculators available in the main app. Use FontAwesome icon class names.</p>
+                    </div>
+                    <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
+                </div>
+            );
+        }
+
+        // Common Mistakes Editor
+        function CommonMistakesEditor({ data, onUpdate, credits }) {
+            const creditOptions = credits.map(c => ({ value: c.id, label: `${c.id} - ${c.name}` }));
+            const impactOptions = ['High', 'Medium', 'Low'];
+
+            const columns = [
+                { key: 'id', label: 'ID', width: '100px', placeholder: 'cm-xxx' },
+                { key: 'creditId', label: 'Credit', type: 'select', width: '180px', options: creditOptions },
+                { key: 'mistake', label: 'Common Mistake', type: 'textarea', width: '250px' },
+                { key: 'impact', label: 'Impact', type: 'select', width: '100px', options: impactOptions },
+                { key: 'prevention', label: 'Prevention Tip', type: 'textarea', width: '250px' },
+            ];
+
+            const emptyRow = { id: '', creditId: '', mistake: '', impact: 'Medium', prevention: '' };
+
+            return (
+                <div className="p-8">
+                    <div className="mb-6">
+                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Common Mistakes</h2>
+                        <p className="text-gray-500">Define common mistakes for each credit to help users avoid pitfalls during submission.</p>
+                    </div>
+                    <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
+                </div>
+            );
+        }
+
         // Import Modal
         function ImportModal({ isOpen, onClose, onImport }) {
             const [status, setStatus] = useState(null);
@@ -1016,6 +1331,29 @@
                             type: row['Synergy Type'],
                             description: row['Description'],
                             recommendation: row['Recommendation'],
+                        }));
+                    }
+
+                    // Parse Calculators
+                    if (workbook.SheetNames.includes('Calculators')) {
+                        imported.calculators = XLSX.utils.sheet_to_json(workbook.Sheets['Calculators']).map(row => ({
+                            id: row['Calculator ID'],
+                            name: row['Calculator Name'],
+                            description: row['Description'],
+                            icon: row['Icon (FontAwesome)'],
+                            type: row['Type'],
+                            active: row['Is Active?'] === 'Yes',
+                        }));
+                    }
+
+                    // Parse Common Mistakes
+                    if (workbook.SheetNames.includes('CommonMistakes')) {
+                        imported.commonMistakes = XLSX.utils.sheet_to_json(workbook.Sheets['CommonMistakes']).map(row => ({
+                            id: row['Mistake ID'],
+                            creditId: row['Credit ID'],
+                            mistake: row['Common Mistake'],
+                            impact: row['Impact Level'],
+                            prevention: row['Prevention Tip'],
                         }));
                     }
 
@@ -1138,6 +1476,120 @@
                 const saved = localStorage.getItem('admin_synergies');
                 return saved ? JSON.parse(saved) : defaultSynergies;
             });
+            const [calculators, setCalculators] = useState(() => {
+                const saved = localStorage.getItem('admin_calculators');
+                return saved ? JSON.parse(saved) : defaultCalculators;
+            });
+            const [commonMistakes, setCommonMistakes] = useState(() => {
+                const saved = localStorage.getItem('admin_mistakes');
+                return saved ? JSON.parse(saved) : defaultCommonMistakes;
+            });
+
+            // Undo/Redo history
+            const [history, setHistory] = useState([]);
+            const [historyIndex, setHistoryIndex] = useState(-1);
+            const isUndoRedo = React.useRef(false);
+
+            // Get current state snapshot
+            const getSnapshot = () => ({
+                categories, credits, levels, criteria, documentation, templates, synergies, calculators, commonMistakes
+            });
+
+            // Record history (debounced to avoid too many entries)
+            const recordHistory = React.useCallback(() => {
+                if (isUndoRedo.current) return;
+
+                setHistory(prev => {
+                    const newHistory = prev.slice(0, historyIndex + 1);
+                    newHistory.push(getSnapshot());
+                    // Keep max 50 history entries
+                    if (newHistory.length > 50) newHistory.shift();
+                    return newHistory;
+                });
+                setHistoryIndex(prev => Math.min(prev + 1, 49));
+            }, [categories, credits, levels, criteria, documentation, templates, synergies, calculators, commonMistakes, historyIndex]);
+
+            // Track changes and record history with debounce
+            const historyTimeout = React.useRef(null);
+            useEffect(() => {
+                if (isUndoRedo.current) {
+                    isUndoRedo.current = false;
+                    return;
+                }
+
+                if (historyTimeout.current) clearTimeout(historyTimeout.current);
+                historyTimeout.current = setTimeout(recordHistory, 500);
+
+                return () => {
+                    if (historyTimeout.current) clearTimeout(historyTimeout.current);
+                };
+            }, [categories, credits, levels, criteria, documentation, templates, synergies, calculators, commonMistakes]);
+
+            // Undo function
+            const handleUndo = () => {
+                if (historyIndex <= 0) return;
+
+                const prevState = history[historyIndex - 1];
+                if (!prevState) return;
+
+                isUndoRedo.current = true;
+                setCategories(prevState.categories);
+                setCredits(prevState.credits);
+                setLevels(prevState.levels);
+                setCriteria(prevState.criteria);
+                setDocumentation(prevState.documentation);
+                setTemplates(prevState.templates);
+                setSynergies(prevState.synergies);
+                setCalculators(prevState.calculators);
+                setCommonMistakes(prevState.commonMistakes);
+                setHistoryIndex(historyIndex - 1);
+                setToast({ message: 'Undone', type: 'info' });
+            };
+
+            // Redo function
+            const handleRedo = () => {
+                if (historyIndex >= history.length - 1) return;
+
+                const nextState = history[historyIndex + 1];
+                if (!nextState) return;
+
+                isUndoRedo.current = true;
+                setCategories(nextState.categories);
+                setCredits(nextState.credits);
+                setLevels(nextState.levels);
+                setCriteria(nextState.criteria);
+                setDocumentation(nextState.documentation);
+                setTemplates(nextState.templates);
+                setSynergies(nextState.synergies);
+                setCalculators(nextState.calculators);
+                setCommonMistakes(nextState.commonMistakes);
+                setHistoryIndex(historyIndex + 1);
+                setToast({ message: 'Redone', type: 'info' });
+            };
+
+            // Keyboard shortcuts for undo/redo
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+                        e.preventDefault();
+                        if (e.shiftKey) {
+                            handleRedo();
+                        } else {
+                            handleUndo();
+                        }
+                    }
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+                        e.preventDefault();
+                        handleRedo();
+                    }
+                };
+
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, [historyIndex, history]);
+
+            const canUndo = historyIndex > 0;
+            const canRedo = historyIndex < history.length - 1;
 
             // Auto-save to localStorage
             useEffect(() => {
@@ -1161,6 +1613,12 @@
             useEffect(() => {
                 localStorage.setItem('admin_synergies', JSON.stringify(synergies));
             }, [synergies]);
+            useEffect(() => {
+                localStorage.setItem('admin_calculators', JSON.stringify(calculators));
+            }, [calculators]);
+            useEffect(() => {
+                localStorage.setItem('admin_mistakes', JSON.stringify(commonMistakes));
+            }, [commonMistakes]);
 
             const dataStats = {
                 categories: categories.length,
@@ -1170,6 +1628,8 @@
                 documentation: documentation.length,
                 templates: templates.length,
                 synergies: synergies.length,
+                calculators: calculators.length,
+                mistakes: commonMistakes.length,
             };
 
             const handleImport = (imported) => {
@@ -1180,6 +1640,8 @@
                 if (imported.documentation) setDocumentation(imported.documentation);
                 if (imported.templates) setTemplates(imported.templates);
                 if (imported.synergies) setSynergies(imported.synergies);
+                if (imported.calculators) setCalculators(imported.calculators);
+                if (imported.commonMistakes) setCommonMistakes(imported.commonMistakes);
                 setToast({ message: 'Data imported successfully!', type: 'success' });
             };
 
@@ -1274,6 +1736,27 @@
                 }));
                 XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(synData), 'Synergies');
 
+                // Calculators sheet
+                const calcData = calculators.map(c => ({
+                    'Calculator ID': c.id,
+                    'Calculator Name': c.name,
+                    'Description': c.description,
+                    'Icon (FontAwesome)': c.icon,
+                    'Type': c.type,
+                    'Is Active?': c.active ? 'Yes' : 'No',
+                }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(calcData), 'Calculators');
+
+                // Common Mistakes sheet
+                const mistakesData = commonMistakes.map(m => ({
+                    'Mistake ID': m.id,
+                    'Credit ID': m.creditId,
+                    'Common Mistake': m.mistake,
+                    'Impact Level': m.impact,
+                    'Prevention Tip': m.prevention,
+                }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(mistakesData), 'CommonMistakes');
+
                 // Save file
                 XLSX.writeFile(wb, 'GreenStar_Admin_Data.xlsx');
                 setToast({ message: 'Excel file downloaded!', type: 'success' });
@@ -1289,6 +1772,8 @@
                     documentation,
                     templates,
                     synergies,
+                    calculators,
+                    commonMistakes,
                     savedAt: new Date().toISOString(),
                 };
                 localStorage.setItem('greenstar_admin_data', JSON.stringify(appData));
@@ -1313,6 +1798,10 @@
                         return <TemplatesEditor data={templates} onUpdate={setTemplates} />;
                     case 'synergies':
                         return <SynergiesEditor data={synergies} onUpdate={setSynergies} credits={credits} />;
+                    case 'calculators':
+                        return <CalculatorsEditor data={calculators} onUpdate={setCalculators} />;
+                    case 'mistakes':
+                        return <CommonMistakesEditor data={commonMistakes} onUpdate={setCommonMistakes} credits={credits} />;
                     default:
                         return <Dashboard stats={dataStats} onNavigate={setActiveTab} />;
                 }
@@ -1328,6 +1817,8 @@
                     documentation: { title: 'Documentation', subtitle: 'Required documents for each credit' },
                     templates: { title: 'Project Templates', subtitle: 'Pre-configured credit selections' },
                     synergies: { title: 'Credit Synergies', subtitle: 'Define credit relationships' },
+                    calculators: { title: 'Calculators', subtitle: 'Manage calculators shown in the app' },
+                    mistakes: { title: 'Common Mistakes', subtitle: 'Define common pitfalls for each credit' },
                 };
                 return titles[activeTab] || titles.dashboard;
             };
@@ -1344,6 +1835,10 @@
                             onImport={() => setShowImportModal(true)}
                             onExport={handleExport}
                             onSave={handleSave}
+                            onUndo={handleUndo}
+                            onRedo={handleRedo}
+                            canUndo={canUndo}
+                            canRedo={canRedo}
                         />
                         {renderContent()}
                     </main>

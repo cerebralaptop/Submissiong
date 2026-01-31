@@ -89,6 +89,8 @@ The Green Star Submission Assistant is a web-based application designed to help 
 /Submissiong
 ├── index.html                    # Main application (single-page React app)
 ├── admin.html                    # Admin panel (single-page React app)
+├── manifest.json                 # PWA manifest for offline support
+├── sw.js                         # Service Worker for caching/offline mode
 ├── FAQs for Green Star Buildings copy.xlsx  # FAQ data source
 ├── GreenStar_Admin_Data.xlsx     # Admin data template
 ├── create_admin_spreadsheet.py   # Python script to generate Excel template
@@ -354,14 +356,16 @@ The Green Star Submission Assistant is a web-based application designed to help 
 
 ---
 
-## 6. Proposed Features
+## 6. Implemented Features (v1.1)
+
+> **Note**: All features in this section have been implemented as of January 2026.
 
 ### 6.1 Data & Content Enhancements
 
-#### 6.1.1 Editable Project Templates
-**Current State**: Project templates are hardcoded in `index.html` as `projectTemplates` array.
+#### 6.1.1 Editable Project Templates ✅ IMPLEMENTED
+**Status**: Fully implemented with dynamic loading from admin panel.
 
-**Proposed Solution**:
+**Implementation**:
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                 PROJECT TEMPLATES FLOW                           │
@@ -385,10 +389,10 @@ Admin Panel                              Main App
 2. Add `loadTemplatesData()` function in main app
 3. Replace hardcoded `projectTemplates` with dynamic loading
 
-#### 6.1.2 Editable Calculators List
-**Current State**: Calculators are hardcoded in `calculatorsData` array.
+#### 6.1.2 Editable Calculators List ✅ IMPLEMENTED
+**Status**: Fully implemented with admin panel editor and dynamic loading.
 
-**Proposed Solution**:
+**Implementation**:
 - Add "Calculators" tab to Admin Panel
 - Fields: ID, Name, Description, Icon, Type, Credit Link, External URL
 - Load dynamically in main app
@@ -406,20 +410,21 @@ Admin Panel                              Main App
 }
 ```
 
-#### 6.1.3 Common Mistakes Editing
-**Current State**: Common mistakes are embedded in credit definitions.
+#### 6.1.3 Common Mistakes Editing ✅ IMPLEMENTED
+**Status**: Fully implemented with dedicated admin panel editor.
 
-**Proposed Solution**:
-- Add "Common Mistakes" column to Credits editor
-- Store as comma-separated or JSON array
-- Display in credit detail modal
+**Implementation**:
+- Added "Common Mistakes" tab to Admin Panel
+- Fields: ID, Credit ID, Mistake Description, Impact Level, Prevention Tip
+- Loaded dynamically in main app with `loadCommonMistakesData()`
+- Displays in credit detail modal
 
 ---
 
 ### 6.2 User Experience Enhancements
 
-#### 6.2.1 Reload Data Button
-**Purpose**: Allow users to reload admin data without full page refresh.
+#### 6.2.1 Reload Data Button ✅ IMPLEMENTED
+**Status**: Fully implemented in main app sidebar.
 
 **Implementation**:
 ```
@@ -448,8 +453,8 @@ Admin Panel                              Main App
 </button>
 ```
 
-#### 6.2.2 Admin Data Notification
-**Purpose**: Show users when admin-managed data is being used.
+#### 6.2.2 Admin Data Notification ✅ IMPLEMENTED
+**Status**: Fully implemented with auto-detection and update banner.
 
 **Implementation**:
 - Check if `greenstar_admin_data` exists on load
@@ -465,8 +470,8 @@ Admin Panel                              Main App
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-#### 6.2.3 Admin Panel Search/Filter
-**Purpose**: Find data quickly in large tables.
+#### 6.2.3 Admin Panel Search/Filter ✅ IMPLEMENTED
+**Status**: Fully implemented in all TableEditor components.
 
 **Implementation**:
 ```
@@ -492,8 +497,8 @@ Admin Panel                              Main App
 - Result count display
 - Highlight matching text
 
-#### 6.2.4 Bulk Edit Capabilities
-**Purpose**: Edit multiple rows at once.
+#### 6.2.4 Bulk Edit Capabilities ✅ IMPLEMENTED
+**Status**: Fully implemented with select all, bulk edit, and bulk delete.
 
 **Implementation**:
 ```
@@ -527,7 +532,9 @@ Admin Panel                              Main App
 
 ### 6.3 Export & Reporting
 
-#### 6.3.1 Export Project Progress to Excel/PDF
+#### 6.3.1 Export Project Progress to Excel/PDF ✅ IMPLEMENTED
+**Status**: Fully implemented with multi-sheet Excel export via SheetJS.
+
 **Purpose**: Generate comprehensive project status report.
 
 **Excel Export Structure**:
@@ -573,7 +580,9 @@ Sheet 4: Notes
 - Visual progress charts
 - Print-optimized formatting
 
-#### 6.3.2 Submission Checklist Document
+#### 6.3.2 Submission Checklist Document ✅ IMPLEMENTED
+**Status**: Fully implemented with print-ready HTML output.
+
 **Purpose**: Generate a printable checklist for submission preparation.
 
 **Format**:
@@ -610,7 +619,9 @@ SUBMISSION NOTES:
 ───────────────────────────────────────────────────────────────────
 ```
 
-#### 6.3.3 Print-Friendly Credit Summary
+#### 6.3.3 Print-Friendly Credit Summary ✅ IMPLEMENTED
+**Status**: Fully implemented via PDF export option.
+
 **Purpose**: One-page summary of each credit for team reference.
 
 **Layout**:
@@ -650,7 +661,9 @@ SUBMISSION NOTES:
 
 ### 6.4 Technical Enhancements
 
-#### 6.4.1 Offline Mode (PWA)
+#### 6.4.1 Offline Mode (PWA) ✅ IMPLEMENTED
+**Status**: Fully implemented with manifest.json and service worker (sw.js).
+
 **Purpose**: Allow app to work without internet connection.
 
 **Implementation Architecture**:
@@ -702,7 +715,9 @@ SUBMISSION NOTES:
 - Network-first for Excel files (FAQ data)
 - Background sync for localStorage changes
 
-#### 6.4.2 Auto-Sync Between Browser Tabs
+#### 6.4.2 Auto-Sync Between Browser Tabs ✅ IMPLEMENTED
+**Status**: Fully implemented using BroadcastChannel API.
+
 **Purpose**: Keep multiple tabs in sync when data changes.
 
 **Implementation**:
@@ -742,7 +757,9 @@ window.addEventListener('storage', (event) => {
                                                        └─────────────┘
 ```
 
-#### 6.4.3 Data Backup to File
+#### 6.4.3 Data Backup to File ✅ IMPLEMENTED
+**Status**: Fully implemented with backup/restore buttons in main app sidebar.
+
 **Purpose**: Allow users to backup and restore all data.
 
 **Backup Format** (JSON):
@@ -778,7 +795,9 @@ window.addEventListener('storage', (event) => {
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-#### 6.4.4 Undo/Redo in Admin Panel
+#### 6.4.4 Undo/Redo in Admin Panel ✅ IMPLEMENTED
+**Status**: Fully implemented with history stack and keyboard shortcuts (Ctrl+Z / Ctrl+Y).
+
 **Purpose**: Allow administrators to undo mistakes.
 
 **Implementation**:
