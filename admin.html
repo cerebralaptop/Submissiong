@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Star Admin Panel</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- SheetJS for Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+    <!-- React -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'display': ['Outfit', 'sans-serif'],
+                        'body': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .font-display { font-family: 'Outfit', sans-serif; }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Table styles */
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th {
+            background: #f8fafc;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            border-bottom: 2px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: top;
+        }
+        .data-table tr:hover { background: #f8fafc; }
+        .data-table input, .data-table select, .data-table textarea {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .data-table input:focus, .data-table select:focus, .data-table textarea:focus {
+            outline: none;
+            border-color: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+        }
+        .data-table textarea { resize: vertical; min-height: 60px; }
+
+        /* Animation */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useCallback } = React;
+
+        // ============================================================
+        // DEFAULT DATA STRUCTURE
+        // ============================================================
+        const defaultCategories = [
+            { id: "responsible", name: "Responsible", description: "Responsible practices in construction and development", icon: "fa-shield-halved", color: "amber", order: 1 },
+            { id: "healthy", name: "Healthy", description: "Creating healthy indoor environments", icon: "fa-heart-pulse", color: "green", order: 2 },
+            { id: "resilient", name: "Resilient", description: "Building resilience to climate change", icon: "fa-shield", color: "blue", order: 3 },
+            { id: "positive", name: "Positive", description: "Positive environmental outcomes", icon: "fa-bolt", color: "red", order: 4 },
+            { id: "places", name: "Places", description: "Creating great places for communities", icon: "fa-map-location-dot", color: "purple", order: 5 },
+            { id: "people", name: "People", description: "Supporting people and communities", icon: "fa-users", color: "pink", order: 6 },
+            { id: "nature", name: "Nature", description: "Protecting and enhancing nature", icon: "fa-leaf", color: "emerald", order: 7 },
+            { id: "leadership", name: "Leadership", description: "Demonstrating industry leadership", icon: "fa-trophy", color: "indigo", order: 8 },
+        ];
+
+        const defaultCredits = [
+            { id: "resp-01", name: "Responsible Construction", category: "responsible", shortDescription: "Sustainable construction practices", description: "Demonstrates responsible construction practices including waste management, pollution prevention, and sustainable material sourcing.", required: true, maxPoints: 3, order: 1 },
+            { id: "resp-02", name: "Metering and Monitoring", category: "responsible", shortDescription: "Building performance monitoring", description: "Implementation of comprehensive metering and monitoring systems to track building performance.", required: false, maxPoints: 2, order: 2 },
+            { id: "health-01", name: "Clean Air", category: "healthy", shortDescription: "Indoor air quality", description: "Ensuring high indoor air quality through ventilation and material selection.", required: true, maxPoints: 3, order: 1 },
+            { id: "health-02", name: "Lighting Comfort", category: "healthy", shortDescription: "Visual comfort and daylight", description: "Providing comfortable lighting conditions with good daylight access.", required: false, maxPoints: 2, order: 2 },
+            { id: "pos-01", name: "Energy Source", category: "positive", shortDescription: "Renewable energy use", description: "Use of renewable energy sources to power the building.", required: true, maxPoints: 4, order: 1 },
+            { id: "pos-02", name: "Energy Use", category: "positive", shortDescription: "Energy efficiency", description: "Reducing energy consumption through efficient design.", required: true, maxPoints: 4, order: 2 },
+            { id: "pos-03", name: "Upfront Carbon Reduction", category: "positive", shortDescription: "Embodied carbon", description: "Reducing embodied carbon in construction materials.", required: true, maxPoints: 4, order: 3 },
+            { id: "lead-01", name: "Market Transformation", category: "leadership", shortDescription: "Industry leadership", description: "Demonstrating leadership and innovation in the industry.", required: true, maxPoints: 4, order: 1 },
+        ];
+
+        const defaultLevels = [
+            { creditId: "resp-01", level: "minimum", points: 0, summary: "Basic compliance", description: "Meet basic responsible construction requirements" },
+            { creditId: "resp-01", level: "credit", points: 2, summary: "Good practices", description: "Implement good responsible construction practices" },
+            { creditId: "resp-01", level: "exceptional", points: 3, summary: "Best in class", description: "Demonstrate industry-leading responsible construction" },
+            { creditId: "health-01", level: "minimum", points: 0, summary: "Basic air quality", description: "Meet minimum ventilation and air quality standards" },
+            { creditId: "health-01", level: "credit", points: 2, summary: "Enhanced air quality", description: "Exceed minimum air quality requirements" },
+            { creditId: "health-01", level: "exceptional", points: 3, summary: "Premium air quality", description: "Achieve premium indoor air quality standards" },
+            { creditId: "pos-01", level: "minimum", points: 0, summary: "Grid connection", description: "Standard grid electricity connection" },
+            { creditId: "pos-01", level: "credit", points: 2, summary: "Partial renewable", description: "30-60% renewable energy" },
+            { creditId: "pos-01", level: "exceptional", points: 4, summary: "Net zero energy", description: "100% renewable or net zero energy" },
+        ];
+
+        const defaultCriteria = [
+            { creditId: "resp-01", level: "minimum", criteriaNum: 1, text: "Complete an Environmental Management Plan (EMP)", mandatory: true, evidenceType: "Document" },
+            { creditId: "resp-01", level: "minimum", criteriaNum: 2, text: "Implement waste management procedures", mandatory: true, evidenceType: "Document" },
+            { creditId: "resp-01", level: "credit", criteriaNum: 1, text: "Achieve 80% construction waste diversion from landfill", mandatory: true, evidenceType: "Report" },
+            { creditId: "resp-01", level: "exceptional", criteriaNum: 1, text: "Achieve 95% construction waste diversion", mandatory: true, evidenceType: "Report" },
+            { creditId: "health-01", level: "minimum", criteriaNum: 1, text: "Meet minimum ventilation rates per AS 1668.2", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "health-01", level: "credit", criteriaNum: 1, text: "Provide 50% more fresh air than code minimum", mandatory: true, evidenceType: "Calculation" },
+        ];
+
+        const defaultDocumentation = [
+            { creditId: "resp-01", level: "all", name: "Environmental Management Plan", type: "Report", description: "Comprehensive EMP covering construction phase", templateAvailable: true, templateLink: "templates/EMP_template.docx" },
+            { creditId: "resp-01", level: "all", name: "Waste Management Report", type: "Report", description: "Monthly waste tracking and diversion rates", templateAvailable: true, templateLink: "templates/waste_report.xlsx" },
+            { creditId: "health-01", level: "all", name: "Ventilation Calculations", type: "Calculation", description: "Fresh air rates per AS 1668.2", templateAvailable: true, templateLink: "templates/ventilation_calc.xlsx" },
+        ];
+
+        const defaultTemplates = [
+            { id: "tpl-office-5", name: "Commercial Office - 5 Star", type: "Office", description: "Standard commercial office targeting 5 Star rating", targetRating: "5 Star", credits: "resp-01,resp-02,health-01,health-02,pos-01,pos-02,pos-03,lead-01", active: true },
+            { id: "tpl-office-6", name: "Premium Office - 6 Star", type: "Office", description: "Premium office development targeting 6 Star", targetRating: "6 Star", credits: "resp-01,resp-02,health-01,health-02,pos-01,pos-02,pos-03,lead-01", active: true },
+            { id: "tpl-resi-5", name: "Residential - 5 Star", type: "Residential", description: "Multi-residential building targeting 5 Star", targetRating: "5 Star", credits: "resp-01,health-01,health-02,pos-01,pos-02", active: true },
+        ];
+
+        const defaultSynergies = [
+            { id: "syn-001", credit1: "pos-01", credit2: "pos-02", type: "Strong", description: "Energy source and energy use are directly related", recommendation: "Pursuing both credits together maximizes energy strategy effectiveness" },
+            { id: "syn-002", credit1: "pos-02", credit2: "pos-03", type: "Strong", description: "Energy efficiency reduces both operational and embodied carbon", recommendation: "Consider holistic carbon strategy addressing both credits" },
+            { id: "syn-003", credit1: "health-01", credit2: "health-02", type: "Moderate", description: "Ventilation strategy affects both air quality and lighting comfort", recommendation: "Coordinate HVAC and lighting design" },
+        ];
+
+        // ============================================================
+        // COMPONENTS
+        // ============================================================
+
+        // Sidebar Navigation
+        function Sidebar({ activeTab, setActiveTab, dataStats }) {
+            const navItems = [
+                { id: 'dashboard', icon: 'fa-chart-pie', label: 'Dashboard' },
+                { id: 'categories', icon: 'fa-folder', label: 'Categories', count: dataStats.categories },
+                { id: 'credits', icon: 'fa-star', label: 'Credits', count: dataStats.credits },
+                { id: 'levels', icon: 'fa-layer-group', label: 'Levels', count: dataStats.levels },
+                { id: 'criteria', icon: 'fa-list-check', label: 'Criteria', count: dataStats.criteria },
+                { id: 'documentation', icon: 'fa-file-lines', label: 'Documentation', count: dataStats.documentation },
+                { id: 'templates', icon: 'fa-copy', label: 'Templates', count: dataStats.templates },
+                { id: 'synergies', icon: 'fa-link', label: 'Synergies', count: dataStats.synergies },
+            ];
+
+            return (
+                <aside className="w-64 bg-white border-r border-gray-200 min-h-screen flex flex-col">
+                    {/* Logo */}
+                    <div className="p-6 border-b border-gray-200">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                                <i className="fa-solid fa-leaf text-white"></i>
+                            </div>
+                            <div>
+                                <h1 className="font-display font-bold text-gray-800">Green Star</h1>
+                                <p className="text-xs text-gray-500">Admin Panel</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Navigation */}
+                    <nav className="flex-1 p-4">
+                        <ul className="space-y-1">
+                            {navItems.map(item => (
+                                <li key={item.id}>
+                                    <button
+                                        onClick={() => setActiveTab(item.id)}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all
+                                            ${activeTab === item.id
+                                                ? 'bg-green-50 text-green-700 border-l-4 border-green-500'
+                                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                            }`}
+                                    >
+                                        <i className={`fa-solid ${item.icon} w-5`}></i>
+                                        <span className="flex-1 text-left">{item.label}</span>
+                                        {item.count !== undefined && (
+                                            <span className={`px-2 py-0.5 rounded-full text-xs ${
+                                                activeTab === item.id ? 'bg-green-200 text-green-800' : 'bg-gray-100 text-gray-600'
+                                            }`}>
+                                                {item.count}
+                                            </span>
+                                        )}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+
+                    {/* Footer */}
+                    <div className="p-4 border-t border-gray-200">
+                        <a
+                            href="index.html"
+                            className="flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all"
+                        >
+                            <i className="fa-solid fa-arrow-left w-5"></i>
+                            Back to App
+                        </a>
+                    </div>
+                </aside>
+            );
+        }
+
+        // Header with actions
+        function Header({ title, subtitle, onImport, onExport, onSave }) {
+            return (
+                <header className="bg-white border-b border-gray-200 px-8 py-6">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h1 className="font-display text-2xl font-bold text-gray-800">{title}</h1>
+                            {subtitle && <p className="text-gray-500 mt-1">{subtitle}</p>}
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={onImport}
+                                className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all flex items-center gap-2"
+                            >
+                                <i className="fa-solid fa-upload"></i>
+                                Import Excel
+                            </button>
+                            <button
+                                onClick={onExport}
+                                className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all flex items-center gap-2"
+                            >
+                                <i className="fa-solid fa-download"></i>
+                                Export Excel
+                            </button>
+                            <button
+                                onClick={onSave}
+                                className="px-4 py-2 bg-green-600 rounded-lg text-sm font-medium text-white hover:bg-green-700 transition-all flex items-center gap-2"
+                            >
+                                <i className="fa-solid fa-save"></i>
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </header>
+            );
+        }
+
+        // Dashboard
+        function Dashboard({ stats, onNavigate }) {
+            const cards = [
+                { id: 'categories', label: 'Categories', count: stats.categories, icon: 'fa-folder', color: 'blue', description: 'Main category groups' },
+                { id: 'credits', label: 'Credits', count: stats.credits, icon: 'fa-star', color: 'green', description: 'Individual credits' },
+                { id: 'levels', label: 'Performance Levels', count: stats.levels, icon: 'fa-layer-group', color: 'purple', description: 'Minimum/Credit/Exceptional' },
+                { id: 'criteria', label: 'Criteria', count: stats.criteria, icon: 'fa-list-check', color: 'amber', description: 'Requirements per level' },
+                { id: 'documentation', label: 'Documentation', count: stats.documentation, icon: 'fa-file-lines', color: 'cyan', description: 'Required documents' },
+                { id: 'templates', label: 'Templates', count: stats.templates, icon: 'fa-copy', color: 'pink', description: 'Project templates' },
+                { id: 'synergies', label: 'Synergies', count: stats.synergies, icon: 'fa-link', color: 'teal', description: 'Credit relationships' },
+            ];
+
+            const colorClasses = {
+                blue: 'bg-blue-50 text-blue-600 border-blue-200',
+                green: 'bg-green-50 text-green-600 border-green-200',
+                purple: 'bg-purple-50 text-purple-600 border-purple-200',
+                amber: 'bg-amber-50 text-amber-600 border-amber-200',
+                cyan: 'bg-cyan-50 text-cyan-600 border-cyan-200',
+                pink: 'bg-pink-50 text-pink-600 border-pink-200',
+                teal: 'bg-teal-50 text-teal-600 border-teal-200',
+            };
+
+            return (
+                <div className="p-8">
+                    <div className="mb-8">
+                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Welcome to the Admin Panel</h2>
+                        <p className="text-gray-500">Manage all Green Star credit data from one place. Click on any card to edit that section.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {cards.map(card => (
+                            <button
+                                key={card.id}
+                                onClick={() => onNavigate(card.id)}
+                                className={`p-6 rounded-xl border-2 ${colorClasses[card.color]} hover:shadow-lg transition-all text-left group`}
+                            >
+                                <div className="flex items-start justify-between mb-4">
+                                    <i className={`fa-solid ${card.icon} text-2xl`}></i>
+                                    <span className="text-3xl font-bold">{card.count}</span>
+                                </div>
+                                <h3 className="font-semibold text-gray-800 mb-1">{card.label}</h3>
+                                <p className="text-sm text-gray-500">{card.description}</p>
+                                <div className="mt-4 flex items-center text-sm font-medium group-hover:translate-x-1 transition-transform">
+                                    Edit <i className="fa-solid fa-arrow-right ml-2"></i>
+                                </div>
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Quick Tips */}
+                    <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+                        <h3 className="font-semibold text-green-800 mb-3 flex items-center gap-2">
+                            <i className="fa-solid fa-lightbulb"></i>
+                            Quick Tips
+                        </h3>
+                        <ul className="text-sm text-green-700 space-y-2">
+                            <li><i className="fa-solid fa-check mr-2"></i>Changes are saved to your browser's local storage automatically</li>
+                            <li><i className="fa-solid fa-check mr-2"></i>Use "Export Excel" to download a spreadsheet backup</li>
+                            <li><i className="fa-solid fa-check mr-2"></i>Use "Save Changes" to push updates to the main app</li>
+                            <li><i className="fa-solid fa-check mr-2"></i>Credit IDs link data across tables - don't change existing IDs</li>
+                        </ul>
+                    </div>
+                </div>
+            );
+        }
+
+        // Generic Table Editor
+        function TableEditor({ data, columns, onUpdate, onAdd, onDelete, emptyRow }) {
+            const [editingId, setEditingId] = useState(null);
+
+            const handleChange = (index, field, value) => {
+                const newData = [...data];
+                newData[index] = { ...newData[index], [field]: value };
+                onUpdate(newData);
+            };
+
+            const handleAdd = () => {
+                onUpdate([...data, { ...emptyRow, _id: Date.now() }]);
+            };
+
+            const handleDelete = (index) => {
+                if (confirm('Are you sure you want to delete this row?')) {
+                    const newData = data.filter((_, i) => i !== index);
+                    onUpdate(newData);
+                }
+            };
+
+            return (
+                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div className="overflow-x-auto max-h-[calc(100vh-280px)] overflow-y-auto">
+                        <table className="data-table">
+                            <thead>
+                                <tr>
+                                    {columns.map(col => (
+                                        <th key={col.key} style={{ width: col.width }}>{col.label}</th>
+                                    ))}
+                                    <th style={{ width: '80px' }}>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.map((row, index) => (
+                                    <tr key={row._id || row.id || index} className="animate-fade-in">
+                                        {columns.map(col => (
+                                            <td key={col.key}>
+                                                {col.type === 'select' ? (
+                                                    <select
+                                                        value={row[col.key] || ''}
+                                                        onChange={(e) => handleChange(index, col.key, e.target.value)}
+                                                    >
+                                                        <option value="">Select...</option>
+                                                        {col.options.map(opt => (
+                                                            <option key={opt.value || opt} value={opt.value || opt}>
+                                                                {opt.label || opt}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                ) : col.type === 'checkbox' ? (
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={row[col.key] || false}
+                                                        onChange={(e) => handleChange(index, col.key, e.target.checked)}
+                                                        className="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                                    />
+                                                ) : col.type === 'textarea' ? (
+                                                    <textarea
+                                                        value={row[col.key] || ''}
+                                                        onChange={(e) => handleChange(index, col.key, e.target.value)}
+                                                        rows={2}
+                                                    />
+                                                ) : col.type === 'number' ? (
+                                                    <input
+                                                        type="number"
+                                                        value={row[col.key] || ''}
+                                                        onChange={(e) => handleChange(index, col.key, parseInt(e.target.value) || 0)}
+                                                        min={col.min || 0}
+                                                        max={col.max}
+                                                    />
+                                                ) : (
+                                                    <input
+                                                        type="text"
+                                                        value={row[col.key] || ''}
+                                                        onChange={(e) => handleChange(index, col.key, e.target.value)}
+                                                        placeholder={col.placeholder}
+                                                    />
+                                                )}
+                                            </td>
+                                        ))}
+                                        <td>
+                                            <button
+                                                onClick={() => handleDelete(index)}
+                                                className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                                title="Delete row"
+                                            >
+                                                <i className="fa-solid fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="p-4 border-t border-gray-200 bg-gray-50">
+                        <button
+                            onClick={handleAdd}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-all flex items-center gap-2"
+                        >
+                            <i className="fa-solid fa-plus"></i>
+                            Add New Row
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // Categories Editor
+        function CategoriesEditor({ data, onUpdate }) {
+            const columns = [
+                { key: 'id', label: 'ID', width: '120px', placeholder: 'e.g., responsible' },
+                { key: 'name', label: 'Name', width: '150px', placeholder: 'e.g., Responsible' },
+                { key: 'description', label: 'Description', type: 'textarea', width: '300px' },
+                { key: 'icon', label: 'Icon', width: '150px', placeholder: 'fa-shield-halved' },
+                { key: 'color', label: 'Color', type: 'select', width: '120px', options: ['amber', 'green', 'blue', 'red', 'purple', 'pink', 'emerald', 'indigo', 'cyan', 'teal'] },
+                { key: 'order', label: 'Order', type: 'number', width: '80px', min: 1 },
+            ];
+
+            const emptyRow = { id: '', name: '', description: '', icon: 'fa-folder', color: 'gray', order: data.length + 1 };
+
+            return (
+                <div className="p-8">
+                    <div className="mb-6">
+                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Categories</h2>
+                        <p className="text-gray-500">Manage the 8 main category groups. Icon names are from Font Awesome (fa-xxx).</p>
+                    </div>
+                    <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
+                </div>
+            );
+        }
+
+        // Credits Editor
+        function CreditsEditor({ data, onUpdate, categories }) {
+            const categoryOptions = categories.map(c => ({ value: c.id, label: c.name }));
+
+            const columns = [
+                { key: 'id', label: 'Credit ID', width: '120px', placeholder: 'e.g., resp-01' },
+                { key: 'name', label: 'Credit Name', width: '200px' },
+                { key: 'category', label: 'Category', type: 'select', width: '140px', options: categoryOptions },
+                { key: 'shortDescription', label: 'Short Desc', width: '200px' },
+                { key: 'description', label: 'Full Description', type: 'textarea', width: '300px' },
+                { key: 'required', label: 'Required?', type: 'checkbox', width: '80px' },
+                { key: 'maxPoints', label: 'Max Pts', type: 'number', width: '80px', min: 0, max: 10 },
+                { key: 'order', label: 'Order', type: 'number', width: '70px', min: 1 },
+            ];
+
+            const emptyRow = { id: '', name: '', category: '', shortDescription: '', description: '', required: false, maxPoints: 2, order: 1 };
+
+            return (
+                <div className="p-8">
+                    <div className="mb-6">
+                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Credits</h2>
+                        <p className="text-gray-500">Manage individual credits. Each credit belongs to a category.</p>
+                    </div>
+                    <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
+                </div>
+            );
+        }
+
+        // Levels Editor
+        function LevelsEditor({ data, onUpdate, credits }) {
+            const creditOptions = credits.map(c => ({ value: c.id, label: `${c.id} - ${c.name}` }));
+            const levelOptions = [
+                { value: 'minimum', label: 'Minimum Expectation' },
+                { value: 'credit', label: 'Credit Achievement' },
+                { value: 'exceptional', label: 'Exceptional Performance' },
+            ];
+
+            const columns = [
+                { key: 'creditId', label: 'Credit ID', type: 'select', width: '200px', options: creditOptions },
+                { key: 'level', label: 'Level', type: 'select', width: '180px', options: levelOptions },
+                { key: 'points', label: 'Points', type: 'number', width: '80px', min: 0, max: 10 },
+                { key: 'summary', label: 'Summary', width: '200px' },
+                { key: 'description', label: 'Description', type: 'textarea', width: '300px' },
+            ];
+
+            const emptyRow = { creditId: '', level: 'minimum', points: 0, summary: '', description: '' };
+
+            return (
+                <div className="p-8">
+                    <div className="mb-6">
+                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Performance Levels</h2>
+                        <p className="text-gray-500">Define Minimum, Credit, and Exceptional levels for each credit.</p>
+                    </div>
+                    <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
+                </div>
+            );
+        }
+
+        // Criteria Editor
+        function CriteriaEditor({ data, onUpdate, credits }) {
+            const creditOptions = credits.map(c => ({ value: c.id, label: `${c.id} - ${c.name}` }));
+            const levelOptions = [
+                { value: 'minimum', label: 'Minimum Expectation' },
+                { value: 'credit', label: 'Credit Achievement' },
+                { value: 'exceptional', label: 'Exceptional Performance' },
+            ];
+            const evidenceOptions = ['Document', 'Calculation', 'Drawing', 'Report', 'Certificate', 'Photo', 'Declaration', 'Other'];
+
+            const columns = [
+                { key: 'creditId', label: 'Credit ID', type: 'select', width: '180px', options: creditOptions },
+                { key: 'level', label: 'Level', type: 'select', width: '160px', options: levelOptions },
+                { key: 'criteriaNum', label: '#', type: 'number', width: '60px', min: 1 },
+                { key: 'text', label: 'Criteria Text', type: 'textarea', width: '350px' },
+                { key: 'mandatory', label: 'Mandatory?', type: 'checkbox', width: '90px' },
+                { key: 'evidenceType', label: 'Evidence', type: 'select', width: '120px', options: evidenceOptions },
+            ];
+
+            const emptyRow = { creditId: '', level: 'minimum', criteriaNum: 1, text: '', mandatory: true, evidenceType: 'Document' };
+
+            return (
+                <div className="p-8">
+                    <div className="mb-6">
+                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Criteria</h2>
+                        <p className="text-gray-500">Define requirements for each performance level. These appear in the Criteria tab.</p>
+                    </div>
+                    <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
+                </div>
+            );
+        }
+
+        // Documentation Editor
+        function DocumentationEditor({ data, onUpdate, credits }) {
+            const creditOptions = credits.map(c => ({ value: c.id, label: `${c.id} - ${c.name}` }));
+            const levelOptions = [
+                { value: 'all', label: 'All Levels' },
+                { value: 'minimum', label: 'Minimum Expectation' },
+                { value: 'credit', label: 'Credit Achievement' },
+                { value: 'exceptional', label: 'Exceptional Performance' },
+            ];
+            const docTypeOptions = ['Report', 'Calculation', 'Drawing', 'Certificate', 'Declaration', 'Photo Evidence', 'Specification', 'Contract', 'Other'];
+
+            const columns = [
+                { key: 'creditId', label: 'Credit ID', type: 'select', width: '180px', options: creditOptions },
+                { key: 'level', label: 'Level', type: 'select', width: '150px', options: levelOptions },
+                { key: 'name', label: 'Document Name', width: '200px' },
+                { key: 'type', label: 'Type', type: 'select', width: '130px', options: docTypeOptions },
+                { key: 'description', label: 'Description', type: 'textarea', width: '250px' },
+                { key: 'templateAvailable', label: 'Template?', type: 'checkbox', width: '80px' },
+                { key: 'templateLink', label: 'Template Link', width: '200px' },
+            ];
+
+            const emptyRow = { creditId: '', level: 'all', name: '', type: 'Document', description: '', templateAvailable: false, templateLink: '' };
+
+            return (
+                <div className="p-8">
+                    <div className="mb-6">
+                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Documentation</h2>
+                        <p className="text-gray-500">Define required documents for each credit. Optionally provide template links.</p>
+                    </div>
+                    <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
+                </div>
+            );
+        }
+
+        // Templates Editor
+        function TemplatesEditor({ data, onUpdate }) {
+            const typeOptions = ['Office', 'Residential', 'Retail', 'Education', 'Healthcare', 'Industrial', 'Mixed Use', 'Other'];
+            const ratingOptions = ['4 Star', '5 Star', '6 Star'];
+
+            const columns = [
+                { key: 'id', label: 'Template ID', width: '130px', placeholder: 'tpl-xxx' },
+                { key: 'name', label: 'Template Name', width: '200px' },
+                { key: 'type', label: 'Building Type', type: 'select', width: '130px', options: typeOptions },
+                { key: 'description', label: 'Description', type: 'textarea', width: '250px' },
+                { key: 'targetRating', label: 'Target', type: 'select', width: '100px', options: ratingOptions },
+                { key: 'credits', label: 'Credits (comma-separated)', type: 'textarea', width: '250px' },
+                { key: 'active', label: 'Active?', type: 'checkbox', width: '70px' },
+            ];
+
+            const emptyRow = { id: '', name: '', type: 'Office', description: '', targetRating: '5 Star', credits: '', active: true };
+
+            return (
+                <div className="p-8">
+                    <div className="mb-6">
+                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Project Templates</h2>
+                        <p className="text-gray-500">Pre-configured credit selections for different building types. List credit IDs separated by commas.</p>
+                    </div>
+                    <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
+                </div>
+            );
+        }
+
+        // Synergies Editor
+        function SynergiesEditor({ data, onUpdate, credits }) {
+            const creditOptions = credits.map(c => ({ value: c.id, label: `${c.id} - ${c.name}` }));
+            const typeOptions = ['Strong', 'Moderate', 'Documentation'];
+
+            const columns = [
+                { key: 'id', label: 'Synergy ID', width: '120px', placeholder: 'syn-xxx' },
+                { key: 'credit1', label: 'Credit 1', type: 'select', width: '180px', options: creditOptions },
+                { key: 'credit2', label: 'Credit 2', type: 'select', width: '180px', options: creditOptions },
+                { key: 'type', label: 'Type', type: 'select', width: '120px', options: typeOptions },
+                { key: 'description', label: 'Description', type: 'textarea', width: '250px' },
+                { key: 'recommendation', label: 'Recommendation', type: 'textarea', width: '250px' },
+            ];
+
+            const emptyRow = { id: '', credit1: '', credit2: '', type: 'Moderate', description: '', recommendation: '' };
+
+            return (
+                <div className="p-8">
+                    <div className="mb-6">
+                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Credit Synergies</h2>
+                        <p className="text-gray-500">Define relationships between credits. Strong synergies are highlighted in the app.</p>
+                    </div>
+                    <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
+                </div>
+            );
+        }
+
+        // Import Modal
+        function ImportModal({ isOpen, onClose, onImport }) {
+            const [status, setStatus] = useState(null);
+            const fileInputRef = React.useRef(null);
+
+            if (!isOpen) return null;
+
+            const handleFileUpload = async (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                setStatus({ type: 'info', message: 'Reading file...' });
+
+                try {
+                    const data = await file.arrayBuffer();
+                    const workbook = XLSX.read(data, { type: 'array' });
+
+                    const imported = {};
+
+                    // Parse Categories
+                    if (workbook.SheetNames.includes('Categories')) {
+                        imported.categories = XLSX.utils.sheet_to_json(workbook.Sheets['Categories']).map(row => ({
+                            id: row['Category ID'],
+                            name: row['Category Name'],
+                            description: row['Description'],
+                            icon: row['Icon (FontAwesome)'],
+                            color: row['Color Theme'],
+                            order: row['Display Order'],
+                        }));
+                    }
+
+                    // Parse Credits
+                    if (workbook.SheetNames.includes('Credits')) {
+                        imported.credits = XLSX.utils.sheet_to_json(workbook.Sheets['Credits']).map(row => ({
+                            id: row['Credit ID'],
+                            name: row['Credit Name'],
+                            category: row['Category']?.toLowerCase(),
+                            shortDescription: row['Short Description'],
+                            description: row['Full Description'],
+                            required: row['Is Required?'] === 'Yes',
+                            maxPoints: row['Max Points'],
+                            order: row['Display Order'],
+                        }));
+                    }
+
+                    // Parse Levels
+                    if (workbook.SheetNames.includes('Levels')) {
+                        imported.levels = XLSX.utils.sheet_to_json(workbook.Sheets['Levels']).map(row => ({
+                            creditId: row['Credit ID'],
+                            level: row['Level Type'] === 'Minimum Expectation' ? 'minimum' :
+                                   row['Level Type'] === 'Credit Achievement' ? 'credit' : 'exceptional',
+                            points: row['Points'],
+                            summary: row['Summary'],
+                            description: row['Description'],
+                        }));
+                    }
+
+                    // Parse Criteria
+                    if (workbook.SheetNames.includes('Criteria')) {
+                        imported.criteria = XLSX.utils.sheet_to_json(workbook.Sheets['Criteria']).map(row => ({
+                            creditId: row['Credit ID'],
+                            level: row['Level Type'] === 'Minimum Expectation' ? 'minimum' :
+                                   row['Level Type'] === 'Credit Achievement' ? 'credit' : 'exceptional',
+                            criteriaNum: row['Criteria #'],
+                            text: row['Criteria Text'],
+                            mandatory: row['Is Mandatory?'] === 'Yes',
+                            evidenceType: row['Evidence Type'],
+                        }));
+                    }
+
+                    // Parse Documentation
+                    if (workbook.SheetNames.includes('Documentation')) {
+                        imported.documentation = XLSX.utils.sheet_to_json(workbook.Sheets['Documentation']).map(row => ({
+                            creditId: row['Credit ID'],
+                            level: row['Level Type'] === 'All Levels' ? 'all' :
+                                   row['Level Type'] === 'Minimum Expectation' ? 'minimum' :
+                                   row['Level Type'] === 'Credit Achievement' ? 'credit' : 'exceptional',
+                            name: row['Document Name'],
+                            type: row['Document Type'],
+                            description: row['Description'],
+                            templateAvailable: row['Template Available?'] === 'Yes',
+                            templateLink: row['Template Link'],
+                        }));
+                    }
+
+                    // Parse Templates
+                    if (workbook.SheetNames.includes('Templates')) {
+                        imported.templates = XLSX.utils.sheet_to_json(workbook.Sheets['Templates']).map(row => ({
+                            id: row['Template ID'],
+                            name: row['Template Name'],
+                            type: row['Building Type'],
+                            description: row['Description'],
+                            targetRating: row['Target Star Rating'],
+                            credits: row['Recommended Credits (comma-separated)'],
+                            active: row['Is Active?'] === 'Yes',
+                        }));
+                    }
+
+                    // Parse Synergies
+                    if (workbook.SheetNames.includes('Synergies')) {
+                        imported.synergies = XLSX.utils.sheet_to_json(workbook.Sheets['Synergies']).map(row => ({
+                            id: row['Synergy ID'],
+                            credit1: row['Credit 1'],
+                            credit2: row['Credit 2'],
+                            type: row['Synergy Type'],
+                            description: row['Description'],
+                            recommendation: row['Recommendation'],
+                        }));
+                    }
+
+                    onImport(imported);
+                    setStatus({ type: 'success', message: 'Import successful!' });
+                    setTimeout(() => onClose(), 1000);
+                } catch (error) {
+                    setStatus({ type: 'error', message: `Error: ${error.message}` });
+                }
+            };
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={onClose}>
+                    <div className="bg-white rounded-2xl p-6 max-w-md w-full" onClick={e => e.stopPropagation()}>
+                        <h2 className="font-display text-xl font-bold text-gray-800 mb-4">Import from Excel</h2>
+                        <p className="text-gray-600 mb-6">Upload an Excel file to import data. This will replace existing data.</p>
+
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept=".xlsx,.xls"
+                            onChange={handleFileUpload}
+                            className="hidden"
+                        />
+
+                        <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="w-full py-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-green-500 transition-colors flex flex-col items-center gap-2 text-gray-500 hover:text-green-600"
+                        >
+                            <i className="fa-solid fa-cloud-arrow-up text-3xl"></i>
+                            <span>Click to upload Excel file</span>
+                        </button>
+
+                        {status && (
+                            <div className={`mt-4 p-3 rounded-lg text-sm ${
+                                status.type === 'success' ? 'bg-green-100 text-green-700' :
+                                status.type === 'error' ? 'bg-red-100 text-red-700' :
+                                'bg-blue-100 text-blue-700'
+                            }`}>
+                                {status.message}
+                            </div>
+                        )}
+
+                        <button
+                            onClick={onClose}
+                            className="w-full mt-4 py-2 text-gray-600 hover:text-gray-800"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // Toast notification
+        function Toast({ message, type, onClose }) {
+            useEffect(() => {
+                const timer = setTimeout(onClose, 3000);
+                return () => clearTimeout(timer);
+            }, []);
+
+            return (
+                <div className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white animate-fade-in ${
+                    type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+                }`}>
+                    <div className="flex items-center gap-3">
+                        <i className={`fa-solid ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}`}></i>
+                        {message}
+                    </div>
+                </div>
+            );
+        }
+
+        // ============================================================
+        // MAIN APP
+        // ============================================================
+        function App() {
+            const [activeTab, setActiveTab] = useState('dashboard');
+            const [showImportModal, setShowImportModal] = useState(false);
+            const [toast, setToast] = useState(null);
+
+            // Data state
+            const [categories, setCategories] = useState(() => {
+                const saved = localStorage.getItem('admin_categories');
+                return saved ? JSON.parse(saved) : defaultCategories;
+            });
+            const [credits, setCredits] = useState(() => {
+                const saved = localStorage.getItem('admin_credits');
+                return saved ? JSON.parse(saved) : defaultCredits;
+            });
+            const [levels, setLevels] = useState(() => {
+                const saved = localStorage.getItem('admin_levels');
+                return saved ? JSON.parse(saved) : defaultLevels;
+            });
+            const [criteria, setCriteria] = useState(() => {
+                const saved = localStorage.getItem('admin_criteria');
+                return saved ? JSON.parse(saved) : defaultCriteria;
+            });
+            const [documentation, setDocumentation] = useState(() => {
+                const saved = localStorage.getItem('admin_documentation');
+                return saved ? JSON.parse(saved) : defaultDocumentation;
+            });
+            const [templates, setTemplates] = useState(() => {
+                const saved = localStorage.getItem('admin_templates');
+                return saved ? JSON.parse(saved) : defaultTemplates;
+            });
+            const [synergies, setSynergies] = useState(() => {
+                const saved = localStorage.getItem('admin_synergies');
+                return saved ? JSON.parse(saved) : defaultSynergies;
+            });
+
+            // Auto-save to localStorage
+            useEffect(() => {
+                localStorage.setItem('admin_categories', JSON.stringify(categories));
+            }, [categories]);
+            useEffect(() => {
+                localStorage.setItem('admin_credits', JSON.stringify(credits));
+            }, [credits]);
+            useEffect(() => {
+                localStorage.setItem('admin_levels', JSON.stringify(levels));
+            }, [levels]);
+            useEffect(() => {
+                localStorage.setItem('admin_criteria', JSON.stringify(criteria));
+            }, [criteria]);
+            useEffect(() => {
+                localStorage.setItem('admin_documentation', JSON.stringify(documentation));
+            }, [documentation]);
+            useEffect(() => {
+                localStorage.setItem('admin_templates', JSON.stringify(templates));
+            }, [templates]);
+            useEffect(() => {
+                localStorage.setItem('admin_synergies', JSON.stringify(synergies));
+            }, [synergies]);
+
+            const dataStats = {
+                categories: categories.length,
+                credits: credits.length,
+                levels: levels.length,
+                criteria: criteria.length,
+                documentation: documentation.length,
+                templates: templates.length,
+                synergies: synergies.length,
+            };
+
+            const handleImport = (imported) => {
+                if (imported.categories) setCategories(imported.categories);
+                if (imported.credits) setCredits(imported.credits);
+                if (imported.levels) setLevels(imported.levels);
+                if (imported.criteria) setCriteria(imported.criteria);
+                if (imported.documentation) setDocumentation(imported.documentation);
+                if (imported.templates) setTemplates(imported.templates);
+                if (imported.synergies) setSynergies(imported.synergies);
+                setToast({ message: 'Data imported successfully!', type: 'success' });
+            };
+
+            const handleExport = () => {
+                const wb = XLSX.utils.book_new();
+
+                // Categories sheet
+                const catData = categories.map(c => ({
+                    'Category ID': c.id,
+                    'Category Name': c.name,
+                    'Description': c.description,
+                    'Icon (FontAwesome)': c.icon,
+                    'Color Theme': c.color,
+                    'Display Order': c.order,
+                }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(catData), 'Categories');
+
+                // Credits sheet
+                const credData = credits.map(c => ({
+                    'Credit ID': c.id,
+                    'Credit Name': c.name,
+                    'Category': c.category?.charAt(0).toUpperCase() + c.category?.slice(1),
+                    'Short Description': c.shortDescription,
+                    'Full Description': c.description,
+                    'Is Required?': c.required ? 'Yes' : 'No',
+                    'Max Points': c.maxPoints,
+                    'Display Order': c.order,
+                }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(credData), 'Credits');
+
+                // Levels sheet
+                const levelData = levels.map(l => ({
+                    'Credit ID': l.creditId,
+                    'Level Type': l.level === 'minimum' ? 'Minimum Expectation' :
+                                  l.level === 'credit' ? 'Credit Achievement' : 'Exceptional Performance',
+                    'Points': l.points,
+                    'Summary': l.summary,
+                    'Description': l.description,
+                }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(levelData), 'Levels');
+
+                // Criteria sheet
+                const critData = criteria.map(c => ({
+                    'Credit ID': c.creditId,
+                    'Level Type': c.level === 'minimum' ? 'Minimum Expectation' :
+                                  c.level === 'credit' ? 'Credit Achievement' : 'Exceptional Performance',
+                    'Criteria #': c.criteriaNum,
+                    'Criteria Text': c.text,
+                    'Is Mandatory?': c.mandatory ? 'Yes' : 'No',
+                    'Evidence Type': c.evidenceType,
+                }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(critData), 'Criteria');
+
+                // Documentation sheet
+                const docData = documentation.map(d => ({
+                    'Credit ID': d.creditId,
+                    'Level Type': d.level === 'all' ? 'All Levels' :
+                                  d.level === 'minimum' ? 'Minimum Expectation' :
+                                  d.level === 'credit' ? 'Credit Achievement' : 'Exceptional Performance',
+                    'Document Name': d.name,
+                    'Document Type': d.type,
+                    'Description': d.description,
+                    'Template Available?': d.templateAvailable ? 'Yes' : 'No',
+                    'Template Link': d.templateLink,
+                }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(docData), 'Documentation');
+
+                // Templates sheet
+                const tplData = templates.map(t => ({
+                    'Template ID': t.id,
+                    'Template Name': t.name,
+                    'Building Type': t.type,
+                    'Description': t.description,
+                    'Target Star Rating': t.targetRating,
+                    'Recommended Credits (comma-separated)': t.credits,
+                    'Is Active?': t.active ? 'Yes' : 'No',
+                }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(tplData), 'Templates');
+
+                // Synergies sheet
+                const synData = synergies.map(s => ({
+                    'Synergy ID': s.id,
+                    'Credit 1': s.credit1,
+                    'Credit 2': s.credit2,
+                    'Synergy Type': s.type,
+                    'Description': s.description,
+                    'Recommendation': s.recommendation,
+                }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(synData), 'Synergies');
+
+                // Save file
+                XLSX.writeFile(wb, 'GreenStar_Admin_Data.xlsx');
+                setToast({ message: 'Excel file downloaded!', type: 'success' });
+            };
+
+            const handleSave = () => {
+                // Save to main app storage
+                const appData = {
+                    categories,
+                    credits,
+                    levels,
+                    criteria,
+                    documentation,
+                    templates,
+                    synergies,
+                    savedAt: new Date().toISOString(),
+                };
+                localStorage.setItem('greenstar_admin_data', JSON.stringify(appData));
+                setToast({ message: 'Changes saved! Refresh the main app to see updates.', type: 'success' });
+            };
+
+            const renderContent = () => {
+                switch (activeTab) {
+                    case 'dashboard':
+                        return <Dashboard stats={dataStats} onNavigate={setActiveTab} />;
+                    case 'categories':
+                        return <CategoriesEditor data={categories} onUpdate={setCategories} />;
+                    case 'credits':
+                        return <CreditsEditor data={credits} onUpdate={setCredits} categories={categories} />;
+                    case 'levels':
+                        return <LevelsEditor data={levels} onUpdate={setLevels} credits={credits} />;
+                    case 'criteria':
+                        return <CriteriaEditor data={criteria} onUpdate={setCriteria} credits={credits} />;
+                    case 'documentation':
+                        return <DocumentationEditor data={documentation} onUpdate={setDocumentation} credits={credits} />;
+                    case 'templates':
+                        return <TemplatesEditor data={templates} onUpdate={setTemplates} />;
+                    case 'synergies':
+                        return <SynergiesEditor data={synergies} onUpdate={setSynergies} credits={credits} />;
+                    default:
+                        return <Dashboard stats={dataStats} onNavigate={setActiveTab} />;
+                }
+            };
+
+            const getPageTitle = () => {
+                const titles = {
+                    dashboard: { title: 'Dashboard', subtitle: 'Overview of all data' },
+                    categories: { title: 'Categories', subtitle: 'Manage the 8 main category groups' },
+                    credits: { title: 'Credits', subtitle: 'Manage individual credits' },
+                    levels: { title: 'Performance Levels', subtitle: 'Define Minimum, Credit, and Exceptional levels' },
+                    criteria: { title: 'Criteria', subtitle: 'Requirements for each level' },
+                    documentation: { title: 'Documentation', subtitle: 'Required documents for each credit' },
+                    templates: { title: 'Project Templates', subtitle: 'Pre-configured credit selections' },
+                    synergies: { title: 'Credit Synergies', subtitle: 'Define credit relationships' },
+                };
+                return titles[activeTab] || titles.dashboard;
+            };
+
+            const { title, subtitle } = getPageTitle();
+
+            return (
+                <div className="flex min-h-screen">
+                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} dataStats={dataStats} />
+                    <main className="flex-1 bg-gray-50">
+                        <Header
+                            title={title}
+                            subtitle={subtitle}
+                            onImport={() => setShowImportModal(true)}
+                            onExport={handleExport}
+                            onSave={handleSave}
+                        />
+                        {renderContent()}
+                    </main>
+
+                    <ImportModal
+                        isOpen={showImportModal}
+                        onClose={() => setShowImportModal(false)}
+                        onImport={handleImport}
+                    />
+
+                    {toast && (
+                        <Toast
+                            message={toast.message}
+                            type={toast.type}
+                            onClose={() => setToast(null)}
+                        />
+                    )}
+                </div>
+            );
+        }
+
+        // Render
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
