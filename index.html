@@ -8048,10 +8048,13 @@
                         <div className="p-4">
                             {/* Logo & Project Name */}
                             <div className="flex items-center gap-3 mb-6">
-                                <div className="w-10 h-10 rounded-xl gbca-header flex items-center justify-center shadow-lg">
-                                    <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M24 4L28.5 17.5H42L31 26.5L35.5 40L24 31L12.5 40L17 26.5L6 17.5H19.5L24 4Z" fill="white" opacity="0.9"/>
-                                    </svg>
+                                <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg">
+                                    <img
+                                        src="https://www.gbca.au/wp-content/uploads/rate-285-x-285.png.webp"
+                                        alt="Green Star Rating"
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => { e.target.style.display = 'none'; e.target.parentNode.classList.add('gbca-header', 'flex', 'items-center', 'justify-center'); e.target.parentNode.innerHTML = '<svg width="24" height="24" viewBox="0 0 48 48" fill="none"><path d="M24 4L28.5 17.5H42L31 26.5L35.5 40L24 31L12.5 40L17 26.5L6 17.5H19.5L24 4Z" fill="white" opacity="0.9"/></svg>'; }}
+                                    />
                                 </div>
                                 <div className="flex-grow min-w-0">
                                     <h1 className="font-display font-bold text-ink dark:text-white text-sm">Green Star</h1>
