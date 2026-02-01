@@ -753,78 +753,43 @@
         // GBCA SVG ICONS - Fine-line, minimal style
         // ============================================
 
+        // Category icon image paths - Official Green Star 2020 icons
+        const categoryIconPaths = {
+            responsible: '2020 Responsible icon 500x500px_72ppi.png',
+            healthy: '2020 Healthy icon 500x500px_300ppi.png',
+            resilient: '2020 Resilient icon 500x500px_72ppi.png',
+            positive: '2020 Positive icon 500x500px_300ppi.png',
+            places: '2020 Places icon 500x500px_300ppi.png',
+            people: '2020 People icon 500x500px_300ppi.png',
+            nature: '2020 Nature icon 500x500px_300ppi.png',
+            leadership: '2020 Leadership icon 500x500px_300ppi.png'
+        };
+
         const GBCAIcons = {
-            // Responsible - Hand with recycling/circular symbol
+            // Main category icons - use official PNG images
             responsible: ({ size = 24, className = '' }) => (
-                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
-                    <path d="M8 12l2 2 4-4"/>
-                    <path d="M16 8l-4 8"/>
-                    <path d="M8 8l4 8"/>
-                </svg>
+                <img src={categoryIconPaths.responsible} alt="Responsible" width={size} height={size} className={`object-contain ${className}`} />
             ),
-            // Healthy - Person with wellness symbol
             healthy: ({ size = 24, className = '' }) => (
-                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                    <circle cx="12" cy="5" r="3"/>
-                    <path d="M12 8v4"/>
-                    <path d="M9 12h6"/>
-                    <path d="M8 22v-6a4 4 0 0 1 8 0v6"/>
-                    <path d="M12 12v2"/>
-                </svg>
+                <img src={categoryIconPaths.healthy} alt="Healthy" width={size} height={size} className={`object-contain ${className}`} />
             ),
-            // Resilient - Shield protection
             resilient: ({ size = 24, className = '' }) => (
-                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                    <path d="M12 2L3 7v6c0 5.25 3.75 10.05 9 11 5.25-.95 9-5.75 9-11V7l-9-5z"/>
-                    <path d="M9 12l2 2 4-4"/>
-                </svg>
+                <img src={categoryIconPaths.resilient} alt="Resilient" width={size} height={size} className={`object-contain ${className}`} />
             ),
-            // Positive - Sun/energy symbol
             positive: ({ size = 24, className = '' }) => (
-                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                    <circle cx="12" cy="12" r="4"/>
-                    <path d="M12 2v2"/>
-                    <path d="M12 20v2"/>
-                    <path d="M4.93 4.93l1.41 1.41"/>
-                    <path d="M17.66 17.66l1.41 1.41"/>
-                    <path d="M2 12h2"/>
-                    <path d="M20 12h2"/>
-                    <path d="M6.34 17.66l-1.41 1.41"/>
-                    <path d="M19.07 4.93l-1.41 1.41"/>
-                </svg>
+                <img src={categoryIconPaths.positive} alt="Positive" width={size} height={size} className={`object-contain ${className}`} />
             ),
-            // Places - Location/compass
             places: ({ size = 24, className = '' }) => (
-                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                    <circle cx="12" cy="12" r="10"/>
-                    <polygon points="12,2 15,10 22,12 15,14 12,22 9,14 2,12 9,10"/>
-                </svg>
+                <img src={categoryIconPaths.places} alt="Places" width={size} height={size} className={`object-contain ${className}`} />
             ),
-            // People - Group of people
             people: ({ size = 24, className = '' }) => (
-                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                    <circle cx="9" cy="7" r="3"/>
-                    <circle cx="17" cy="7" r="2"/>
-                    <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
-                    <path d="M21 21v-2a3 3 0 0 0-2-2.83"/>
-                </svg>
+                <img src={categoryIconPaths.people} alt="People" width={size} height={size} className={`object-contain ${className}`} />
             ),
-            // Nature - Leaf/tree
             nature: ({ size = 24, className = '' }) => (
-                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                    <path d="M12 22V8"/>
-                    <path d="M5 12c0-5 3-9 7-9s7 4 7 9c0 3-2 5-4 6"/>
-                    <path d="M9 18c-2-1-4-3-4-6"/>
-                    <path d="M8 22c2-1 4-1 4-1s2 0 4 1"/>
-                </svg>
+                <img src={categoryIconPaths.nature} alt="Nature" width={size} height={size} className={`object-contain ${className}`} />
             ),
-            // Leadership - Paper plane/direction
             leadership: ({ size = 24, className = '' }) => (
-                <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                    <path d="M22 2L11 13"/>
-                    <path d="M22 2L15 22l-4-9-9-4 20-7z"/>
-                </svg>
+                <img src={categoryIconPaths.leadership} alt="Leadership" width={size} height={size} className={`object-contain ${className}`} />
             ),
             // Generic checkmark for verification
             verification: ({ size = 24, className = '' }) => (
@@ -9841,20 +9806,15 @@
                     {/* Collapsible Sidebar */}
                     <aside className={`sidebar ${!sidebarOpen ? 'collapsed' : ''}`}>
                         <div className="p-4">
-                            {/* GBCA Branded Header - Clean, solid color */}
-                            <div className="mb-6 -mx-4 -mt-4 px-4 py-4 bg-[#1F4B2E] border-b border-[#1F4B2E]">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-white p-1.5">
-                                        <img
-                                            src="gbca-logo.svg"
-                                            alt="Green Star Rating"
-                                            className="w-full h-full object-contain"
-                                        />
-                                    </div>
-                                    <div className="flex-grow min-w-0">
-                                        <h1 className="font-display font-bold text-white text-base tracking-wide">Green Star</h1>
-                                        <p className="text-xs text-white/80">Submission Assistant</p>
-                                    </div>
+                            {/* GBCA Branded Header - Official Green Star logo */}
+                            <div className="mb-6 -mx-4 -mt-4 px-4 py-4 bg-white border-b border-line">
+                                <div className="flex flex-col gap-2">
+                                    <img
+                                        src="green star logo full.png"
+                                        alt="Green Star"
+                                        className="h-8 object-contain object-left"
+                                    />
+                                    <p className="text-xs text-ink-3 font-medium">Submission Assistant</p>
                                 </div>
                             </div>
 
