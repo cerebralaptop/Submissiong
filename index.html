@@ -8473,6 +8473,7 @@
         // Onboarding Tour Component
         function OnboardingTour({ isOpen, onClose, onComplete }) {
             const [currentStep, setCurrentStep] = useState(0);
+            const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
             const tourSteps = [
                 {
@@ -8485,43 +8486,43 @@
                     title: "Project Selector",
                     content: "Click here to switch between projects, create new ones, or clone scenarios for what-if analysis. You can manage multiple projects at once.",
                     target: "[data-tour='project-selector']",
-                    position: "bottom"
+                    position: "right"
                 },
                 {
                     title: "Your Score",
                     content: "Track your current points and star rating in real-time. The progress bar shows how close you are to your target rating.",
                     target: "[data-tour='score-display']",
-                    position: "bottom"
+                    position: "right"
                 },
                 {
                     title: "Target Rating",
                     content: "Set your target star rating (4, 5, or 6 stars) to see how many points you still need and get tailored recommendations.",
                     target: "[data-tour='target-rating']",
-                    position: "bottom"
+                    position: "right"
                 },
                 {
                     title: "Credit Categories",
                     content: "Browse credits by category. Each category has color-coded icons. Click a category to filter, or click 'All' to see everything.",
                     target: "[data-tour='categories']",
-                    position: "bottom"
+                    position: "right"
                 },
                 {
                     title: "Analysis Tools",
                     content: "Use these powerful tools: Templates for quick setup, Gap Analysis for recommendations, Synergies for related credits, and What-If for scenario testing.",
                     target: "[data-tour='tools']",
-                    position: "top"
+                    position: "right"
                 },
                 {
                     title: "Compare & What-If",
                     content: "Compare multiple projects side-by-side, or use What-If to test adding credits before committing. Great for exploring strategies!",
                     target: "[data-tour='scenario-tools']",
-                    position: "top"
+                    position: "right"
                 },
                 {
                     title: "Credit Cards",
                     content: "Each card shows a credit with its points, difficulty, and status. Click to expand and see full details, documentation requirements, and FAQs.",
                     target: "[data-tour='credit-cards']",
-                    position: "top"
+                    position: "left"
                 },
                 {
                     title: "You're Ready! 🎉",
@@ -8531,12 +8532,59 @@
                 }
             ];
 
-            if (!isOpen) return null;
-
             const step = tourSteps[currentStep];
             const isFirstStep = currentStep === 0;
             const isLastStep = currentStep === tourSteps.length - 1;
             const isCenterStep = step.position === "center";
+
+            // Calculate tooltip position when step changes
+            useEffect(() => {
+                if (!isOpen || !step.target) return;
+
+                const targetEl = document.querySelector(step.target);
+                if (!targetEl) return;
+
+                const rect = targetEl.getBoundingClientRect();
+                const tooltipWidth = 320; // max-w-sm is roughly 320px
+                const tooltipHeight = 200; // approximate height
+                const padding = 16;
+
+                let top, left;
+
+                if (step.position === 'right') {
+                    // Position to the right of the element
+                    left = rect.right + padding;
+                    top = rect.top + (rect.height / 2) - (tooltipHeight / 2);
+                    // Make sure it doesn't go off screen
+                    if (left + tooltipWidth > window.innerWidth) {
+                        left = rect.left - tooltipWidth - padding;
+                    }
+                } else if (step.position === 'left') {
+                    // Position to the left of the element
+                    left = rect.left - tooltipWidth - padding;
+                    top = rect.top;
+                    // Make sure it doesn't go off screen
+                    if (left < 0) {
+                        left = rect.right + padding;
+                    }
+                } else if (step.position === 'bottom') {
+                    // Position below the element
+                    left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+                    top = rect.bottom + padding;
+                } else if (step.position === 'top') {
+                    // Position above the element
+                    left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+                    top = rect.top - tooltipHeight - padding;
+                }
+
+                // Constrain to viewport
+                top = Math.max(padding, Math.min(top, window.innerHeight - tooltipHeight - padding));
+                left = Math.max(padding, Math.min(left, window.innerWidth - tooltipWidth - padding));
+
+                setTooltipPosition({ top, left });
+            }, [currentStep, isOpen, step.target, step.position]);
+
+            if (!isOpen) return null;
 
             const handleNext = () => {
                 if (isLastStep) {
@@ -8628,14 +8676,10 @@
 
                     {/* Tooltip */}
                     <div
-                        className={`absolute z-[102] bg-white dark:bg-gray-800 rounded-xl p-5 shadow-2xl max-w-sm animate-fade-in ${
-                            step.position === 'bottom' ? 'top-auto' : ''
-                        }`}
+                        className="fixed z-[102] bg-white dark:bg-gray-800 rounded-xl p-5 shadow-2xl max-w-sm animate-fade-in"
                         style={{
-                            left: step.position === 'left' ? '20px' : '50%',
-                            transform: step.position === 'left' ? 'none' : 'translateX(-50%)',
-                            top: step.position === 'bottom' ? '140px' : (step.position === 'left' ? '50%' : 'auto'),
-                            bottom: step.position === 'top' ? '140px' : 'auto'
+                            top: tooltipPosition.top,
+                            left: tooltipPosition.left
                         }}
                     >
                         <div className="flex items-start gap-3 mb-3">
@@ -8683,15 +8727,6 @@
                                 />
                             ))}
                         </div>
-
-                        {/* Arrow pointer */}
-                        <div
-                            className={`absolute w-3 h-3 bg-white dark:bg-gray-800 transform rotate-45 ${
-                                step.position === 'bottom' ? '-top-1.5 left-1/2 -translate-x-1/2' :
-                                step.position === 'left' ? 'top-1/2 -right-1.5 -translate-y-1/2' :
-                                '-bottom-1.5 left-1/2 -translate-x-1/2'
-                            }`}
-                        />
                     </div>
                 </div>
             );
