@@ -9291,7 +9291,8 @@
                         setCreditNotes(data.creditNotes || {});
                         setCreditDocs(data.creditDocs || {});
                         setCreditAssignments(data.creditAssignments || {});
-                        setDarkMode(data.darkMode || false);
+                        // Don't load darkMode from localStorage - default to light theme like GBCA website
+                        // setDarkMode(data.darkMode || false);
                         if (data.projectId) setActiveProjectId(data.projectId);
                     } catch (e) {
                         console.error('Failed to load saved project:', e);
@@ -9585,7 +9586,8 @@
 
                         // Restore settings
                         if (backup.settings) {
-                            setDarkMode(backup.settings.darkMode || false);
+                            // Don't restore darkMode - keep light theme
+                            // setDarkMode(backup.settings.darkMode || false);
                             setTargetStarRating(backup.settings.targetStarRating || 5);
                         }
 
@@ -9716,7 +9718,12 @@
                 };
             }, [totalPoints, selectedCredits]);
 
-            // Apply dark mode to body
+            // Apply dark mode to body - force light mode on initial load
+            useEffect(() => {
+                // Ensure light mode on first load (remove any cached dark mode class)
+                document.body.classList.remove('dark-mode');
+            }, []);
+
             useEffect(() => {
                 document.body.classList.toggle('dark-mode', darkMode);
             }, [darkMode]);
@@ -10249,19 +10256,8 @@
                                 </div>
                             </div>
 
-                            {/* Dark Mode Toggle */}
-                            <div className="border-t border-line dark:border-gray-700 pt-4 mt-4">
-                                <button
-                                    onClick={() => setDarkMode(!darkMode)}
-                                    className="w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 text-ink-2 dark:text-gray-300"
-                                >
-                                    <i className={`fa-solid ${darkMode ? 'fa-sun text-yellow-400' : 'fa-moon text-ink-3'}`}></i>
-                                    <span>{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
-                                    <div className={`ml-auto w-10 h-5 rounded-full transition-colors ${darkMode ? 'bg-green-500' : 'bg-gray-300'} relative`}>
-                                        <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${darkMode ? 'left-5' : 'left-0.5'}`}></div>
-                                    </div>
-                                </button>
-                            </div>
+                            {/* Dark Mode Toggle - Hidden to match GBCA light-only design */}
+                            {/* Users can still access dark mode via browser dev tools if needed */}
                         </div>
                     </aside>
 
