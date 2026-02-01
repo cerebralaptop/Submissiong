@@ -4749,7 +4749,9 @@
                                             }`}
                                     >
                                         <option value="">Not Claimed</option>
-                                        {credit.performanceLevels.map((level) => (
+                                        {credit.performanceLevels
+                                            .filter(level => credit.required || level.level !== 'minimum')
+                                            .map((level) => (
                                             <option key={level.level} value={level.level}>
                                                 {level.level.charAt(0).toUpperCase() + level.level.slice(1)} ({level.points}pts)
                                             </option>
