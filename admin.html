@@ -142,16 +142,7 @@
 <body class="min-h-screen">
     <div id="root"></div>
 
-    <script>
-        // Test if scripts are loading
-        console.log('Basic script loaded');
-        window.onerror = function(msg, url, line) {
-            document.body.innerHTML = '<div style="padding:20px;color:red;"><h1>JavaScript Error</h1><p>' + msg + '</p><p>Line: ' + line + '</p></div>';
-            return false;
-        };
-    </script>
     <script type="text/babel">
-        console.log('Babel script starting...');
         const { useState, useEffect, useMemo, useCallback } = React;
 
         // ============================================================
@@ -187,7 +178,7 @@
                     return false;
                 }
                 return token === 'authenticated';
-            } catch {
+            } catch (e) {
                 return false;
             }
         }
@@ -2079,14 +2070,8 @@
         }
 
         // Render
-        try {
-            const root = ReactDOM.createRoot(document.getElementById('root'));
-            root.render(<App />);
-            console.log('React app rendered successfully');
-        } catch (error) {
-            console.error('Failed to render React app:', error);
-            document.getElementById('root').innerHTML = '<div style="padding: 20px; color: red;"><h1>Error Loading Admin Panel</h1><p>' + error.message + '</p></div>';
-        }
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
