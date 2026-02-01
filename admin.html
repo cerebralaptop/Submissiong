@@ -845,57 +845,49 @@
                                     <option key={col.key} value={col.key}>{col.label}</option>
                                 ))}
                             </select>
-                            {bulkEditField && (() => {
-                                const col = columns.find(c => c.key === bulkEditField);
-                                if (col?.type === 'select') {
-                                    return (
-                                        <select
-                                            value={bulkEditValue}
-                                            onChange={(e) => setBulkEditValue(e.target.value)}
-                                            className="px-3 py-1.5 border border-line rounded-lg text-sm"
-                                        >
-                                            <option value="">Select value...</option>
-                                            {col.options.map(opt => (
-                                                <option key={opt.value || opt} value={opt.value || opt}>
-                                                    {opt.label || opt}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    );
-                                } else if (col?.type === 'checkbox') {
-                                    return (
-                                        <select
-                                            value={bulkEditValue}
-                                            onChange={(e) => setBulkEditValue(e.target.value)}
-                                            className="px-3 py-1.5 border border-line rounded-lg text-sm"
-                                        >
-                                            <option value="">Select...</option>
-                                            <option value="true">Yes / Checked</option>
-                                            <option value="false">No / Unchecked</option>
-                                        </select>
-                                    );
-                                } else if (col?.type === 'number') {
-                                    return (
-                                        <input
-                                            type="number"
-                                            value={bulkEditValue}
-                                            onChange={(e) => setBulkEditValue(e.target.value)}
-                                            className="px-3 py-1.5 border border-line rounded-lg text-sm w-24"
-                                            placeholder="Value"
-                                        />
-                                    );
-                                } else {
-                                    return (
-                                        <input
-                                            type="text"
-                                            value={bulkEditValue}
-                                            onChange={(e) => setBulkEditValue(e.target.value)}
-                                            className="px-3 py-1.5 border border-line rounded-lg text-sm"
-                                            placeholder="New value"
-                                        />
-                                    );
-                                }
-                            })()}
+                            {bulkEditField && columns.find(c => c.key === bulkEditField)?.type === 'select' && (
+                                <select
+                                    value={bulkEditValue}
+                                    onChange={(e) => setBulkEditValue(e.target.value)}
+                                    className="px-3 py-1.5 border border-line rounded-lg text-sm"
+                                >
+                                    <option value="">Select value...</option>
+                                    {(columns.find(c => c.key === bulkEditField)?.options || []).map(opt => (
+                                        <option key={opt.value || opt} value={opt.value || opt}>
+                                            {opt.label || opt}
+                                        </option>
+                                    ))}
+                                </select>
+                            )}
+                            {bulkEditField && columns.find(c => c.key === bulkEditField)?.type === 'checkbox' && (
+                                <select
+                                    value={bulkEditValue}
+                                    onChange={(e) => setBulkEditValue(e.target.value)}
+                                    className="px-3 py-1.5 border border-line rounded-lg text-sm"
+                                >
+                                    <option value="">Select...</option>
+                                    <option value="true">Yes / Checked</option>
+                                    <option value="false">No / Unchecked</option>
+                                </select>
+                            )}
+                            {bulkEditField && columns.find(c => c.key === bulkEditField)?.type === 'number' && (
+                                <input
+                                    type="number"
+                                    value={bulkEditValue}
+                                    onChange={(e) => setBulkEditValue(e.target.value)}
+                                    className="px-3 py-1.5 border border-line rounded-lg text-sm w-24"
+                                    placeholder="Value"
+                                />
+                            )}
+                            {bulkEditField && columns.find(c => c.key === bulkEditField)?.type !== 'select' && columns.find(c => c.key === bulkEditField)?.type !== 'checkbox' && columns.find(c => c.key === bulkEditField)?.type !== 'number' && (
+                                <input
+                                    type="text"
+                                    value={bulkEditValue}
+                                    onChange={(e) => setBulkEditValue(e.target.value)}
+                                    className="px-3 py-1.5 border border-line rounded-lg text-sm"
+                                    placeholder="New value"
+                                />
+                            )}
                             <button
                                 onClick={handleBulkEdit}
                                 disabled={!bulkEditField || !bulkEditValue}
