@@ -7,10 +7,12 @@
 4. [Data Model](#data-model)
 5. [User Flows](#user-flows)
 6. [Implemented Features](#implemented-features-v11)
-7. [Technical Specifications](#technical-specifications)
-8. [Security](#security)
-9. [Deployment](#deployment)
-10. [Visual Design System](#visual-design-system)
+7. [Multi-Project & Scenario Analysis](#multi-project--scenario-analysis)
+8. [Onboarding Tours](#onboarding-tours)
+9. [Technical Specifications](#technical-specifications)
+10. [Security](#security)
+11. [Deployment](#deployment)
+12. [Visual Design System](#visual-design-system)
 
 ---
 
@@ -861,7 +863,394 @@ const recordChange = (newState) => {
 
 ---
 
-## 7. Technical Specifications
+## 7. Multi-Project & Scenario Analysis
+
+### 7.1 Project Management System
+
+The application supports managing multiple projects with a streamlined dropdown interface.
+
+#### Project Dropdown Selector
+
+Located directly below the GBCA branded header in the sidebar, the project dropdown provides:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ PROJECT DROPDOWN                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ Project                                              ▼      │ │
+│ │ My Office Building                                          │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                  │
+│ Expanded State:                                                  │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ Rename Current Project                                       │ │
+│ │ [My Office Building________________]                         │ │
+│ ├─────────────────────────────────────────────────────────────┤ │
+│ │ ✓ My Office Building          1/15/2026    [Clone] [Delete] │ │
+│ │   Retail Center              1/10/2026    [Clone] [Delete] │ │
+│ │   Office (Scenario)          1/16/2026    [Clone] [Delete] │ │
+│ ├─────────────────────────────────────────────────────────────┤ │
+│ │ [+ New Project]              [↑ Import]                     │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Features**:
+- **Inline Rename**: Edit current project name directly in dropdown
+- **Project List**: All projects with creation date and scenario indicator
+- **Quick Actions**: Clone as scenario, delete (with confirmation)
+- **Create/Import**: New project button and JSON import
+
+#### Project Data Structure
+
+```javascript
+{
+  id: "1706832000000",           // Unique timestamp ID
+  name: "My Office Building",     // User-editable name
+  createdAt: "2026-02-01T...",   // ISO timestamp
+  isScenario: false,              // True if cloned from another project
+  parentId: null,                 // Original project ID if scenario
+  data: {
+    projectName: "My Office Building",
+    selectedCredits: {
+      "responsible-1": { level: "credit", points: 2 },
+      "healthy-3": { level: "exceptional", points: 4 }
+    },
+    creditNotes: {
+      "responsible-1": "Waiting on supplier documentation"
+    },
+    creditDocs: {
+      "responsible-1": { doc1: true, doc2: false }
+    },
+    creditAssignments: {
+      "responsible-1": { assignee: "John", dueDate: "2026-03-01" }
+    }
+  }
+}
+```
+
+### 7.2 Scenario Analysis Features
+
+#### 7.2.1 Project Cloning (Scenarios)
+
+Create "what-if" copies of projects to explore different credit strategies.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    SCENARIO CLONING FLOW                         │
+└─────────────────────────────────────────────────────────────────┘
+
+Original Project                    Cloned Scenario
+┌─────────────────┐                ┌─────────────────┐
+│ Office Building │───Clone───────►│ Office (Ambitious)
+│                 │                │                 │
+│ 45 points       │                │ 45 points       │
+│ 12 credits      │                │ 12 credits      │
+│                 │                │ (copy of all    │
+│                 │                │  selections)    │
+└─────────────────┘                └─────────────────┘
+                                          │
+                                          ▼
+                                   User modifies scenario
+                                   to test different
+                                   credit combinations
+```
+
+**Implementation**:
+- Click clone icon on any project in dropdown
+- Enter scenario name (defaults to "ProjectName (Scenario)")
+- All data copied: credits, notes, docs, assignments
+- Scenario badge displayed in project list
+- `parentId` tracks original project
+
+#### 7.2.2 Comparison View Modal
+
+Compare up to 3 projects or scenarios side-by-side.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ Compare Projects & Scenarios                              [×]   │
+├─────────────────────────────────────────────────────────────────┤
+│ Select up to 3 projects to compare:                             │
+│ [● Office (52 pts)] [Conservative (45 pts)] [Ambitious (68 pts)]│
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│ Total Points                                                     │
+│ ┌─────────────────┬─────────────────┬─────────────────┐         │
+│ │ 52 pts          │ 45 pts          │ 68 pts          │         │
+│ │ Office          │ Conservative    │ Ambitious       │         │
+│ └─────────────────┴─────────────────┴─────────────────┘         │
+│                                                                  │
+│ Category Breakdown                                               │
+│ ┌───────────────┬──────────┬──────────┬──────────┐              │
+│ │ Category      │ Office   │ Conserv. │ Ambit.   │              │
+│ ├───────────────┼──────────┼──────────┼──────────┤              │
+│ │ Responsible   │ 8        │ 6        │ 12 ★     │              │
+│ │ Healthy       │ 10 ★     │ 8        │ 10 ★     │              │
+│ │ Resilient     │ 6        │ 6        │ 8 ★      │              │
+│ │ ...           │          │          │          │              │
+│ └───────────────┴──────────┴──────────┴──────────┘              │
+│                                                                  │
+│ Credit Differences (showing only differences)                    │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ Clean Air      │ Credit   │ Not sel. │ Except.  │           │ │
+│ │ Energy Use     │ Credit   │ Credit   │ Except.  │           │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Features**:
+- Select 2-3 projects via clickable buttons
+- Total points comparison with project names
+- Category-by-category breakdown
+- Winner highlighting (★) for highest in each category
+- Credit differences view showing only varying selections
+
+#### 7.2.3 What-If Analysis Panel
+
+Test credit additions without modifying the actual project.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ Quick Analysis & What-If                                  [×]   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│ ┌─────────────┐          ┌─────────────┐      ┌───────────────┐ │
+│ │ Current     │    →     │ Projected   │      │ Impact        │ │
+│ │ 52 pts      │          │ 68 pts      │      │ +16 pts       │ │
+│ │ Best Pract. │          │ Aust. Excel │      │ 5 credits     │ │
+│ └─────────────┘          └─────────────┘      └───────────────┘ │
+│                                                                  │
+│ Quick Actions:                                                   │
+│ [⚡ Add All Easy Credits] [📁 Add Category ▼] [Clear] [Apply]  │
+│                                                                  │
+├───────────────────────────────┬─────────────────────────────────┤
+│ What-If Selection (5)         │ Available Credits               │
+├───────────────────────────────┼─────────────────────────────────┤
+│ ✓ Clean Air          +4  [×] │ Industry Dev.    Easy    +2     │
+│ ✓ Energy Use         +3  [×] │ Resp. Const.     Medium  +3     │
+│ ✓ Waste Reduction    +3  [×] │ Light Quality    Easy    +2     │
+│ ✓ Materials          +4  [×] │ Thermal Comfort  Medium  +3     │
+│ ✓ Transport          +2  [×] │ Water Efficiency Hard    +4     │
+│                               │ ...                             │
+└───────────────────────────────┴─────────────────────────────────┘
+```
+
+**Features**:
+- **Impact Summary**: Current → Projected points with star rating change
+- **Quick Actions**:
+  - Add All Easy Credits: One-click add all easy-difficulty unselected credits
+  - Add Category: Dropdown to add all credits from a specific category
+  - Clear All: Reset what-if selection
+  - Apply to Project: Commit selections to actual project
+- **What-If List**: Credits added to analysis with point values, removable
+- **Available Credits**: Click to add to what-if, shows difficulty and points
+
+### 7.3 Scenario Workflow Example
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    SCENARIO ANALYSIS WORKFLOW                    │
+└─────────────────────────────────────────────────────────────────┘
+
+1. Start with base project
+   ┌─────────────────┐
+   │ Office Building │ 52 points
+   └────────┬────────┘
+            │
+2. Clone to create scenarios
+            │
+   ┌────────┴────────┬─────────────────┐
+   ▼                 ▼                 ▼
+┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+│ Conservative│ │ Balanced    │ │ Ambitious   │
+│ (min cost)  │ │ (optimal)   │ │ (max points)│
+└─────────────┘ └─────────────┘ └─────────────┘
+
+3. Use What-If to explore changes in each scenario
+
+4. Compare scenarios to find best strategy
+
+5. Apply winning strategy to main project
+```
+
+---
+
+## 8. Onboarding Tours
+
+### 8.1 Overview
+
+The application includes interactive onboarding tours to help first-time users understand key features. Tours are available for both the main application and the admin panel.
+
+### 8.2 Main Application Tour
+
+The main app tour guides users through 9 key features:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    MAIN APP TOUR STEPS                           │
+└─────────────────────────────────────────────────────────────────┘
+
+Step 1: Welcome
+┌─────────────────────────────────────────────────────────────────┐
+│ Welcome to Green Star! 🌟                                        │
+│ Your personal assistant for tracking Green Star certification.  │
+│ Let's take a quick tour of the main features.                   │
+│                                              [Skip] [Start Tour]│
+└─────────────────────────────────────────────────────────────────┘
+
+Step 2: Project Selector       (Targets: data-tour="project-selector")
+Step 3: Score Display          (Targets: data-tour="score-display")
+Step 4: Target Rating          (Targets: data-tour="target-rating")
+Step 5: Categories             (Targets: data-tour="categories")
+Step 6: Analysis Tools         (Targets: data-tour="tools")
+Step 7: Scenario Tools         (Targets: data-tour="scenario-tools")
+Step 8: Credit Cards           (Targets: data-tour="credit-cards")
+Step 9: Finish                 (Center modal)
+```
+
+**Tour Features**:
+- **Progress Dots**: Visual indicator of current step and total steps
+- **Element Highlighting**: Active elements are highlighted with spotlight effect
+- **Skip Option**: Users can skip the tour at any time
+- **Navigation**: Back/Next buttons for step-by-step progression
+- **Positioning**: Steps target specific elements or display in center
+
+### 8.3 Admin Panel Tour
+
+The admin tour covers 8 essential admin functions:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ADMIN TOUR STEPS                              │
+└─────────────────────────────────────────────────────────────────┘
+
+Step 1: Welcome to Admin Panel
+Step 2: Navigation Menu
+Step 3: Dashboard Overview
+Step 4: Editing Data
+Step 5: Import & Export
+Step 6: Save to Main App
+Step 7: Undo & Redo
+Step 8: You're Ready!
+```
+
+### 8.4 Tour Implementation
+
+#### Technical Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    TOUR SYSTEM                                   │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────┐      ┌─────────────────┐      ┌──────────────┐
+│ First Visit     │      │ Tour Component  │      │ localStorage │
+│ Detection       │─────►│                 │◄────►│              │
+│ (useEffect)     │      │ - Step state    │      │ tour-        │
+│                 │      │ - Navigation    │      │ completed    │
+└─────────────────┘      │ - Overlay       │      │ flag         │
+                         │ - Highlighting  │      └──────────────┘
+                         └─────────────────┘
+```
+
+#### Component Structure
+
+```javascript
+// OnboardingTour Component
+function OnboardingTour({ isOpen, onComplete }) {
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const tourSteps = [
+    {
+      title: "Step Title",
+      content: "Step description",
+      target: "data-tour-attribute",  // Optional: element to highlight
+      position: "center" | "element"
+    },
+    // ... more steps
+  ];
+
+  // Navigation handlers
+  const handleNext = () => {...};
+  const handlePrev = () => {...};
+
+  return (
+    <div className="tour-overlay">
+      <div className="tour-modal">
+        {/* Title, content, navigation, progress dots */}
+      </div>
+    </div>
+  );
+}
+```
+
+#### localStorage Keys
+
+| Key | Purpose |
+|-----|---------|
+| `greenstar-tour-completed` | Main app tour completion flag |
+| `greenstar-admin-tour-completed` | Admin panel tour completion flag |
+
+### 8.5 Restart Tour
+
+Users can restart the tour at any time:
+
+**Main App**: "Take a Tour" button in the sidebar footer
+**Admin Panel**: "Take a Tour" button in the sidebar footer
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ Sidebar Footer                                                   │
+├─────────────────────────────────────────────────────────────────┤
+│  [?] Take a Tour                                                 │
+│  [←] Back to App                                                 │
+│  [→] Sign Out                                                    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 8.6 Styling
+
+Tours use the GBCA design system:
+
+```css
+/* Tour Overlay */
+.tour-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* Tour Modal */
+.tour-modal {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  max-width: 400px;
+  box-shadow: var(--shadow-xl);
+}
+
+/* Progress Dots */
+.tour-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-line);
+}
+.tour-dot.active {
+  background: var(--color-green-900);
+}
+
+/* GBCA Branded Icon */
+.tour-icon {
+  background: linear-gradient(135deg, #1F4B2E, #2E6B3F);
+  border-radius: var(--radius-xl);
+}
+```
+
+---
+
+## 9. Technical Specifications
 
 ### Browser Support
 | Browser | Minimum Version |
@@ -892,7 +1281,7 @@ const recordChange = (newState) => {
 
 ---
 
-## 8. Security
+## 10. Security
 
 ### Current Security Measures
 | Measure | Implementation |
@@ -928,7 +1317,7 @@ const recordChange = (newState) => {
 
 ---
 
-## 9. Deployment
+## 11. Deployment
 
 ### Current Deployment
 - Static files served directly
@@ -970,7 +1359,7 @@ const recordChange = (newState) => {
 
 ---
 
-## 10. Visual Design System
+## 12. Visual Design System
 
 ### Design Principles
 
@@ -1206,12 +1595,20 @@ Print-optimized CSS for generating professional documentation:
 |-----------|---------|-------|
 | `App` | Root component | - |
 | `Header` | Top navigation bar | projectName, onMenuClick |
-| `Sidebar` | Category navigation | categories, selectedCategory |
+| `Sidebar` | Category navigation with project dropdown | categories, selectedCategory, projects |
 | `CreditCard` | Individual credit display | credit, category, onSelect |
 | `CreditDetailModal` | Full credit details | credit, isOpen, onClose |
 | `ProgressBar` | Points progress display | current, target |
 | `StarRating` | Star rating display | rating |
 | `FilterBar` | Credit filters | filters, onChange |
+| `ProjectManagerModal` | Project management (legacy) | projects, onSwitch, onClone, onDelete |
+| `ScenarioComparisonModal` | Compare 2-3 projects | projects, activeProjectId, categoriesData |
+| `QuickAnalysisPanel` | What-if analysis tool | categoriesData, selectedCredits, onSelectCredit |
+| `GapAnalysisModal` | Gap to target rating | gapAnalysis, onSelectCredit |
+| `SynergiesModal` | Credit synergies view | synergies, onSelectCredit |
+| `TemplatesModal` | Project templates | templates, onApply |
+| `ExportModal` | Export to PDF/Excel | projectData |
+| `OnboardingTour` | First-time user tour | isOpen, onComplete |
 
 ### Admin Panel Components
 | Component | Purpose | Props |
@@ -1223,6 +1620,7 @@ Print-optimized CSS for generating professional documentation:
 | `CategoriesEditor` | Category management | data, onUpdate |
 | `CreditsEditor` | Credit management | data, onUpdate, categories |
 | `ImportModal` | Excel import | isOpen, onImport |
+| `AdminOnboardingTour` | Admin first-time user tour | isOpen, onComplete |
 
 ---
 
@@ -1271,6 +1669,38 @@ Print-optimized CSS for generating professional documentation:
 
 ---
 
-*Document Version: 1.1*
+*Document Version: 1.3*
 *Last Updated: February 1, 2026*
 *Author: Green Star Development Team*
+
+---
+
+## Changelog
+
+### v1.3 (February 1, 2026)
+- Added Onboarding Tours section (Section 8)
+- Implemented interactive 9-step tour for main application
+- Implemented interactive 8-step tour for admin panel
+- Tours auto-trigger on first visit, with localStorage tracking
+- Added "Take a Tour" button in both app sidebars for tour restart
+- Updated component reference with tour components
+
+### v1.2 (February 1, 2026)
+- Added Multi-Project & Scenario Analysis section (Section 7)
+- Implemented project dropdown selector in sidebar
+- Added scenario cloning functionality
+- Added comparison view modal for side-by-side analysis
+- Added what-if analysis panel with quick actions
+- Enhanced GBCA visual branding with gradient header
+- Updated component reference with new modals
+
+### v1.1 (February 1, 2026)
+- Added Visual Design System section (Section 12)
+- Implemented CSS design tokens
+- Added GBCA brand colors and typography
+- Created custom SVG icon system
+
+### v1.0 (January 31, 2026)
+- Initial design document
+- Core features documented
+- Data model and architecture defined
