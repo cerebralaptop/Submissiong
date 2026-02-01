@@ -529,13 +529,12 @@
             top: 0;
             bottom: 0;
             width: 320px;
-            background: linear-gradient(180deg, #FFFFFF 0%, #FAFBFA 100%);
+            background: #FFFFFF;
             border-right: 1px solid var(--color-line);
             transition: transform 0.25s ease;
             z-index: 40;
             overflow-y: auto;
             overflow-x: hidden;
-            box-shadow: 2px 0 8px rgba(28, 35, 32, 0.04);
         }
 
         .sidebar.collapsed {
@@ -4704,9 +4703,9 @@
                 (hasLevels ? credit.performanceLevels.find(l => l.level === selectedLevel)?.points || 0 : credit.points) : 0;
 
             const levelColors = {
-                minimum: { bg: 'bg-gray-100 dark:bg-gray-700', border: 'border-gray-400', text: 'text-ink-2 dark:text-gray-300', gradient: 'from-gray-50 to-white dark:from-gray-800 dark:to-gray-800' },
-                credit: { bg: 'bg-blue-100 dark:bg-blue-900/30', border: 'border-blue-500', text: 'text-blue-700 dark:text-blue-300', gradient: 'from-blue-50 to-white dark:from-blue-900/20 dark:to-gray-800' },
-                exceptional: { bg: 'bg-green-100 dark:bg-green-900/30', border: 'border-green-500', text: 'text-green-700 dark:text-green-300', gradient: 'from-green-50 to-white dark:from-green-900/20 dark:to-gray-800' }
+                minimum: { bg: 'bg-gray-50', border: 'border-gray-300', text: 'text-ink-2' },
+                credit: { bg: 'bg-blue-50', border: 'border-blue-400', text: 'text-blue-700' },
+                exceptional: { bg: 'bg-[#1F4B2E]/5', border: 'border-[#1F4B2E]', text: 'text-[#1F4B2E]' }
             };
 
             const levelIcons = {
@@ -4739,52 +4738,52 @@
 
             return (
                 <div
-                    className={`credit-card rounded-xl border-2 transition-all bg-white dark:bg-gray-800
+                    className={`credit-card rounded-lg border transition-all bg-white
                         ${selectedLevel
-                            ? `${currentLevelColors.border} bg-gradient-to-r ${currentLevelColors.gradient}`
-                            : 'border-line dark:border-gray-700'}`}
+                            ? `${currentLevelColors.border} ${currentLevelColors.bg}`
+                            : 'border-line'}`}
                 >
                     {/* Clickable Header row */}
                     <div
-                        className="flex items-center gap-4 p-4 pb-2 cursor-pointer hover:bg-surface-2 dark:hover:bg-gray-700/50 rounded-t-xl transition-colors"
+                        className="flex items-center gap-4 p-4 pb-2 cursor-pointer hover:bg-surface-1 rounded-t-lg transition-colors"
                         onClick={onViewDetails}
                     >
                         <div className="flex-grow min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                                <h3 className={`font-medium ${selectedLevel ? currentLevelColors.text : 'text-ink dark:text-gray-200'}`}>
+                                <h3 className={`font-medium ${selectedLevel ? currentLevelColors.text : 'text-ink'}`}>
                                     {credit.name}
                                 </h3>
                                 {credit.required && (
-                                    <span className="required-badge bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-400 px-2 py-0.5 rounded-full font-semibold uppercase">
+                                    <span className="required-badge bg-red-50 text-red-600 px-2 py-0.5 rounded text-xs font-semibold uppercase">
                                         Required
                                     </span>
                                 )}
                                 {credit.difficulty && (
-                                    <span className={`text-xs px-2 py-0.5 rounded-full ${
-                                        credit.difficulty === 'Easy' ? 'bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-400' :
-                                        credit.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/50 dark:text-yellow-400' :
-                                        'bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-400'
+                                    <span className={`text-xs px-2 py-0.5 rounded ${
+                                        credit.difficulty === 'Easy' ? 'bg-green-50 text-green-700' :
+                                        credit.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700' :
+                                        'bg-red-50 text-red-700'
                                     }`}>
                                         {credit.difficulty}
                                     </span>
                                 )}
                                 {credit.calculatorRequired && (
-                                    <span className="text-xs bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400 px-2 py-0.5 rounded-full">
+                                    <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded">
                                         <i className="fa-solid fa-calculator mr-1"></i>
                                         Calc
                                     </span>
                                 )}
                             </div>
                             {credit.description && (
-                                <p className="text-sm text-ink-2 dark:text-ink-3 mt-1 line-clamp-2">{credit.description}</p>
+                                <p className="text-sm text-ink-3 mt-1 line-clamp-2">{credit.description}</p>
                             )}
                         </div>
 
                         <div className="flex items-center gap-3 flex-shrink-0">
-                            <div className={`font-mono text-xl font-bold min-w-[50px] text-right ${selectedLevel ? currentLevelColors.text : 'text-ink-3'}`}>
+                            <div className={`font-mono text-lg font-bold min-w-[50px] text-right ${selectedLevel ? currentLevelColors.text : 'text-ink-3'}`}>
                                 +{currentPoints}
                             </div>
-                            <i className="fa-solid fa-chevron-right text-ink-3 dark:text-ink-2"></i>
+                            <i className="fa-solid fa-chevron-right text-ink-3 text-sm"></i>
                         </div>
                     </div>
 
@@ -4792,7 +4791,7 @@
                     {hasLevels ? (
                         <div className="px-4 pb-4 pt-2">
                             <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-1 text-xs text-ink-2 dark:text-ink-3">
+                                <div className="flex items-center gap-1 text-xs text-ink-3">
                                     <i className="fa-solid fa-clipboard-check"></i>
                                     <span>Claim:</span>
                                 </div>
@@ -4801,10 +4800,10 @@
                                         value={selectedLevel || ''}
                                         onChange={handleSelectChange}
                                         onClick={(e) => e.stopPropagation()}
-                                        className={`w-full py-2 px-3 pr-8 rounded-lg border-2 transition-all text-sm font-medium appearance-none cursor-pointer
+                                        className={`w-full py-2 px-3 pr-8 rounded-lg border transition-all text-sm font-medium appearance-none cursor-pointer
                                             ${selectedLevel
                                                 ? `${levelColors[selectedLevel].bg} ${levelColors[selectedLevel].border} ${levelColors[selectedLevel].text}`
-                                                : 'bg-white dark:bg-gray-700 border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:border-gray-300'
+                                                : 'bg-white border-line text-ink-2 hover:border-[#2E6B3F]'
                                             }`}
                                     >
                                         <option value="">— Not Claimed —</option>
@@ -4815,12 +4814,12 @@
                                         ))}
                                     </select>
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <i className={`fa-solid ${selectedLevel ? levelIcons[selectedLevel] : 'fa-chevron-down'} ${selectedLevel ? levelColors[selectedLevel].text : 'text-ink-3'}`}></i>
+                                        <i className={`fa-solid ${selectedLevel ? levelIcons[selectedLevel] : 'fa-chevron-down'} text-sm ${selectedLevel ? levelColors[selectedLevel].text : 'text-ink-3'}`}></i>
                                     </div>
                                 </div>
                             </div>
                             {selectedLevel && (
-                                <div className="mt-2 text-xs text-ink-2 dark:text-ink-3 flex items-center gap-1">
+                                <div className="mt-2 text-xs text-ink-3 flex items-center gap-1">
                                     <i className="fa-solid fa-circle-info"></i>
                                     {selectedLevel === 'exceptional' && <span>Includes Credit Achievement + Minimum Expectation compliance</span>}
                                     {selectedLevel === 'credit' && <span>Includes Minimum Expectation compliance</span>}
@@ -4832,14 +4831,14 @@
                         <div className="px-4 pb-4 pt-2">
                             <button
                                 onClick={() => onSelectLevel(selectedLevel ? null : 'credit', credit.points)}
-                                className={`w-full py-2 px-3 rounded-lg border-2 transition-all text-sm font-medium
+                                className={`w-full py-2 px-3 rounded-lg border transition-all text-sm font-medium
                                     ${selectedLevel
-                                        ? 'bg-green-100 dark:bg-green-900/30 border-green-500 text-green-700 dark:text-green-300'
-                                        : 'bg-white dark:bg-gray-700 border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20'
+                                        ? 'bg-[#1F4B2E]/5 border-[#1F4B2E] text-[#1F4B2E]'
+                                        : 'bg-white border-line text-ink-2 hover:border-[#2E6B3F] hover:bg-[#1F4B2E]/5'
                                     }`}
                             >
                                 <div className="flex items-center justify-center gap-2">
-                                    <i className={`fa-solid ${selectedLevel ? 'fa-check' : 'fa-plus'}`}></i>
+                                    <i className={`fa-solid ${selectedLevel ? 'fa-check' : 'fa-plus'} text-sm`}></i>
                                     <span>{selectedLevel ? 'Selected' : 'Select Credit'}</span>
                                     <span className="font-mono">({credit.points} pts)</span>
                                 </div>
@@ -5781,7 +5780,7 @@
 
             if (!hasAnyCredits) {
                 return (
-                    <div className="glass-card rounded-2xl p-6 shadow-lg dark:bg-gray-800/80">
+                    <div className="bg-white rounded-lg p-6 border border-line">
                         <p className="text-center text-ink-3 py-12">
                             <i className="fa-solid fa-filter-circle-xmark text-4xl mb-3 block"></i>
                             No credits match your current filters
@@ -5800,22 +5799,22 @@
                         if (filteredCredits.length === 0) return null;
 
                         return (
-                            <div key={category.id} className="glass-card rounded-2xl p-6 shadow-lg dark:bg-gray-800/80">
-                                <div className="flex items-center justify-between mb-4">
+                            <div key={category.id} className="bg-white rounded-lg p-5 border border-line">
+                                <div className="flex items-center justify-between mb-4 pb-3 border-b border-line">
                                     <div className="flex items-center gap-3">
-                                        <span className={category.colorClasses.text}><CategoryIcon category={category.id} size={32} /></span>
+                                        <span className={category.colorClasses.text}><CategoryIcon category={category.id} size={28} /></span>
                                         <div>
-                                            <h2 className="font-display text-xl font-bold text-ink dark:text-white">{category.name}</h2>
-                                            <p className="text-sm text-ink-2 dark:text-ink-3">{category.description}</p>
+                                            <h2 className="font-display text-lg font-bold text-ink">{category.name}</h2>
+                                            <p className="text-sm text-ink-3">{category.description}</p>
                                         </div>
                                     </div>
-                                    <div className={`${category.colorClasses.bgLight} ${category.colorClasses.text} px-4 py-2 rounded-lg`}>
-                                        <span className="font-mono font-bold">{filteredCredits.length}</span>
-                                        <span className="text-sm ml-1">credits</span>
+                                    <div className="bg-surface-1 px-3 py-1.5 rounded-lg border border-line">
+                                        <span className="font-mono font-bold text-ink">{filteredCredits.length}</span>
+                                        <span className="text-sm text-ink-3 ml-1">credits</span>
                                     </div>
                                 </div>
 
-                                <div className="space-y-3">
+                                <div className="space-y-2">
                                     {filteredCredits.map((credit, index) => {
                                         const creditKey = `${category.id}-${credit.id}`;
                                         const selection = selectedCredits[creditKey];
@@ -9842,19 +9841,19 @@
                     {/* Collapsible Sidebar */}
                     <aside className={`sidebar ${!sidebarOpen ? 'collapsed' : ''}`}>
                         <div className="p-4">
-                            {/* GBCA Branded Header */}
-                            <div className="mb-6 -mx-4 -mt-4 px-4 py-4 bg-gradient-to-r from-[#1F4B2E] to-[#2E6B3F] border-b border-[#1F4B2E]/20">
+                            {/* GBCA Branded Header - Clean, solid color */}
+                            <div className="mb-6 -mx-4 -mt-4 px-4 py-4 bg-[#1F4B2E] border-b border-[#1F4B2E]">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-11 h-11 rounded-lg overflow-hidden bg-white/10 p-1">
+                                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-white p-1.5">
                                         <img
                                             src="gbca-logo.svg"
                                             alt="Green Star Rating"
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-contain"
                                         />
                                     </div>
                                     <div className="flex-grow min-w-0">
-                                        <h1 className="font-display font-bold text-white text-sm tracking-wide">GREEN STAR</h1>
-                                        <p className="text-xs text-white/70">Submission Assistant</p>
+                                        <h1 className="font-display font-bold text-white text-base tracking-wide">Green Star</h1>
+                                        <p className="text-xs text-white/80">Submission Assistant</p>
                                     </div>
                                 </div>
                             </div>
@@ -9968,31 +9967,31 @@
                                 )}
                             </div>
 
-                            {/* Score Display - GBCA Style */}
-                            <div className="bg-gradient-to-br from-[#1F4B2E]/5 to-[#2E6B3F]/10 dark:from-[#1B4D3E]/30 dark:to-[#0D9488]/20 rounded-xl p-4 mb-4 border border-[#1F4B2E]/15" data-tour="score-display">
+                            {/* Score Display - Clean GBCA Style */}
+                            <div className="bg-white rounded-lg p-4 mb-4 border border-line" data-tour="score-display">
                                 <div className="flex items-center justify-between mb-2">
-                                    <span className="text-xs font-semibold text-ink-2 dark:text-ink-3 uppercase tracking-wider">Current Score</span>
-                                    <span className="text-xs font-bold text-[#1F4B2E] dark:text-teal-400 bg-[#1F4B2E]/10 px-2 py-0.5 rounded-full">{currentRating.label}</span>
+                                    <span className="text-xs font-semibold text-ink-3 uppercase tracking-wider">Current Score</span>
+                                    <span className="text-xs font-semibold text-[#1F4B2E] bg-[#1F4B2E]/10 px-2 py-0.5 rounded">{currentRating.label}</span>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <span className="text-4xl font-bold text-[#1F4B2E] dark:text-teal-400">{totalPoints}</span>
-                                    <span className="text-sm font-medium text-ink-3 dark:text-ink-3">points</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-3xl font-bold text-[#1F4B2E]">{totalPoints}</span>
+                                    <span className="text-sm font-medium text-ink-3">points</span>
                                 </div>
-                                <div className="mt-3 h-2 bg-[#1F4B2E]/10 dark:bg-gray-700 rounded-full overflow-hidden">
-                                    <div className="h-full bg-gradient-to-r from-[#1F4B2E] to-[#2E6B3F] transition-all rounded-full" style={{ width: `${Math.min(100, (totalPoints / 100) * 100)}%` }}></div>
+                                <div className="mt-3 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                    <div className="h-full bg-[#1F4B2E] transition-all rounded-full" style={{ width: `${Math.min(100, (totalPoints / 100) * 100)}%` }}></div>
                                 </div>
                             </div>
 
                             {/* Target Rating Selector */}
-                            <div className="mb-4 p-3 bg-white dark:bg-gray-800 rounded-lg border border-line dark:border-gray-700" data-tour="target-rating">
+                            <div className="mb-4 p-3 bg-white rounded-lg border border-line" data-tour="target-rating">
                                 <div className="mb-2">
-                                    <span className="text-xs font-medium text-ink-2 dark:text-ink-3">Target Rating</span>
+                                    <span className="text-xs font-medium text-ink-3">Target Rating</span>
                                 </div>
                                 <div className="relative">
                                     <select
                                         value={targetStarRating}
                                         onChange={(e) => setTargetStarRating(Number(e.target.value))}
-                                        className="w-full py-2 px-3 pr-8 rounded-lg border border-line dark:border-gray-600 bg-surface-2 dark:bg-gray-700 text-ink dark:text-gray-200 text-sm font-medium appearance-none cursor-pointer hover:border-[#2E6B3F] dark:hover:border-teal-500 transition-colors focus:ring-2 focus:ring-[#2E6B3F]/20 focus:border-[#2E6B3F]"
+                                        className="w-full py-2 px-3 pr-8 rounded-lg border border-line bg-white text-ink text-sm font-medium appearance-none cursor-pointer hover:border-[#2E6B3F] transition-colors focus:ring-1 focus:ring-[#2E6B3F]/20 focus:border-[#2E6B3F]"
                                     >
                                         <option value={4}>4 Star Best Practice (15+ pts)</option>
                                         <option value={5}>5 Star Australian Excellence (35+ pts)</option>
@@ -10007,14 +10006,14 @@
                                     return (
                                         <div className="mt-3">
                                             <div className="flex justify-between text-xs mb-1">
-                                                <span className="text-ink-2 dark:text-ink-3">{totalPoints} / {targetPoints} pts</span>
-                                                <span className={remaining <= 0 ? 'text-[#1B4D3E] dark:text-teal-400 font-semibold' : 'text-ink-2 dark:text-ink-3'}>
+                                                <span className="text-ink-3">{totalPoints} / {targetPoints} pts</span>
+                                                <span className={remaining <= 0 ? 'text-[#1F4B2E] font-semibold' : 'text-ink-3'}>
                                                     {remaining <= 0 ? 'Target Achieved!' : `${remaining} pts needed`}
                                                 </span>
                                             </div>
-                                            <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                                            <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                                                 <div
-                                                    className={`h-full transition-all rounded-full ${remaining <= 0 ? 'bg-[#1B4D3E]' : 'bg-gradient-to-r from-[#1B4D3E] to-[#0D9488]'}`}
+                                                    className="h-full transition-all rounded-full bg-[#1F4B2E]"
                                                     style={{ width: `${progress}%` }}
                                                 ></div>
                                             </div>
@@ -10031,10 +10030,10 @@
                                     placeholder="Search credits..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full pl-9 pr-8 py-2 text-sm rounded-lg border border-line dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-green-500 focus:ring-1 focus:ring-green-200"
+                                    className="w-full pl-9 pr-8 py-2 text-sm rounded-lg border border-line bg-white focus:border-[#2E6B3F] focus:ring-1 focus:ring-[#2E6B3F]/20"
                                 />
                                 {searchQuery && (
-                                    <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-3 hover:text-ink-2">
+                                    <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-3 hover:text-ink">
                                         <i className="fa-solid fa-xmark text-sm"></i>
                                     </button>
                                 )}
@@ -10042,8 +10041,8 @@
 
                             {/* View Toggle */}
                             <div className="mb-4">
-                                <label className="text-xs font-medium text-ink-2 dark:text-ink-3 mb-2 block">View</label>
-                                <div className="grid grid-cols-4 gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                                <label className="text-xs font-medium text-ink-3 mb-2 block">View</label>
+                                <div className="grid grid-cols-4 gap-1 bg-surface-1 rounded-lg p-1">
                                     {[
                                         { id: 'credits', icon: 'fa-grip', label: 'Cards' },
                                         { id: 'timeline', icon: 'fa-timeline', label: 'Timeline' },
@@ -10054,7 +10053,7 @@
                                             key={view.id}
                                             onClick={() => setActiveView(view.id)}
                                             className={`py-2 px-2 rounded-md text-xs font-medium transition-all flex flex-col items-center gap-1
-                                                ${activeView === view.id ? 'bg-white dark:bg-gray-600 shadow-sm text-green-600 dark:text-green-400' : 'text-ink-2 hover:text-ink dark:text-ink-3'}`}
+                                                ${activeView === view.id ? 'bg-white shadow-sm text-[#1F4B2E]' : 'text-ink-3 hover:text-ink'}`}
                                         >
                                             <i className={`fa-solid ${view.icon}`}></i>
                                             <span>{view.label}</span>
@@ -10065,48 +10064,48 @@
 
                             {/* Filters */}
                             <div className="mb-4">
-                                <label className="text-xs font-medium text-ink-2 dark:text-ink-3 mb-2 block">Filters</label>
-                                <div className="space-y-2">
+                                <label className="text-xs font-medium text-ink-3 mb-2 block">Filters</label>
+                                <div className="space-y-1.5">
                                     <button
                                         onClick={() => setShowQuickWins(!showQuickWins)}
                                         className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2
                                             ${showQuickWins
-                                                ? 'bg-amber-600 text-white'
-                                                : 'bg-white dark:bg-gray-700 border border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:bg-amber-50'
+                                                ? 'bg-[#1F4B2E] text-white'
+                                                : 'bg-white border border-line text-ink-2 hover:border-[#2E6B3F]'
                                             }`}
                                     >
-                                        <i className="fa-solid fa-bolt"></i>
-                                        <span>Quick Wins (Easy)</span>
-                                        {showQuickWins && <i className="fa-solid fa-check ml-auto"></i>}
+                                        <i className="fa-solid fa-bolt text-xs"></i>
+                                        <span>Quick Wins</span>
+                                        {showQuickWins && <i className="fa-solid fa-check ml-auto text-xs"></i>}
                                     </button>
                                     <button
                                         onClick={() => setShowRequired(!showRequired)}
                                         className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2
                                             ${showRequired
-                                                ? 'bg-amber-600 text-white'
-                                                : 'bg-white dark:bg-gray-700 border border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:bg-amber-50'
+                                                ? 'bg-[#1F4B2E] text-white'
+                                                : 'bg-white border border-line text-ink-2 hover:border-[#2E6B3F]'
                                             }`}
                                     >
-                                        <i className="fa-solid fa-clipboard-list"></i>
+                                        <i className="fa-solid fa-clipboard-list text-xs"></i>
                                         <span>Minimum Expectations</span>
-                                        {showRequired && <i className="fa-solid fa-check ml-auto"></i>}
+                                        {showRequired && <i className="fa-solid fa-check ml-auto text-xs"></i>}
                                     </button>
                                 </div>
                             </div>
 
                             {/* Categories */}
                             <div className="mb-4" data-tour="categories">
-                                <label className="text-xs font-medium text-ink-2 dark:text-ink-3 mb-2 block">Categories</label>
+                                <label className="text-xs font-medium text-ink-3 mb-2 block">Categories</label>
                                 <div className="space-y-1">
                                     <button
                                         onClick={() => setActiveCategory('all')}
                                         className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2
                                             ${activeCategory === 'all'
-                                                ? 'bg-[#2E6B3F] text-white'
-                                                : 'bg-white dark:bg-gray-700 border border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:bg-surface-2 dark:hover:bg-gray-600'
+                                                ? 'bg-[#1F4B2E] text-white'
+                                                : 'bg-white border border-line text-ink-2 hover:border-[#2E6B3F]'
                                             }`}
                                     >
-                                        <i className="fa-solid fa-layer-group"></i>
+                                        <i className="fa-solid fa-layer-group text-xs"></i>
                                         <span className="flex-grow text-left">All Credits</span>
                                         <span className="text-xs font-mono opacity-70">{totalPoints}/170</span>
                                     </button>
@@ -10116,11 +10115,11 @@
                                             onClick={() => setActiveCategory(category.id)}
                                             className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
                                                 ${activeCategory === category.id
-                                                    ? `${category.colorClasses.bgLight} ${category.colorClasses.text} shadow-sm`
-                                                    : 'bg-white dark:bg-gray-700 border border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:bg-surface-2 dark:hover:bg-gray-600'
+                                                    ? 'bg-[#1F4B2E] text-white'
+                                                    : 'bg-white border border-line text-ink-2 hover:border-[#2E6B3F]'
                                                 }`}
                                         >
-                                            <span className={category.colorClasses?.text || 'text-ink-3'}><CategoryIcon category={category.id} size={20} /></span>
+                                            <span className={activeCategory === category.id ? 'text-white' : (category.colorClasses?.text || 'text-ink-3')}><CategoryIcon category={category.id} size={18} /></span>
                                             <span className="flex-grow text-left truncate">{category.name}</span>
                                             <span className="text-xs font-mono opacity-70">{getCategoryPoints(category.id)}/{category.maxPoints}</span>
                                         </button>
@@ -10130,7 +10129,7 @@
 
                             {/* Project Phase Filter */}
                             <div className="mb-4">
-                                <label className="text-xs font-medium text-ink-2 dark:text-ink-3 mb-2 block">Project Phase</label>
+                                <label className="text-xs font-medium text-ink-3 mb-2 block">Project Phase</label>
                                 <div className="space-y-1">
                                     {projectPhases.map(phase => (
                                         <button
@@ -10138,8 +10137,8 @@
                                             onClick={() => setPhaseFilter(phase.id)}
                                             className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2 text-left
                                                 ${phaseFilter === phase.id
-                                                    ? 'bg-purple-500 text-white shadow-md'
-                                                    : 'bg-white dark:bg-gray-700 border border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-600'
+                                                    ? 'bg-[#1F4B2E] text-white'
+                                                    : 'bg-white border border-line text-ink-2 hover:border-[#2E6B3F]'
                                                 }`}
                                         >
                                             <i className={`fa-solid ${phase.icon} text-xs w-4`}></i>
@@ -10150,108 +10149,108 @@
                             </div>
 
                             {/* Tools & Analysis */}
-                            <div className="border-t border-line dark:border-gray-700 pt-4 mt-4" data-tour="tools">
-                                <label className="text-xs font-medium text-ink-2 dark:text-ink-3 mb-2 block">Tools & Analysis</label>
-                                <div className="grid grid-cols-2 gap-2 mb-2">
+                            <div className="border-t border-line pt-4 mt-4" data-tour="tools">
+                                <label className="text-xs font-medium text-ink-3 mb-2 block">Tools & Analysis</label>
+                                <div className="grid grid-cols-2 gap-1.5 mb-1.5">
                                     <button
                                         onClick={() => setShowTemplates(true)}
-                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                        className="py-2 px-3 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:border-[#2E6B3F] transition-all flex items-center justify-center gap-2"
                                     >
-                                        <i className="fa-solid fa-wand-magic-sparkles text-purple-500"></i>
+                                        <i className="fa-solid fa-wand-magic-sparkles text-[#2E6B3F] text-xs"></i>
                                         <span>Templates</span>
                                     </button>
                                     <button
                                         onClick={() => setShowGapAnalysis(true)}
-                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-amber-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                        className="py-2 px-3 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:border-[#2E6B3F] transition-all flex items-center justify-center gap-2"
                                         disabled={!gapAnalysis}
                                         style={{ opacity: gapAnalysis ? 1 : 0.5 }}
                                     >
-                                        <i className="fa-solid fa-chart-line text-amber-500"></i>
+                                        <i className="fa-solid fa-chart-line text-[#2E6B3F] text-xs"></i>
                                         <span>Gap</span>
                                     </button>
                                 </div>
-                                <div className="grid grid-cols-2 gap-2 mb-2">
+                                <div className="grid grid-cols-2 gap-1.5 mb-1.5">
                                     <button
                                         onClick={() => setShowSynergies(true)}
-                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-cyan-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2 relative"
+                                        className="py-2 px-3 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:border-[#2E6B3F] transition-all flex items-center justify-center gap-2 relative"
                                     >
-                                        <i className="fa-solid fa-link text-cyan-500"></i>
+                                        <i className="fa-solid fa-link text-[#2E6B3F] text-xs"></i>
                                         <span>Synergies</span>
                                         {getActiveSynergies.length > 0 && (
-                                            <span className="absolute -top-1 -right-1 w-5 h-5 bg-cyan-500 text-white text-xs rounded-full flex items-center justify-center">{getActiveSynergies.length}</span>
+                                            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#1F4B2E] text-white text-[10px] rounded-full flex items-center justify-center">{getActiveSynergies.length}</span>
                                         )}
                                     </button>
                                     <button
                                         onClick={() => setShowCalculators(true)}
-                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                        className="py-2 px-3 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:border-[#2E6B3F] transition-all flex items-center justify-center gap-2"
                                     >
-                                        <i className="fa-solid fa-calculator text-green-500"></i>
+                                        <i className="fa-solid fa-calculator text-[#2E6B3F] text-xs"></i>
                                         <span>Calcs</span>
                                     </button>
                                 </div>
                                 <button
                                     onClick={() => setShowExport(true)}
-                                    className="w-full py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                    className="w-full py-2 px-3 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:border-[#2E6B3F] transition-all flex items-center justify-center gap-2"
                                 >
-                                    <i className="fa-solid fa-download text-red-500"></i>
+                                    <i className="fa-solid fa-download text-[#2E6B3F] text-xs"></i>
                                     <span>Export Project</span>
                                 </button>
 
                                 {/* Scenario Analysis */}
-                                <div className="grid grid-cols-2 gap-2 mt-2" data-tour="scenario-tools">
+                                <div className="grid grid-cols-2 gap-1.5 mt-1.5" data-tour="scenario-tools">
                                     <button
                                         onClick={() => setShowQuickAnalysis(true)}
-                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                        className="py-2 px-3 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:border-[#2E6B3F] transition-all flex items-center justify-center gap-2"
                                     >
-                                        <i className="fa-solid fa-flask text-purple-500"></i>
+                                        <i className="fa-solid fa-flask text-[#2E6B3F] text-xs"></i>
                                         <span>What-If</span>
                                     </button>
                                     <button
                                         onClick={() => setShowComparison(true)}
-                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                        className="py-2 px-3 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:border-[#2E6B3F] transition-all flex items-center justify-center gap-2"
                                         disabled={projects.length < 2}
                                         style={{ opacity: projects.length >= 2 ? 1 : 0.5 }}
                                     >
-                                        <i className="fa-solid fa-code-compare text-indigo-500"></i>
+                                        <i className="fa-solid fa-code-compare text-[#2E6B3F] text-xs"></i>
                                         <span>Compare</span>
                                     </button>
                                 </div>
 
                                 {/* Admin Section */}
-                                <div className="mt-3 pt-3 border-t border-line dark:border-gray-700 space-y-2">
+                                <div className="mt-3 pt-3 border-t border-line space-y-1.5">
                                     <a
                                         href="admin.html"
-                                        className="w-full py-2 px-3 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-200 dark:border-indigo-700 rounded-lg text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-all flex items-center justify-center gap-2"
+                                        className="w-full py-2 px-3 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:border-[#2E6B3F] transition-all flex items-center justify-center gap-2"
                                     >
-                                        <i className="fa-solid fa-cog text-indigo-500"></i>
+                                        <i className="fa-solid fa-cog text-ink-3 text-xs"></i>
                                         <span>Admin Panel</span>
                                     </a>
                                     <button
                                         onClick={reloadAdminData}
-                                        className="w-full py-2 px-3 bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700 rounded-lg text-sm font-medium text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50 transition-all flex items-center justify-center gap-2"
+                                        className="w-full py-2 px-3 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:border-[#2E6B3F] transition-all flex items-center justify-center gap-2"
                                     >
-                                        <i className="fa-solid fa-sync-alt text-teal-500"></i>
+                                        <i className="fa-solid fa-sync-alt text-ink-3 text-xs"></i>
                                         <span>Reload Data</span>
                                     </button>
-                                    <div className="grid grid-cols-2 gap-2 mt-2">
+                                    <div className="grid grid-cols-2 gap-1.5">
                                         <button
                                             onClick={handleBackupData}
-                                            className="py-2 px-3 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-lg text-sm font-medium text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-all flex items-center justify-center gap-1"
+                                            className="py-2 px-3 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:border-[#2E6B3F] transition-all flex items-center justify-center gap-1"
                                         >
-                                            <i className="fa-solid fa-cloud-arrow-up text-amber-500 text-xs"></i>
+                                            <i className="fa-solid fa-cloud-arrow-up text-ink-3 text-xs"></i>
                                             <span>Backup</span>
                                         </button>
-                                        <label className="py-2 px-3 bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-700 rounded-lg text-sm font-medium text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900/50 transition-all flex items-center justify-center gap-1 cursor-pointer">
-                                            <i className="fa-solid fa-cloud-arrow-down text-orange-500 text-xs"></i>
+                                        <label className="py-2 px-3 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:border-[#2E6B3F] transition-all flex items-center justify-center gap-1 cursor-pointer">
+                                            <i className="fa-solid fa-cloud-arrow-down text-ink-3 text-xs"></i>
                                             <span>Restore</span>
                                             <input type="file" accept=".json" onChange={handleRestoreBackup} className="hidden" />
                                         </label>
                                     </div>
                                     <button
                                         onClick={restartTour}
-                                        className="w-full py-2 px-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-all flex items-center justify-center gap-2 mt-2"
+                                        className="w-full py-2 px-3 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:border-[#2E6B3F] transition-all flex items-center justify-center gap-2"
                                     >
-                                        <i className="fa-solid fa-question-circle text-blue-500"></i>
+                                        <i className="fa-solid fa-question-circle text-ink-3 text-xs"></i>
                                         <span>Take a Tour</span>
                                     </button>
                                 </div>
