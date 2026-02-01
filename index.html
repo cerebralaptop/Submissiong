@@ -4850,7 +4850,7 @@
         }
 
         // Credit Detail Modal Component
-        function CreditDetailModal({ isOpen, onClose, credit, category, selectedCredits, onSelectLevel, creditNotes, onNotesChange, creditDocs, onDocsChange, faqData }) {
+        function CreditDetailModal({ isOpen, onClose, credit, category, selectedCredits, onSelectLevel, creditNotes, onNotesChange, creditDocs, onDocsChange, faqData, onOpenCalculator, calculatorsData }) {
             const [activeTab, setActiveTab] = useState('overview');
             const [expandedFaqs, setExpandedFaqs] = useState({});
             const [localNote, setLocalNote] = useState('');
@@ -5002,10 +5002,15 @@
                                         </span>
                                     )}
                                     {credit.calculatorRequired && (
-                                        <span className="bg-blue-500 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2">
+                                        <button
+                                            onClick={() => credit.relatedCalculator && onOpenCalculator?.(credit.relatedCalculator)}
+                                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors cursor-pointer"
+                                            title={credit.relatedCalculator ? `Open ${calculatorsData?.find(c => c.id === credit.relatedCalculator)?.name || 'Calculator'}` : 'Calculator required'}
+                                        >
                                             <i className="fa-solid fa-calculator"></i>
-                                            Calculator
-                                        </span>
+                                            {credit.relatedCalculator ? 'Open Calculator' : 'Calculator Required'}
+                                            {credit.relatedCalculator && <i className="fa-solid fa-arrow-right text-xs"></i>}
+                                        </button>
                                     )}
                                 </div>
 
@@ -6180,50 +6185,1059 @@
             );
         }
 
+        // Individual Calculator Forms
+        function ResponsibleProductsCalculator({ savedResult, onSave }) {
+            const [products, setProducts] = useState(savedResult?.products || [
+                { name: '', category: 'structure', hasEPD: false, isResponsible: false, value: 0 }
+            ]);
+
+            const addProduct = () => {
+                setProducts([...products, { name: '', category: 'structure', hasEPD: false, isResponsible: false, value: 0 }]);
+            };
+
+            const updateProduct = (index, field, value) => {
+                const newProducts = [...products];
+                newProducts[index] = { ...newProducts[index], [field]: value };
+                setProducts(newProducts);
+            };
+
+            const removeProduct = (index) => {
+                setProducts(products.filter((_, i) => i !== index));
+            };
+
+            const totalValue = products.reduce((sum, p) => sum + (parseFloat(p.value) || 0), 0);
+            const responsibleValue = products.filter(p => p.isResponsible).reduce((sum, p) => sum + (parseFloat(p.value) || 0), 0);
+            const percentage = totalValue > 0 ? ((responsibleValue / totalValue) * 100).toFixed(1) : 0;
+
+            const getLevel = () => {
+                if (percentage >= 90) return { level: 'Exceptional', points: 3, color: 'text-green-600' };
+                if (percentage >= 60) return { level: 'Credit', points: 2, color: 'text-blue-600' };
+                if (percentage >= 30) return { level: 'Minimum', points: 0, color: 'text-gray-600' };
+                return { level: 'Below Minimum', points: 0, color: 'text-red-600' };
+            };
+
+            const result = getLevel();
+
+            return (
+                <div className="space-y-4">
+                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-4 border border-green-200 dark:border-green-800">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-green-700 dark:text-green-300 font-medium">Responsible Products Percentage</p>
+                                <p className="text-3xl font-bold text-green-600">{percentage}%</p>
+                            </div>
+                            <div className="text-right">
+                                <p className={`font-semibold ${result.color}`}>{result.level}</p>
+                                <p className="text-sm text-ink-2">{result.points} points achievable</p>
+                            </div>
+                        </div>
+                        <div className="mt-3 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div className="h-full bg-gradient-to-r from-green-500 to-emerald-500 transition-all" style={{ width: `${Math.min(percentage, 100)}%` }}></div>
+                        </div>
+                        <div className="flex justify-between text-xs text-ink-3 mt-1">
+                            <span>0%</span>
+                            <span>30% Min</span>
+                            <span>60% Credit</span>
+                            <span>90% Exceptional</span>
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                            <h4 className="font-medium text-ink dark:text-white">Products List</h4>
+                            <button onClick={addProduct} className="text-sm text-green-600 hover:text-green-700 font-medium flex items-center gap-1">
+                                <i className="fa-solid fa-plus"></i> Add Product
+                            </button>
+                        </div>
+
+                        {products.map((product, index) => (
+                            <div key={index} className="bg-surface-1 dark:bg-gray-800 rounded-lg p-3 border border-line dark:border-gray-700">
+                                <div className="grid grid-cols-12 gap-2 items-center">
+                                    <input
+                                        type="text"
+                                        placeholder="Product name"
+                                        value={product.name}
+                                        onChange={(e) => updateProduct(index, 'name', e.target.value)}
+                                        className="col-span-4 px-2 py-1.5 text-sm border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                                    />
+                                    <select
+                                        value={product.category}
+                                        onChange={(e) => updateProduct(index, 'category', e.target.value)}
+                                        className="col-span-2 px-2 py-1.5 text-sm border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                                    >
+                                        <option value="structure">Structure</option>
+                                        <option value="envelope">Envelope</option>
+                                        <option value="systems">Systems</option>
+                                        <option value="fitout">Fitout</option>
+                                    </select>
+                                    <input
+                                        type="number"
+                                        placeholder="Value ($)"
+                                        value={product.value}
+                                        onChange={(e) => updateProduct(index, 'value', e.target.value)}
+                                        className="col-span-2 px-2 py-1.5 text-sm border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                                    />
+                                    <label className="col-span-2 flex items-center gap-1 text-xs">
+                                        <input
+                                            type="checkbox"
+                                            checked={product.isResponsible}
+                                            onChange={(e) => updateProduct(index, 'isResponsible', e.target.checked)}
+                                            className="rounded"
+                                        />
+                                        <span className="text-ink-2 dark:text-gray-400">Responsible</span>
+                                    </label>
+                                    <button onClick={() => removeProduct(index)} className="col-span-2 text-red-500 hover:text-red-600 text-sm">
+                                        <i className="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="flex justify-between items-center pt-4 border-t border-line dark:border-gray-700">
+                        <div className="text-sm text-ink-2">
+                            Total: ${totalValue.toLocaleString()} | Responsible: ${responsibleValue.toLocaleString()}
+                        </div>
+                        <button
+                            onClick={() => onSave({ products, percentage, result })}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm"
+                        >
+                            <i className="fa-solid fa-save mr-2"></i>Save Results
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        function EnergyUseCalculator({ savedResult, onSave }) {
+            const [referenceEnergy, setReferenceEnergy] = useState(savedResult?.referenceEnergy || 150);
+            const [proposedEnergy, setProposedEnergy] = useState(savedResult?.proposedEnergy || 120);
+            const [buildingArea, setBuildingArea] = useState(savedResult?.buildingArea || 5000);
+            const [renewableEnergy, setRenewableEnergy] = useState(savedResult?.renewableEnergy || 20);
+
+            const reduction = referenceEnergy > 0 ? (((referenceEnergy - proposedEnergy) / referenceEnergy) * 100).toFixed(1) : 0;
+            const netEnergy = Math.max(0, proposedEnergy - renewableEnergy);
+            const netReduction = referenceEnergy > 0 ? (((referenceEnergy - netEnergy) / referenceEnergy) * 100).toFixed(1) : 0;
+
+            const getLevel = () => {
+                const red = parseFloat(netReduction);
+                if (red >= 60) return { level: 'Exceptional', points: 20, color: 'text-green-600' };
+                if (red >= 40) return { level: 'Credit (High)', points: 15, color: 'text-blue-600' };
+                if (red >= 20) return { level: 'Credit', points: 10, color: 'text-blue-500' };
+                if (red >= 10) return { level: 'Minimum', points: 0, color: 'text-gray-600' };
+                return { level: 'Below Minimum', points: 0, color: 'text-red-600' };
+            };
+
+            const result = getLevel();
+            const annualSavings = (referenceEnergy - netEnergy) * buildingArea;
+
+            return (
+                <div className="space-y-4">
+                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl p-4 border border-amber-200 dark:border-amber-800">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-amber-700 dark:text-amber-300 font-medium">Net Energy Reduction</p>
+                                <p className="text-3xl font-bold text-amber-600">{netReduction}%</p>
+                            </div>
+                            <div className="text-right">
+                                <p className={`font-semibold ${result.color}`}>{result.level}</p>
+                                <p className="text-sm text-ink-2">{result.points} points achievable</p>
+                            </div>
+                        </div>
+                        <div className="mt-3 grid grid-cols-2 gap-4 text-sm">
+                            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                                <p className="text-ink-3">Annual Savings</p>
+                                <p className="font-bold text-ink dark:text-white">{annualSavings.toLocaleString()} kWh/year</p>
+                            </div>
+                            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                                <p className="text-ink-3">Net Energy Use</p>
+                                <p className="font-bold text-ink dark:text-white">{netEnergy} kWh/m²/year</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Reference Building Energy (kWh/m²/yr)</label>
+                            <input
+                                type="number"
+                                value={referenceEnergy}
+                                onChange={(e) => setReferenceEnergy(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Proposed Building Energy (kWh/m²/yr)</label>
+                            <input
+                                type="number"
+                                value={proposedEnergy}
+                                onChange={(e) => setProposedEnergy(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Building Area (m²)</label>
+                            <input
+                                type="number"
+                                value={buildingArea}
+                                onChange={(e) => setBuildingArea(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">On-site Renewables (kWh/m²/yr)</label>
+                            <input
+                                type="number"
+                                value={renewableEnergy}
+                                onChange={(e) => setRenewableEnergy(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex justify-end pt-4 border-t border-line dark:border-gray-700">
+                        <button
+                            onClick={() => onSave({ referenceEnergy, proposedEnergy, buildingArea, renewableEnergy, netReduction, result })}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm"
+                        >
+                            <i className="fa-solid fa-save mr-2"></i>Save Results
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        function UpfrontCarbonCalculator({ savedResult, onSave }) {
+            const [buildingArea, setBuildingArea] = useState(savedResult?.buildingArea || 5000);
+            const [structureCarbon, setStructureCarbon] = useState(savedResult?.structureCarbon || 400);
+            const [envelopeCarbon, setEnvelopeCarbon] = useState(savedResult?.envelopeCarbon || 80);
+            const [systemsCarbon, setSystemsCarbon] = useState(savedResult?.systemsCarbon || 50);
+            const [fitoutCarbon, setFitoutCarbon] = useState(savedResult?.fitoutCarbon || 30);
+            const [benchmark, setBenchmark] = useState(savedResult?.benchmark || 700);
+
+            const totalCarbon = structureCarbon + envelopeCarbon + systemsCarbon + fitoutCarbon;
+            const reduction = benchmark > 0 ? (((benchmark - totalCarbon) / benchmark) * 100).toFixed(1) : 0;
+            const totalEmissions = totalCarbon * buildingArea;
+
+            const getLevel = () => {
+                const red = parseFloat(reduction);
+                if (red >= 40) return { level: 'Exceptional', points: 3, color: 'text-green-600' };
+                if (red >= 20) return { level: 'Credit', points: 2, color: 'text-blue-600' };
+                if (red >= 10) return { level: 'Minimum', points: 0, color: 'text-gray-600' };
+                return { level: 'Below Minimum', points: 0, color: 'text-red-600' };
+            };
+
+            const result = getLevel();
+
+            return (
+                <div className="space-y-4">
+                    <div className="bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-900/20 dark:to-gray-900/20 rounded-xl p-4 border border-slate-200 dark:border-slate-800">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">Carbon Reduction vs Benchmark</p>
+                                <p className="text-3xl font-bold text-slate-600">{reduction}%</p>
+                            </div>
+                            <div className="text-right">
+                                <p className={`font-semibold ${result.color}`}>{result.level}</p>
+                                <p className="text-sm text-ink-2">{result.points} points achievable</p>
+                            </div>
+                        </div>
+                        <div className="mt-3 grid grid-cols-2 gap-4 text-sm">
+                            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                                <p className="text-ink-3">Total Upfront Carbon</p>
+                                <p className="font-bold text-ink dark:text-white">{totalCarbon} kgCO₂e/m²</p>
+                            </div>
+                            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                                <p className="text-ink-3">Total Emissions</p>
+                                <p className="font-bold text-ink dark:text-white">{(totalEmissions / 1000).toFixed(0)} tCO₂e</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Building Area (m²)</label>
+                            <input
+                                type="number"
+                                value={buildingArea}
+                                onChange={(e) => setBuildingArea(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Benchmark (kgCO₂e/m²)</label>
+                            <input
+                                type="number"
+                                value={benchmark}
+                                onChange={(e) => setBenchmark(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-3">
+                        <h4 className="font-medium text-ink dark:text-white">Embodied Carbon by Category</h4>
+                        {[
+                            { label: 'Structure (A1-A3)', value: structureCarbon, setter: setStructureCarbon, color: 'bg-blue-500' },
+                            { label: 'Envelope (A1-A3)', value: envelopeCarbon, setter: setEnvelopeCarbon, color: 'bg-green-500' },
+                            { label: 'Systems (A1-A3)', value: systemsCarbon, setter: setSystemsCarbon, color: 'bg-amber-500' },
+                            { label: 'Fitout (A1-A3)', value: fitoutCarbon, setter: setFitoutCarbon, color: 'bg-purple-500' }
+                        ].map((item, idx) => (
+                            <div key={idx} className="flex items-center gap-3">
+                                <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
+                                <span className="text-sm text-ink dark:text-white w-32">{item.label}</span>
+                                <input
+                                    type="number"
+                                    value={item.value}
+                                    onChange={(e) => item.setter(parseFloat(e.target.value) || 0)}
+                                    className="flex-grow px-3 py-1.5 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white text-sm"
+                                />
+                                <span className="text-sm text-ink-2 w-24">kgCO₂e/m²</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="flex justify-end pt-4 border-t border-line dark:border-gray-700">
+                        <button
+                            onClick={() => onSave({ buildingArea, structureCarbon, envelopeCarbon, systemsCarbon, fitoutCarbon, benchmark, totalCarbon, reduction, result })}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm"
+                        >
+                            <i className="fa-solid fa-save mr-2"></i>Save Results
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        function CarbonCompensationCalculator({ savedResult, onSave }) {
+            const [totalEmissions, setTotalEmissions] = useState(savedResult?.totalEmissions || 2500);
+            const [reductionAchieved, setReductionAchieved] = useState(savedResult?.reductionAchieved || 800);
+            const [offsetPercentage, setOffsetPercentage] = useState(savedResult?.offsetPercentage || 100);
+
+            const residualEmissions = Math.max(0, totalEmissions - reductionAchieved);
+            const offsetRequired = (residualEmissions * offsetPercentage) / 100;
+            const offsetCost = offsetRequired * 25; // Assume $25/tCO2e
+
+            const getLevel = () => {
+                if (offsetPercentage >= 100) return { level: 'Exceptional', points: 2, color: 'text-green-600' };
+                if (offsetPercentage >= 50) return { level: 'Credit', points: 1, color: 'text-blue-600' };
+                return { level: 'Below Minimum', points: 0, color: 'text-red-600' };
+            };
+
+            const result = getLevel();
+
+            return (
+                <div className="space-y-4">
+                    <div className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-4 border border-emerald-200 dark:border-emerald-800">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-emerald-700 dark:text-emerald-300 font-medium">Offset Coverage</p>
+                                <p className="text-3xl font-bold text-emerald-600">{offsetPercentage}%</p>
+                            </div>
+                            <div className="text-right">
+                                <p className={`font-semibold ${result.color}`}>{result.level}</p>
+                                <p className="text-sm text-ink-2">{result.points} points achievable</p>
+                            </div>
+                        </div>
+                        <div className="mt-3 grid grid-cols-3 gap-4 text-sm">
+                            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                                <p className="text-ink-3">Residual Emissions</p>
+                                <p className="font-bold text-ink dark:text-white">{residualEmissions.toLocaleString()} tCO₂e</p>
+                            </div>
+                            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                                <p className="text-ink-3">Offsets Required</p>
+                                <p className="font-bold text-ink dark:text-white">{offsetRequired.toLocaleString()} tCO₂e</p>
+                            </div>
+                            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                                <p className="text-ink-3">Est. Cost (@$25/t)</p>
+                                <p className="font-bold text-ink dark:text-white">${offsetCost.toLocaleString()}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Total Upfront Emissions (tCO₂e)</label>
+                            <input
+                                type="number"
+                                value={totalEmissions}
+                                onChange={(e) => setTotalEmissions(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Reduction Achieved (tCO₂e)</label>
+                            <input
+                                type="number"
+                                value={reductionAchieved}
+                                onChange={(e) => setReductionAchieved(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Offset Percentage (%)</label>
+                            <input
+                                type="number"
+                                value={offsetPercentage}
+                                onChange={(e) => setOffsetPercentage(Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)))}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex justify-end pt-4 border-t border-line dark:border-gray-700">
+                        <button
+                            onClick={() => onSave({ totalEmissions, reductionAchieved, offsetPercentage, residualEmissions, offsetRequired, result })}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm"
+                        >
+                            <i className="fa-solid fa-save mr-2"></i>Save Results
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        function WaterUseCalculator({ savedResult, onSave }) {
+            const [benchmarkWater, setBenchmarkWater] = useState(savedResult?.benchmarkWater || 12);
+            const [proposedWater, setProposedWater] = useState(savedResult?.proposedWater || 8);
+            const [rainwaterCapture, setRainwaterCapture] = useState(savedResult?.rainwaterCapture || 2);
+            const [recycledWater, setRecycledWater] = useState(savedResult?.recycledWater || 1);
+            const [occupants, setOccupants] = useState(savedResult?.occupants || 200);
+
+            const netWater = Math.max(0, proposedWater - rainwaterCapture - recycledWater);
+            const reduction = benchmarkWater > 0 ? (((benchmarkWater - netWater) / benchmarkWater) * 100).toFixed(1) : 0;
+            const annualSavings = (benchmarkWater - netWater) * occupants * 260; // 260 working days
+
+            const getLevel = () => {
+                const red = parseFloat(reduction);
+                if (red >= 50) return { level: 'Exceptional', points: 3, color: 'text-green-600' };
+                if (red >= 30) return { level: 'Credit', points: 2, color: 'text-blue-600' };
+                if (red >= 15) return { level: 'Minimum', points: 0, color: 'text-gray-600' };
+                return { level: 'Below Minimum', points: 0, color: 'text-red-600' };
+            };
+
+            const result = getLevel();
+
+            return (
+                <div className="space-y-4">
+                    <div className="bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-xl p-4 border border-cyan-200 dark:border-cyan-800">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-cyan-700 dark:text-cyan-300 font-medium">Water Use Reduction</p>
+                                <p className="text-3xl font-bold text-cyan-600">{reduction}%</p>
+                            </div>
+                            <div className="text-right">
+                                <p className={`font-semibold ${result.color}`}>{result.level}</p>
+                                <p className="text-sm text-ink-2">{result.points} points achievable</p>
+                            </div>
+                        </div>
+                        <div className="mt-3 grid grid-cols-2 gap-4 text-sm">
+                            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                                <p className="text-ink-3">Net Water Use</p>
+                                <p className="font-bold text-ink dark:text-white">{netWater.toFixed(1)} L/person/day</p>
+                            </div>
+                            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                                <p className="text-ink-3">Annual Savings</p>
+                                <p className="font-bold text-ink dark:text-white">{(annualSavings / 1000).toFixed(0)} kL/year</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Benchmark Water Use (L/person/day)</label>
+                            <input
+                                type="number"
+                                value={benchmarkWater}
+                                onChange={(e) => setBenchmarkWater(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Proposed Water Use (L/person/day)</label>
+                            <input
+                                type="number"
+                                value={proposedWater}
+                                onChange={(e) => setProposedWater(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Rainwater Capture (L/person/day)</label>
+                            <input
+                                type="number"
+                                value={rainwaterCapture}
+                                onChange={(e) => setRainwaterCapture(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Recycled Water (L/person/day)</label>
+                            <input
+                                type="number"
+                                value={recycledWater}
+                                onChange={(e) => setRecycledWater(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Number of Occupants</label>
+                            <input
+                                type="number"
+                                value={occupants}
+                                onChange={(e) => setOccupants(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex justify-end pt-4 border-t border-line dark:border-gray-700">
+                        <button
+                            onClick={() => onSave({ benchmarkWater, proposedWater, rainwaterCapture, recycledWater, occupants, netWater, reduction, result })}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm"
+                        >
+                            <i className="fa-solid fa-save mr-2"></i>Save Results
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        function RefrigerantCalculator({ savedResult, onSave }) {
+            const [systems, setSystems] = useState(savedResult?.systems || [
+                { name: 'Main HVAC', refrigerant: 'R-410A', charge: 50, gwp: 2088 }
+            ]);
+
+            const refrigerantOptions = [
+                { name: 'R-410A', gwp: 2088 },
+                { name: 'R-32', gwp: 675 },
+                { name: 'R-1234yf', gwp: 4 },
+                { name: 'R-1234ze', gwp: 7 },
+                { name: 'R-290 (Propane)', gwp: 3 },
+                { name: 'R-744 (CO2)', gwp: 1 },
+                { name: 'R-717 (Ammonia)', gwp: 0 }
+            ];
+
+            const addSystem = () => {
+                setSystems([...systems, { name: '', refrigerant: 'R-410A', charge: 0, gwp: 2088 }]);
+            };
+
+            const updateSystem = (index, field, value) => {
+                const newSystems = [...systems];
+                if (field === 'refrigerant') {
+                    const ref = refrigerantOptions.find(r => r.name === value);
+                    newSystems[index] = { ...newSystems[index], refrigerant: value, gwp: ref?.gwp || 0 };
+                } else {
+                    newSystems[index] = { ...newSystems[index], [field]: value };
+                }
+                setSystems(newSystems);
+            };
+
+            const removeSystem = (index) => {
+                setSystems(systems.filter((_, i) => i !== index));
+            };
+
+            const totalCharge = systems.reduce((sum, s) => sum + (parseFloat(s.charge) || 0), 0);
+            const weightedGWP = totalCharge > 0 ? systems.reduce((sum, s) => sum + ((parseFloat(s.charge) || 0) * s.gwp), 0) / totalCharge : 0;
+
+            const getLevel = () => {
+                if (weightedGWP <= 10) return { level: 'Exceptional', points: 1, color: 'text-green-600' };
+                if (weightedGWP <= 750) return { level: 'Credit', points: 1, color: 'text-blue-600' };
+                if (weightedGWP <= 1500) return { level: 'Minimum', points: 0, color: 'text-gray-600' };
+                return { level: 'Below Minimum', points: 0, color: 'text-red-600' };
+            };
+
+            const result = getLevel();
+
+            return (
+                <div className="space-y-4">
+                    <div className="bg-gradient-to-r from-sky-50 to-indigo-50 dark:from-sky-900/20 dark:to-indigo-900/20 rounded-xl p-4 border border-sky-200 dark:border-sky-800">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-sky-700 dark:text-sky-300 font-medium">Weighted Average GWP</p>
+                                <p className="text-3xl font-bold text-sky-600">{weightedGWP.toFixed(0)}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className={`font-semibold ${result.color}`}>{result.level}</p>
+                                <p className="text-sm text-ink-2">{result.points} points achievable</p>
+                            </div>
+                        </div>
+                        <div className="mt-3 text-sm bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                            <p className="text-ink-3">Total Refrigerant Charge: <span className="font-bold text-ink dark:text-white">{totalCharge} kg</span></p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                            <h4 className="font-medium text-ink dark:text-white">Refrigerant Systems</h4>
+                            <button onClick={addSystem} className="text-sm text-green-600 hover:text-green-700 font-medium flex items-center gap-1">
+                                <i className="fa-solid fa-plus"></i> Add System
+                            </button>
+                        </div>
+
+                        {systems.map((system, index) => (
+                            <div key={index} className="bg-surface-1 dark:bg-gray-800 rounded-lg p-3 border border-line dark:border-gray-700">
+                                <div className="grid grid-cols-12 gap-2 items-center">
+                                    <input
+                                        type="text"
+                                        placeholder="System name"
+                                        value={system.name}
+                                        onChange={(e) => updateSystem(index, 'name', e.target.value)}
+                                        className="col-span-4 px-2 py-1.5 text-sm border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                                    />
+                                    <select
+                                        value={system.refrigerant}
+                                        onChange={(e) => updateSystem(index, 'refrigerant', e.target.value)}
+                                        className="col-span-3 px-2 py-1.5 text-sm border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                                    >
+                                        {refrigerantOptions.map(r => (
+                                            <option key={r.name} value={r.name}>{r.name} (GWP: {r.gwp})</option>
+                                        ))}
+                                    </select>
+                                    <input
+                                        type="number"
+                                        placeholder="Charge (kg)"
+                                        value={system.charge}
+                                        onChange={(e) => updateSystem(index, 'charge', e.target.value)}
+                                        className="col-span-2 px-2 py-1.5 text-sm border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                                    />
+                                    <span className="col-span-2 text-sm text-ink-2 dark:text-gray-400">GWP: {system.gwp}</span>
+                                    <button onClick={() => removeSystem(index)} className="col-span-1 text-red-500 hover:text-red-600 text-sm">
+                                        <i className="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="flex justify-end pt-4 border-t border-line dark:border-gray-700">
+                        <button
+                            onClick={() => onSave({ systems, totalCharge, weightedGWP, result })}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm"
+                        >
+                            <i className="fa-solid fa-save mr-2"></i>Save Results
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        function MovementPlaceCalculator({ savedResult, onSave }) {
+            const [publicTransportScore, setPublicTransportScore] = useState(savedResult?.publicTransportScore || 7);
+            const [cyclingScore, setCyclingScore] = useState(savedResult?.cyclingScore || 5);
+            const [pedestrianScore, setPedestrianScore] = useState(savedResult?.pedestrianScore || 6);
+            const [amenitiesScore, setAmenitiesScore] = useState(savedResult?.amenitiesScore || 8);
+            const [evCharging, setEvCharging] = useState(savedResult?.evCharging || 10);
+            const [bikeParking, setBikeParking] = useState(savedResult?.bikeParking || 5);
+
+            const totalScore = ((publicTransportScore + cyclingScore + pedestrianScore + amenitiesScore) / 4 * 0.7 +
+                              (evCharging / 100 * 10 + bikeParking / 100 * 10) / 2 * 0.3).toFixed(1);
+
+            const getLevel = () => {
+                const score = parseFloat(totalScore);
+                if (score >= 8) return { level: 'Exceptional', points: 3, color: 'text-green-600' };
+                if (score >= 6) return { level: 'Credit', points: 2, color: 'text-blue-600' };
+                if (score >= 4) return { level: 'Minimum', points: 0, color: 'text-gray-600' };
+                return { level: 'Below Minimum', points: 0, color: 'text-red-600' };
+            };
+
+            const result = getLevel();
+
+            return (
+                <div className="space-y-4">
+                    <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl p-4 border border-violet-200 dark:border-violet-800">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-violet-700 dark:text-violet-300 font-medium">Movement & Place Score</p>
+                                <p className="text-3xl font-bold text-violet-600">{totalScore}/10</p>
+                            </div>
+                            <div className="text-right">
+                                <p className={`font-semibold ${result.color}`}>{result.level}</p>
+                                <p className="text-sm text-ink-2">{result.points} points achievable</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-3">
+                        <h4 className="font-medium text-ink dark:text-white">Location Accessibility (1-10 scale)</h4>
+                        {[
+                            { label: 'Public Transport Access', value: publicTransportScore, setter: setPublicTransportScore },
+                            { label: 'Cycling Infrastructure', value: cyclingScore, setter: setCyclingScore },
+                            { label: 'Pedestrian Connectivity', value: pedestrianScore, setter: setPedestrianScore },
+                            { label: 'Local Amenities Access', value: amenitiesScore, setter: setAmenitiesScore }
+                        ].map((item, idx) => (
+                            <div key={idx} className="flex items-center gap-3">
+                                <span className="text-sm text-ink dark:text-white w-40">{item.label}</span>
+                                <input
+                                    type="range"
+                                    min="1"
+                                    max="10"
+                                    value={item.value}
+                                    onChange={(e) => item.setter(parseInt(e.target.value))}
+                                    className="flex-grow"
+                                />
+                                <span className="text-sm font-bold text-ink dark:text-white w-8">{item.value}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">EV Charging (% of parking)</label>
+                            <input
+                                type="number"
+                                value={evCharging}
+                                onChange={(e) => setEvCharging(Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)))}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Bike Parking (% of occupants)</label>
+                            <input
+                                type="number"
+                                value={bikeParking}
+                                onChange={(e) => setBikeParking(Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)))}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex justify-end pt-4 border-t border-line dark:border-gray-700">
+                        <button
+                            onClick={() => onSave({ publicTransportScore, cyclingScore, pedestrianScore, amenitiesScore, evCharging, bikeParking, totalScore, result })}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm"
+                        >
+                            <i className="fa-solid fa-save mr-2"></i>Save Results
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        function ProcurementCalculator({ savedResult, onSave }) {
+            const [totalProcurement, setTotalProcurement] = useState(savedResult?.totalProcurement || 5000000);
+            const [socialEnterprise, setSocialEnterprise] = useState(savedResult?.socialEnterprise || 250000);
+            const [indigenousBusiness, setIndigenousBusiness] = useState(savedResult?.indigenousBusiness || 150000);
+            const [localContent, setLocalContent] = useState(savedResult?.localContent || 3000000);
+            const [diverseSuppliers, setDiverseSuppliers] = useState(savedResult?.diverseSuppliers || 100000);
+
+            const socialSpend = socialEnterprise + indigenousBusiness + diverseSuppliers;
+            const socialPercentage = totalProcurement > 0 ? ((socialSpend / totalProcurement) * 100).toFixed(1) : 0;
+            const localPercentage = totalProcurement > 0 ? ((localContent / totalProcurement) * 100).toFixed(1) : 0;
+
+            const getLevel = () => {
+                const sp = parseFloat(socialPercentage);
+                if (sp >= 10) return { level: 'Exceptional', points: 2, color: 'text-green-600' };
+                if (sp >= 5) return { level: 'Credit', points: 1, color: 'text-blue-600' };
+                if (sp >= 2) return { level: 'Minimum', points: 0, color: 'text-gray-600' };
+                return { level: 'Below Minimum', points: 0, color: 'text-red-600' };
+            };
+
+            const result = getLevel();
+
+            return (
+                <div className="space-y-4">
+                    <div className="bg-gradient-to-r from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20 rounded-xl p-4 border border-rose-200 dark:border-rose-800">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-rose-700 dark:text-rose-300 font-medium">Social Procurement</p>
+                                <p className="text-3xl font-bold text-rose-600">{socialPercentage}%</p>
+                            </div>
+                            <div className="text-right">
+                                <p className={`font-semibold ${result.color}`}>{result.level}</p>
+                                <p className="text-sm text-ink-2">{result.points} points achievable</p>
+                            </div>
+                        </div>
+                        <div className="mt-3 grid grid-cols-2 gap-4 text-sm">
+                            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                                <p className="text-ink-3">Social Spend</p>
+                                <p className="font-bold text-ink dark:text-white">${socialSpend.toLocaleString()}</p>
+                            </div>
+                            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                                <p className="text-ink-3">Local Content</p>
+                                <p className="font-bold text-ink dark:text-white">{localPercentage}%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-3">
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Total Procurement Value ($)</label>
+                            <input
+                                type="number"
+                                value={totalProcurement}
+                                onChange={(e) => setTotalProcurement(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-ink dark:text-white mb-1">Social Enterprise Spend ($)</label>
+                                <input
+                                    type="number"
+                                    value={socialEnterprise}
+                                    onChange={(e) => setSocialEnterprise(parseFloat(e.target.value) || 0)}
+                                    className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-ink dark:text-white mb-1">Indigenous Business Spend ($)</label>
+                                <input
+                                    type="number"
+                                    value={indigenousBusiness}
+                                    onChange={(e) => setIndigenousBusiness(parseFloat(e.target.value) || 0)}
+                                    className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-ink dark:text-white mb-1">Local Content Spend ($)</label>
+                                <input
+                                    type="number"
+                                    value={localContent}
+                                    onChange={(e) => setLocalContent(parseFloat(e.target.value) || 0)}
+                                    className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-ink dark:text-white mb-1">Diverse Suppliers Spend ($)</label>
+                                <input
+                                    type="number"
+                                    value={diverseSuppliers}
+                                    onChange={(e) => setDiverseSuppliers(parseFloat(e.target.value) || 0)}
+                                    className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex justify-end pt-4 border-t border-line dark:border-gray-700">
+                        <button
+                            onClick={() => onSave({ totalProcurement, socialEnterprise, indigenousBusiness, localContent, diverseSuppliers, socialPercentage, localPercentage, result })}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm"
+                        >
+                            <i className="fa-solid fa-save mr-2"></i>Save Results
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        function BiodiversityCalculator({ savedResult, onSave }) {
+            const [siteArea, setSiteArea] = useState(savedResult?.siteArea || 5000);
+            const [existingBiodiversity, setExistingBiodiversity] = useState(savedResult?.existingBiodiversity || 2);
+            const [proposedBiodiversity, setProposedBiodiversity] = useState(savedResult?.proposedBiodiversity || 3.5);
+            const [nativeSpecies, setNativeSpecies] = useState(savedResult?.nativeSpecies || 80);
+            const [habitatConnectivity, setHabitatConnectivity] = useState(savedResult?.habitatConnectivity || true);
+
+            const netGain = ((proposedBiodiversity - existingBiodiversity) / existingBiodiversity * 100).toFixed(1);
+            const absoluteGain = (proposedBiodiversity - existingBiodiversity).toFixed(2);
+
+            const getLevel = () => {
+                const ng = parseFloat(netGain);
+                if (ng >= 20 && nativeSpecies >= 80) return { level: 'Exceptional', points: 2, color: 'text-green-600' };
+                if (ng >= 10) return { level: 'Credit', points: 1, color: 'text-blue-600' };
+                if (ng >= 0) return { level: 'Minimum', points: 0, color: 'text-gray-600' };
+                return { level: 'Net Loss', points: 0, color: 'text-red-600' };
+            };
+
+            const result = getLevel();
+
+            return (
+                <div className="space-y-4">
+                    <div className="bg-gradient-to-r from-lime-50 to-green-50 dark:from-lime-900/20 dark:to-green-900/20 rounded-xl p-4 border border-lime-200 dark:border-lime-800">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-lime-700 dark:text-lime-300 font-medium">Biodiversity Net Gain</p>
+                                <p className="text-3xl font-bold text-lime-600">{netGain}%</p>
+                            </div>
+                            <div className="text-right">
+                                <p className={`font-semibold ${result.color}`}>{result.level}</p>
+                                <p className="text-sm text-ink-2">{result.points} points achievable</p>
+                            </div>
+                        </div>
+                        <div className="mt-3 grid grid-cols-2 gap-4 text-sm">
+                            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                                <p className="text-ink-3">Biodiversity Units Gain</p>
+                                <p className="font-bold text-ink dark:text-white">+{absoluteGain} units</p>
+                            </div>
+                            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-2">
+                                <p className="text-ink-3">Native Species</p>
+                                <p className="font-bold text-ink dark:text-white">{nativeSpecies}%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Site Area (m²)</label>
+                            <input
+                                type="number"
+                                value={siteArea}
+                                onChange={(e) => setSiteArea(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Native Species (%)</label>
+                            <input
+                                type="number"
+                                value={nativeSpecies}
+                                onChange={(e) => setNativeSpecies(Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)))}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Existing Biodiversity Units</label>
+                            <input
+                                type="number"
+                                step="0.1"
+                                value={existingBiodiversity}
+                                onChange={(e) => setExistingBiodiversity(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-ink dark:text-white mb-1">Proposed Biodiversity Units</label>
+                            <input
+                                type="number"
+                                step="0.1"
+                                value={proposedBiodiversity}
+                                onChange={(e) => setProposedBiodiversity(parseFloat(e.target.value) || 0)}
+                                className="w-full px-3 py-2 border border-line dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                    </div>
+
+                    <label className="flex items-center gap-2 p-3 bg-surface-1 dark:bg-gray-800 rounded-lg border border-line dark:border-gray-700">
+                        <input
+                            type="checkbox"
+                            checked={habitatConnectivity}
+                            onChange={(e) => setHabitatConnectivity(e.target.checked)}
+                            className="rounded"
+                        />
+                        <span className="text-sm text-ink dark:text-white">Habitat connectivity with adjacent green spaces</span>
+                    </label>
+
+                    <div className="flex justify-end pt-4 border-t border-line dark:border-gray-700">
+                        <button
+                            onClick={() => onSave({ siteArea, existingBiodiversity, proposedBiodiversity, nativeSpecies, habitatConnectivity, netGain, result })}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm"
+                        >
+                            <i className="fa-solid fa-save mr-2"></i>Save Results
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
         // Calculators Modal Component
-        function CalculatorsModal({ isOpen, onClose }) {
+        function CalculatorsModal({ isOpen, onClose, selectedCalculator, onSelectCalculator, calculatorResults, onSaveResult }) {
             if (!isOpen) return null;
+
+            const selectedCalc = selectedCalculator ? calculatorsData.find(c => c.id === selectedCalculator) : null;
+
+            const renderCalculatorForm = () => {
+                if (!selectedCalculator) return null;
+
+                const savedResult = calculatorResults[selectedCalculator];
+                const handleSave = (result) => onSaveResult(selectedCalculator, result);
+
+                switch (selectedCalculator) {
+                    case 'responsible-products':
+                        return <ResponsibleProductsCalculator savedResult={savedResult} onSave={handleSave} />;
+                    case 'energy-reference':
+                        return <EnergyUseCalculator savedResult={savedResult} onSave={handleSave} />;
+                    case 'upfront-carbon':
+                        return <UpfrontCarbonCalculator savedResult={savedResult} onSave={handleSave} />;
+                    case 'carbon-compensation':
+                        return <CarbonCompensationCalculator savedResult={savedResult} onSave={handleSave} />;
+                    case 'refrigerant':
+                        return <RefrigerantCalculator savedResult={savedResult} onSave={handleSave} />;
+                    case 'water':
+                        return <WaterUseCalculator savedResult={savedResult} onSave={handleSave} />;
+                    case 'movement':
+                        return <MovementPlaceCalculator savedResult={savedResult} onSave={handleSave} />;
+                    case 'procurement':
+                        return <ProcurementCalculator savedResult={savedResult} onSave={handleSave} />;
+                    case 'biodiversity':
+                        return <BiodiversityCalculator savedResult={savedResult} onSave={handleSave} />;
+                    default:
+                        return <p className="text-ink-2">Calculator not yet implemented</p>;
+                }
+            };
 
             return (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
                     <div
-                        className="glass-card rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                        className="glass-card dark:bg-gray-800 rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex items-center justify-between mb-6">
-                            <div>
-                                <h2 className="font-display text-2xl font-bold text-ink">Green Star Calculators</h2>
-                                <p className="text-ink-2">Required calculators for specific credits</p>
+                            <div className="flex items-center gap-3">
+                                {selectedCalculator && (
+                                    <button
+                                        onClick={() => onSelectCalculator(null)}
+                                        className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors"
+                                    >
+                                        <i className="fa-solid fa-arrow-left text-ink-2 dark:text-gray-300"></i>
+                                    </button>
+                                )}
+                                <div>
+                                    <h2 className="font-display text-2xl font-bold text-ink dark:text-white">
+                                        {selectedCalc ? selectedCalc.name : 'Green Star Calculators'}
+                                    </h2>
+                                    <p className="text-ink-2 dark:text-gray-400">
+                                        {selectedCalc ? selectedCalc.description : 'Required calculators for specific credits'}
+                                    </p>
+                                </div>
                             </div>
                             <button
                                 onClick={onClose}
-                                className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                                className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors"
                             >
-                                <i className="fa-solid fa-xmark text-ink-2"></i>
+                                <i className="fa-solid fa-xmark text-ink-2 dark:text-gray-300"></i>
                             </button>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {calculatorsData.map((calc) => (
-                                <div
-                                    key={calc.id}
-                                    className="bg-white rounded-xl p-4 border border-line hover:border-green-300 hover:shadow-md transition-all cursor-pointer"
-                                >
-                                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center mb-3">
-                                        <i className={`fa-solid ${calc.icon} text-xl text-green-600`}></i>
-                                    </div>
-                                    <h3 className="font-medium text-ink mb-1">{calc.name}</h3>
-                                    <p className="text-sm text-ink-2 mb-3">{calc.description}</p>
-                                    <button className="text-sm text-green-600 font-medium hover:text-green-700">
-                                        Open Calculator <i className="fa-solid fa-arrow-right ml-1"></i>
-                                    </button>
+                        <div className="flex-1 overflow-y-auto">
+                            {selectedCalculator ? (
+                                renderCalculatorForm()
+                            ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {calculatorsData.map((calc) => {
+                                        const hasResult = calculatorResults[calc.id];
+                                        return (
+                                            <div
+                                                key={calc.id}
+                                                onClick={() => onSelectCalculator(calc.id)}
+                                                className="bg-white dark:bg-gray-700 rounded-xl p-4 border border-line dark:border-gray-600 hover:border-green-300 dark:hover:border-green-600 hover:shadow-md transition-all cursor-pointer"
+                                            >
+                                                <div className="flex items-start justify-between mb-3">
+                                                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-green-100 to-blue-100 dark:from-green-900/30 dark:to-blue-900/30 flex items-center justify-center">
+                                                        <i className={`fa-solid ${calc.icon} text-xl text-green-600 dark:text-green-400`}></i>
+                                                    </div>
+                                                    {hasResult && (
+                                                        <span className="text-xs bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 px-2 py-1 rounded-full font-medium">
+                                                            <i className="fa-solid fa-check mr-1"></i>Saved
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <h3 className="font-medium text-ink dark:text-white mb-1">{calc.name}</h3>
+                                                <p className="text-sm text-ink-2 dark:text-gray-400 mb-3">{calc.description}</p>
+                                                {hasResult && hasResult.result && (
+                                                    <div className="text-xs text-ink-3 dark:text-gray-500 mb-2">
+                                                        Last result: <span className={hasResult.result.color}>{hasResult.result.level}</span>
+                                                    </div>
+                                                )}
+                                                <button className="text-sm text-green-600 dark:text-green-400 font-medium hover:text-green-700 dark:hover:text-green-300">
+                                                    Open Calculator <i className="fa-solid fa-arrow-right ml-1"></i>
+                                                </button>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
-                            ))}
+                            )}
                         </div>
-
-                        <p className="text-center text-sm text-ink-3 mt-6">
-                            Calculator functionality coming in Phase 3
-                        </p>
                     </div>
                 </div>
             );
@@ -8101,6 +9115,8 @@
             const [activeCategory, setActiveCategory] = useState('all'); // 'all' shows all categories
             const [selectedCredits, setSelectedCredits] = useState({});
             const [showCalculators, setShowCalculators] = useState(false);
+            const [selectedCalculator, setSelectedCalculator] = useState(null);
+            const [calculatorResults, setCalculatorResults] = useState({});
             const [showExport, setShowExport] = useState(false);
             const [creditDetailModal, setCreditDetailModal] = useState({ isOpen: false, credit: null, category: null });
             const [phaseFilter, setPhaseFilter] = useState('all');
@@ -8749,6 +9765,18 @@
                 setCreditDetailModal({ isOpen: false, credit: null, category: null });
             };
 
+            const handleOpenCalculator = (calculatorId) => {
+                setSelectedCalculator(calculatorId);
+                setShowCalculators(true);
+                setCreditDetailModal({ isOpen: false, credit: null, category: null });
+            };
+
+            const handleSaveCalculatorResult = (calculatorId, result) => {
+                setCalculatorResults(prev => ({
+                    ...prev,
+                    [calculatorId]: { ...result, savedAt: new Date().toISOString() }
+                }));
+            };
 
             // Get star rating
             const getStarRating = (points) => {
@@ -9299,7 +10327,11 @@
                     {/* Modals */}
                     <CalculatorsModal
                         isOpen={showCalculators}
-                        onClose={() => setShowCalculators(false)}
+                        onClose={() => { setShowCalculators(false); setSelectedCalculator(null); }}
+                        selectedCalculator={selectedCalculator}
+                        onSelectCalculator={setSelectedCalculator}
+                        calculatorResults={calculatorResults}
+                        onSaveResult={handleSaveCalculatorResult}
                     />
                     <ExportModal
                         isOpen={showExport}
@@ -9375,6 +10407,8 @@
                         creditDocs={creditDocs}
                         onDocsChange={(key, docs) => setCreditDocs(prev => ({ ...prev, [key]: docs }))}
                         faqData={faqData}
+                        onOpenCalculator={handleOpenCalculator}
+                        calculatorsData={calculatorsData}
                     />
                 </div>
             );
