@@ -557,34 +557,166 @@
         ];
 
         const defaultCriteria = [
+            // Industry Development
+            { creditId: "ind-dev", level: "credit", criteriaNum: 1, text: "At least 2 project team members complete Green Star accreditation or equivalent training", mandatory: true, evidenceType: "Certificate" },
+            { creditId: "ind-dev", level: "credit", criteriaNum: 2, text: "Project participates in one industry event (presentation, case study, or site tour)", mandatory: true, evidenceType: "Document" },
+            { creditId: "ind-dev", level: "exceptional", criteriaNum: 1, text: "At least 4 project team members complete Green Star accreditation", mandatory: true, evidenceType: "Certificate" },
+            { creditId: "ind-dev", level: "exceptional", criteriaNum: 2, text: "Project participates in multiple industry events", mandatory: true, evidenceType: "Document" },
+            { creditId: "ind-dev", level: "exceptional", criteriaNum: 3, text: "Project contributes to sustainability research or innovation initiatives", mandatory: false, evidenceType: "Report" },
             // Responsible Construction
             { creditId: "resp-const", level: "minimum", criteriaNum: 1, text: "Complete an Environmental Management Plan (EMP)", mandatory: true, evidenceType: "Document" },
-            { creditId: "resp-const", level: "minimum", criteriaNum: 2, text: "Implement waste management procedures", mandatory: true, evidenceType: "Document" },
-            { creditId: "resp-const", level: "credit", criteriaNum: 1, text: "Achieve 80% construction waste diversion from landfill", mandatory: true, evidenceType: "Report" },
-            { creditId: "resp-const", level: "exceptional", criteriaNum: 1, text: "Achieve 95% construction waste diversion", mandatory: true, evidenceType: "Report" },
+            { creditId: "resp-const", level: "minimum", criteriaNum: 2, text: "Comply with local environmental regulations", mandatory: true, evidenceType: "Document" },
+            { creditId: "resp-const", level: "credit", criteriaNum: 1, text: "Implement comprehensive EMP with regular monitoring and reporting", mandatory: true, evidenceType: "Report" },
+            { creditId: "resp-const", level: "credit", criteriaNum: 2, text: "Implement air quality, noise, and stormwater management controls", mandatory: true, evidenceType: "Report" },
+            { creditId: "resp-const", level: "credit", criteriaNum: 3, text: "Achieve at least 80% waste diversion from landfill", mandatory: true, evidenceType: "Report" },
+            { creditId: "resp-const", level: "exceptional", criteriaNum: 1, text: "Implement third-party certified EMP (ISO 14001 or equivalent)", mandatory: true, evidenceType: "Certificate" },
+            { creditId: "resp-const", level: "exceptional", criteriaNum: 2, text: "Install real-time environmental monitoring systems", mandatory: true, evidenceType: "Report" },
+            { creditId: "resp-const", level: "exceptional", criteriaNum: 3, text: "Achieve at least 95% waste diversion from landfill", mandatory: true, evidenceType: "Report" },
+            { creditId: "resp-const", level: "exceptional", criteriaNum: 4, text: "Achieve zero environmental non-conformances", mandatory: true, evidenceType: "Report" },
+            // Verification and Handover
+            { creditId: "verify-hand", level: "credit", criteriaNum: 1, text: "Engage Independent Commissioning Agent", mandatory: true, evidenceType: "Contract" },
+            { creditId: "verify-hand", level: "credit", criteriaNum: 2, text: "Commission and test all building systems", mandatory: true, evidenceType: "Report" },
+            { creditId: "verify-hand", level: "credit", criteriaNum: 3, text: "Provide comprehensive O&M manuals", mandatory: true, evidenceType: "Document" },
+            { creditId: "verify-hand", level: "credit", criteriaNum: 4, text: "Complete building operator training", mandatory: true, evidenceType: "Report" },
+            { creditId: "verify-hand", level: "exceptional", criteriaNum: 1, text: "Complete enhanced commissioning with seasonal testing", mandatory: true, evidenceType: "Report" },
+            { creditId: "verify-hand", level: "exceptional", criteriaNum: 2, text: "Commit to 12-month building tuning period", mandatory: true, evidenceType: "Contract" },
+            { creditId: "verify-hand", level: "exceptional", criteriaNum: 3, text: "Implement digital building logbook or BIM-based O&M", mandatory: true, evidenceType: "Document" },
             // Clean Air
-            { creditId: "clean-air", level: "minimum", criteriaNum: 1, text: "Meet minimum ventilation rates per AS 1668.2", mandatory: true, evidenceType: "Calculation" },
-            { creditId: "clean-air", level: "credit", criteriaNum: 1, text: "Provide 50% more fresh air than code minimum", mandatory: true, evidenceType: "Calculation" },
-            { creditId: "clean-air", level: "exceptional", criteriaNum: 1, text: "Provide 100% more fresh air than code minimum", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "clean-air", level: "minimum", criteriaNum: 1, text: "Ventilation complies with AS 1668.2 minimum requirements", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "clean-air", level: "minimum", criteriaNum: 2, text: "Basic exhaust systems for toilets and kitchens", mandatory: true, evidenceType: "Drawing" },
+            { creditId: "clean-air", level: "credit", criteriaNum: 1, text: "Ventilation rates exceed code by at least 50%", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "clean-air", level: "credit", criteriaNum: 2, text: "MERV 13 (or equivalent) filtration on outdoor air", mandatory: true, evidenceType: "Specification" },
+            { creditId: "clean-air", level: "credit", criteriaNum: 3, text: "CO2 sensors in all occupied spaces connected to BMS", mandatory: true, evidenceType: "Drawing" },
+            { creditId: "clean-air", level: "credit", criteriaNum: 4, text: "All interior paints and adhesives meet GECA standards", mandatory: true, evidenceType: "Certificate" },
+            { creditId: "clean-air", level: "exceptional", criteriaNum: 1, text: "Ventilation rates exceed code by at least 100%", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "clean-air", level: "exceptional", criteriaNum: 2, text: "MERV 16 filtration or better with activated carbon", mandatory: true, evidenceType: "Specification" },
+            { creditId: "clean-air", level: "exceptional", criteriaNum: 3, text: "Real-time IAQ monitoring (CO2, PM2.5, VOCs) publicly displayed", mandatory: true, evidenceType: "Report" },
+            { creditId: "clean-air", level: "exceptional", criteriaNum: 4, text: "Pre-occupancy flush-out completed and documented", mandatory: true, evidenceType: "Report" },
+            // Light Quality
+            { creditId: "light-quality", level: "credit", criteriaNum: 1, text: "At least 60% of NLA achieves daylight factor of 2% or higher", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "light-quality", level: "credit", criteriaNum: 2, text: "Glare controlled with automated blinds or fixed shading", mandatory: true, evidenceType: "Drawing" },
+            { creditId: "light-quality", level: "credit", criteriaNum: 3, text: "Lighting zones of max 100m² with individual dimming control", mandatory: true, evidenceType: "Drawing" },
+            { creditId: "light-quality", level: "exceptional", criteriaNum: 1, text: "At least 80% of NLA achieves daylight factor of 2% or higher", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "light-quality", level: "exceptional", criteriaNum: 2, text: "Circadian lighting with tunable white (2700K-6500K)", mandatory: true, evidenceType: "Specification" },
+            { creditId: "light-quality", level: "exceptional", criteriaNum: 3, text: "Views to outdoors from at least 75% of regularly occupied spaces", mandatory: true, evidenceType: "Calculation" },
+            // Acoustic Comfort
+            { creditId: "acoustic", level: "credit", criteriaNum: 1, text: "Background noise from HVAC < 40 dB(A) in open offices, < 35 dB(A) in enclosed offices", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "acoustic", level: "credit", criteriaNum: 2, text: "Reverberation time < 0.8 seconds in open plan areas", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "acoustic", level: "credit", criteriaNum: 3, text: "Sound insulation Rw ≥ 45 between enclosed spaces", mandatory: true, evidenceType: "Specification" },
+            { creditId: "acoustic", level: "exceptional", criteriaNum: 1, text: "Background noise from HVAC < 35 dB(A) in all occupied spaces", mandatory: true, evidenceType: "Report" },
+            { creditId: "acoustic", level: "exceptional", criteriaNum: 2, text: "Speech privacy achieved with Sound Transmission Class (STC) ≥ 50", mandatory: true, evidenceType: "Report" },
+            { creditId: "acoustic", level: "exceptional", criteriaNum: 3, text: "Post-occupancy acoustic verification testing completed", mandatory: true, evidenceType: "Report" },
             // Energy Source
-            { creditId: "energy-source", level: "minimum", criteriaNum: 1, text: "Demonstrate compliance with NCC energy requirements", mandatory: true, evidenceType: "Calculation" },
-            { creditId: "energy-source", level: "credit", criteriaNum: 1, text: "50% of energy from renewable sources", mandatory: true, evidenceType: "Report" },
+            { creditId: "energy-source", level: "credit", criteriaNum: 1, text: "50% of energy from renewable sources (on-site or PPA)", mandatory: true, evidenceType: "Report" },
             { creditId: "energy-source", level: "exceptional", criteriaNum: 1, text: "100% of energy from renewable sources", mandatory: true, evidenceType: "Report" },
+            { creditId: "energy-source", level: "exceptional", criteriaNum: 2, text: "On-site renewable generation prioritised", mandatory: false, evidenceType: "Calculation" },
+            // Energy Use
+            { creditId: "energy-use", level: "minimum", criteriaNum: 1, text: "Meet NCC Section J requirements", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "energy-use", level: "credit", criteriaNum: 1, text: "Achieve 30% improvement on reference building", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "energy-use", level: "exceptional", criteriaNum: 1, text: "Achieve 50%+ improvement on reference building", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "energy-use", level: "exceptional", criteriaNum: 2, text: "Building is net zero carbon ready", mandatory: true, evidenceType: "Report" },
+            // Upfront Carbon Reduction
+            { creditId: "upfront-carbon-red", level: "minimum", criteriaNum: 1, text: "Complete whole-building Life Cycle Assessment", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "upfront-carbon-red", level: "credit", criteriaNum: 1, text: "Achieve 20% reduction in upfront carbon vs benchmark", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "upfront-carbon-red", level: "exceptional", criteriaNum: 1, text: "Achieve 40%+ reduction in upfront carbon", mandatory: true, evidenceType: "Calculation" },
+            // Water Use
+            { creditId: "water-use", level: "credit", criteriaNum: 1, text: "Achieve 30% potable water reduction", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "water-use", level: "credit", criteriaNum: 2, text: "Install high WELS-rated fixtures throughout", mandatory: true, evidenceType: "Specification" },
+            { creditId: "water-use", level: "exceptional", criteriaNum: 1, text: "Achieve 50% potable water reduction", mandatory: true, evidenceType: "Calculation" },
+            { creditId: "water-use", level: "exceptional", criteriaNum: 2, text: "Implement rainwater or greywater systems", mandatory: true, evidenceType: "Drawing" },
+            // Movement and Place
+            { creditId: "movement", level: "credit", criteriaNum: 1, text: "Site within 400m of quality public transport", mandatory: true, evidenceType: "Drawing" },
+            { creditId: "movement", level: "credit", criteriaNum: 2, text: "Secure bike parking provided", mandatory: true, evidenceType: "Drawing" },
+            { creditId: "movement", level: "credit", criteriaNum: 3, text: "End-of-trip facilities with showers and lockers", mandatory: true, evidenceType: "Drawing" },
+            { creditId: "movement", level: "exceptional", criteriaNum: 1, text: "Multiple sustainable transport options available", mandatory: true, evidenceType: "Report" },
+            { creditId: "movement", level: "exceptional", criteriaNum: 2, text: "Reduced parking provision below local requirements", mandatory: true, evidenceType: "Report" },
+            // Climate Resilience
+            { creditId: "climate-res", level: "credit", criteriaNum: 1, text: "Climate risk assessment completed for building lifespan", mandatory: true, evidenceType: "Report" },
+            { creditId: "climate-res", level: "credit", criteriaNum: 2, text: "Adaptation measures identified and implemented", mandatory: true, evidenceType: "Report" },
+            { creditId: "climate-res", level: "exceptional", criteriaNum: 1, text: "Multiple climate scenarios modelled (RCP 4.5 and 8.5)", mandatory: true, evidenceType: "Report" },
+            { creditId: "climate-res", level: "exceptional", criteriaNum: 2, text: "Passive survivability demonstrated", mandatory: true, evidenceType: "Calculation" },
+            // Biodiversity Enhancement
+            { creditId: "biodiversity", level: "credit", criteriaNum: 1, text: "Native plantings incorporated in landscape design", mandatory: true, evidenceType: "Drawing" },
+            { creditId: "biodiversity", level: "credit", criteriaNum: 2, text: "Habitat features provided (nesting boxes, insect hotels)", mandatory: true, evidenceType: "Drawing" },
+            { creditId: "biodiversity", level: "exceptional", criteriaNum: 1, text: "Significant habitat creation demonstrated", mandatory: true, evidenceType: "Report" },
+            { creditId: "biodiversity", level: "exceptional", criteriaNum: 2, text: "Ongoing ecological monitoring program established", mandatory: true, evidenceType: "Contract" },
+            // Design for Equity
+            { creditId: "design-equity", level: "credit", criteriaNum: 1, text: "Accessibility exceeds minimum DDA requirements", mandatory: true, evidenceType: "Report" },
+            { creditId: "design-equity", level: "credit", criteriaNum: 2, text: "Changing Places toilet provided", mandatory: false, evidenceType: "Drawing" },
+            { creditId: "design-equity", level: "exceptional", criteriaNum: 1, text: "Universal design principles applied throughout", mandatory: true, evidenceType: "Report" },
+            { creditId: "design-equity", level: "exceptional", criteriaNum: 2, text: "Co-design undertaken with disability community", mandatory: true, evidenceType: "Report" },
+            // Market Transformation
+            { creditId: "market-transform", level: "credit", criteriaNum: 1, text: "Documented industry contribution (case study, publication)", mandatory: true, evidenceType: "Document" },
+            { creditId: "market-transform", level: "exceptional", criteriaNum: 1, text: "Industry-first achievement demonstrated", mandatory: true, evidenceType: "Report" },
+            { creditId: "market-transform", level: "exceptional", criteriaNum: 2, text: "Transformational influence on industry practice documented", mandatory: true, evidenceType: "Report" },
         ];
 
         const defaultDocumentation = [
+            // Industry Development
+            { creditId: "ind-dev", level: "all", name: "Training Certificates", type: "Certificate", description: "Evidence of Green Star accreditation or equivalent training completion", templateAvailable: false, templateLink: "" },
+            { creditId: "ind-dev", level: "all", name: "Industry Event Evidence", type: "Document", description: "Presentation materials, attendance records, or case study publications", templateAvailable: false, templateLink: "" },
             // Responsible Construction
             { creditId: "resp-const", level: "all", name: "Environmental Management Plan", type: "Report", description: "Comprehensive EMP covering construction phase", templateAvailable: true, templateLink: "templates/EMP_template.docx" },
             { creditId: "resp-const", level: "all", name: "Waste Management Report", type: "Report", description: "Monthly waste tracking and diversion rates", templateAvailable: true, templateLink: "templates/waste_report.xlsx" },
+            { creditId: "resp-const", level: "all", name: "Site Inspection Reports", type: "Report", description: "Regular environmental inspection reports with photos", templateAvailable: true, templateLink: "templates/inspection_report.docx" },
+            { creditId: "resp-const", level: "exceptional", name: "ISO 14001 Certificate", type: "Certificate", description: "Third-party EMS certification", templateAvailable: false, templateLink: "" },
+            // Verification and Handover
+            { creditId: "verify-hand", level: "all", name: "Commissioning Plan", type: "Report", description: "Comprehensive commissioning plan for all systems", templateAvailable: true, templateLink: "templates/cx_plan.docx" },
+            { creditId: "verify-hand", level: "all", name: "Commissioning Reports", type: "Report", description: "Test certificates and commissioning results", templateAvailable: false, templateLink: "" },
+            { creditId: "verify-hand", level: "all", name: "O&M Manuals", type: "Document", description: "Operation and maintenance documentation", templateAvailable: false, templateLink: "" },
+            { creditId: "verify-hand", level: "all", name: "Training Records", type: "Report", description: "Building operator training attendance and materials", templateAvailable: false, templateLink: "" },
+            // Responsible Procurement
+            { creditId: "resp-proc", level: "all", name: "Sustainable Procurement Policy", type: "Document", description: "Project sustainable procurement policy", templateAvailable: true, templateLink: "templates/procurement_policy.docx" },
+            { creditId: "resp-proc", level: "all", name: "Product Certifications", type: "Certificate", description: "EPDs and sustainability certifications for products", templateAvailable: false, templateLink: "" },
+            // Responsible Structure
+            { creditId: "resp-struct", level: "all", name: "Material Specifications", type: "Document", description: "Structural material specifications and quantities", templateAvailable: false, templateLink: "" },
+            { creditId: "resp-struct", level: "all", name: "Structural EPDs", type: "Certificate", description: "Environmental Product Declarations for structural materials", templateAvailable: false, templateLink: "" },
+            { creditId: "resp-struct", level: "all", name: "Responsible Products Calculator", type: "Calculation", description: "Calculator outputs demonstrating compliance", templateAvailable: true, templateLink: "calculators/responsible_products.xlsx" },
+            // Responsible Envelope
+            { creditId: "resp-envelope", level: "all", name: "Envelope Material Schedule", type: "Document", description: "Specifications for facade, insulation, and glazing", templateAvailable: false, templateLink: "" },
+            { creditId: "resp-envelope", level: "all", name: "Envelope EPDs", type: "Certificate", description: "EPDs for envelope products", templateAvailable: false, templateLink: "" },
             // Clean Air
             { creditId: "clean-air", level: "all", name: "Ventilation Calculations", type: "Calculation", description: "Fresh air rates per AS 1668.2", templateAvailable: true, templateLink: "templates/ventilation_calc.xlsx" },
-            { creditId: "clean-air", level: "all", name: "HVAC Design Report", type: "Report", description: "Mechanical ventilation system design", templateAvailable: false, templateLink: "" },
+            { creditId: "clean-air", level: "all", name: "Air Filtration Specifications", type: "Specification", description: "Filter ratings and specifications", templateAvailable: false, templateLink: "" },
+            { creditId: "clean-air", level: "all", name: "VOC Test Reports", type: "Report", description: "TVOC testing or product certifications", templateAvailable: false, templateLink: "" },
+            { creditId: "clean-air", level: "all", name: "CO2 Sensor Drawings", type: "Drawing", description: "Locations and BMS integration details", templateAvailable: false, templateLink: "" },
+            // Light Quality
+            { creditId: "light-quality", level: "all", name: "Daylight Modelling Report", type: "Calculation", description: "Daylight factor analysis and results", templateAvailable: false, templateLink: "" },
+            { creditId: "light-quality", level: "all", name: "Glare Analysis", type: "Calculation", description: "UGR calculations and glare control strategy", templateAvailable: false, templateLink: "" },
+            { creditId: "light-quality", level: "all", name: "Lighting Design Documentation", type: "Drawing", description: "Lighting layouts and control zones", templateAvailable: false, templateLink: "" },
+            // Acoustic Comfort
+            { creditId: "acoustic", level: "all", name: "Acoustic Consultant Report", type: "Report", description: "Acoustic design and compliance report", templateAvailable: false, templateLink: "" },
+            { creditId: "acoustic", level: "all", name: "Background Noise Calculations", type: "Calculation", description: "HVAC noise level predictions", templateAvailable: false, templateLink: "" },
+            { creditId: "acoustic", level: "exceptional", name: "Post-Occupancy Testing", type: "Report", description: "Acoustic verification test results", templateAvailable: false, templateLink: "" },
+            // Exposure to Toxins
+            { creditId: "toxins", level: "all", name: "Material Declarations", type: "Certificate", description: "Declare labels and Health Product Declarations", templateAvailable: false, templateLink: "" },
+            { creditId: "toxins", level: "all", name: "Red List Compliance", type: "Report", description: "Red List free product verification", templateAvailable: false, templateLink: "" },
             // Energy Source
-            { creditId: "energy-source", level: "all", name: "Energy Source Report", type: "Report", description: "Documentation of renewable energy systems", templateAvailable: false, templateLink: "" },
+            { creditId: "energy-source", level: "all", name: "Energy Source Report", type: "Report", description: "Documentation of renewable energy systems and PPAs", templateAvailable: false, templateLink: "" },
+            { creditId: "energy-source", level: "all", name: "PPA Documentation", type: "Contract", description: "Power Purchase Agreement details", templateAvailable: false, templateLink: "" },
             // Energy Use
-            { creditId: "energy-use", level: "all", name: "Energy Model Report", type: "Calculation", description: "Building energy modelling results", templateAvailable: false, templateLink: "" },
-            // Upfront Carbon
-            { creditId: "upfront-carbon-red", level: "all", name: "Life Cycle Assessment", type: "Calculation", description: "Whole building LCA report", templateAvailable: false, templateLink: "" },
+            { creditId: "energy-use", level: "all", name: "Energy Model Report", type: "Calculation", description: "Building energy modelling results and methodology", templateAvailable: false, templateLink: "" },
+            { creditId: "energy-use", level: "all", name: "NCC Section J Compliance", type: "Calculation", description: "JV3 modelling or DTS compliance", templateAvailable: false, templateLink: "" },
+            // Upfront Carbon Reduction
+            { creditId: "upfront-carbon-red", level: "all", name: "Life Cycle Assessment", type: "Calculation", description: "Whole building LCA report per EN 15978", templateAvailable: false, templateLink: "" },
+            { creditId: "upfront-carbon-red", level: "all", name: "LCA Tool Outputs", type: "Calculation", description: "Detailed LCA calculator outputs", templateAvailable: false, templateLink: "" },
+            // Water Use
+            { creditId: "water-use", level: "all", name: "Water Balance Calculation", type: "Calculation", description: "Potable water reduction calculations", templateAvailable: true, templateLink: "templates/water_balance.xlsx" },
+            { creditId: "water-use", level: "all", name: "Fixture Schedule", type: "Specification", description: "WELS ratings for all fixtures", templateAvailable: false, templateLink: "" },
+            // Movement and Place
+            { creditId: "movement", level: "all", name: "Transport Assessment", type: "Report", description: "Site accessibility and transport analysis", templateAvailable: false, templateLink: "" },
+            { creditId: "movement", level: "all", name: "End-of-Trip Drawings", type: "Drawing", description: "Bike parking and EOT facility layouts", templateAvailable: false, templateLink: "" },
+            // Climate Resilience
+            { creditId: "climate-res", level: "all", name: "Climate Risk Assessment", type: "Report", description: "Climate hazard identification and risk analysis", templateAvailable: true, templateLink: "templates/climate_risk.docx" },
+            { creditId: "climate-res", level: "all", name: "Adaptation Strategy", type: "Report", description: "Climate adaptation measures and implementation", templateAvailable: false, templateLink: "" },
+            // Biodiversity
+            { creditId: "biodiversity", level: "all", name: "Ecology Assessment", type: "Report", description: "Site ecology survey and assessment", templateAvailable: false, templateLink: "" },
+            { creditId: "biodiversity", level: "all", name: "Landscape Plan", type: "Drawing", description: "Native planting and habitat feature designs", templateAvailable: false, templateLink: "" },
+            // Design for Equity
+            { creditId: "design-equity", level: "all", name: "Accessibility Report", type: "Report", description: "DDA compliance and beyond-minimum features", templateAvailable: false, templateLink: "" },
+            // Market Transformation
+            { creditId: "market-transform", level: "all", name: "Innovation Documentation", type: "Report", description: "Evidence of industry-first achievements or innovations", templateAvailable: false, templateLink: "" },
+            { creditId: "market-transform", level: "all", name: "Case Study", type: "Document", description: "Published case study or presentation materials", templateAvailable: false, templateLink: "" },
         ];
 
         const defaultTemplates = [
