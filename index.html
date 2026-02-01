@@ -8521,7 +8521,7 @@
                     title: "Credit Cards",
                     content: "Each card shows a credit with its points, difficulty, and status. Click to expand and see full details, documentation requirements, and FAQs.",
                     target: "[data-tour='credit-cards']",
-                    position: "left"
+                    position: "top"
                 },
                 {
                     title: "You're Ready! 🎉",
@@ -8632,9 +8632,9 @@
                             step.position === 'bottom' ? 'top-auto' : ''
                         }`}
                         style={{
-                            left: '50%',
-                            transform: 'translateX(-50%)',
-                            top: step.position === 'bottom' ? '140px' : 'auto',
+                            left: step.position === 'left' ? '20px' : '50%',
+                            transform: step.position === 'left' ? 'none' : 'translateX(-50%)',
+                            top: step.position === 'bottom' ? '140px' : (step.position === 'left' ? '50%' : 'auto'),
                             bottom: step.position === 'top' ? '140px' : 'auto'
                         }}
                     >
@@ -8687,7 +8687,9 @@
                         {/* Arrow pointer */}
                         <div
                             className={`absolute w-3 h-3 bg-white dark:bg-gray-800 transform rotate-45 ${
-                                step.position === 'bottom' ? '-top-1.5 left-1/2 -translate-x-1/2' : '-bottom-1.5 left-1/2 -translate-x-1/2'
+                                step.position === 'bottom' ? '-top-1.5 left-1/2 -translate-x-1/2' :
+                                step.position === 'left' ? 'top-1/2 -right-1.5 -translate-y-1/2' :
+                                '-bottom-1.5 left-1/2 -translate-x-1/2'
                             }`}
                         />
                     </div>
