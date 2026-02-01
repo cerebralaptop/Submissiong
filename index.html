@@ -6682,7 +6682,7 @@
         }
 
         // Project Manager Modal Component
-        function ProjectManagerModal({ isOpen, onClose, projects, activeProjectId, onCreateProject, onSwitchProject, onDeleteProject, onImport }) {
+        function ProjectManagerModal({ isOpen, onClose, projects, activeProjectId, onCreateProject, onSwitchProject, onDeleteProject, onImport, onCloneProject }) {
             const [newProjectName, setNewProjectName] = useState('');
 
             if (!isOpen) return null;
@@ -6756,12 +6756,29 @@
                                                     <p className="text-xs text-ink-2 dark:text-ink-3">
                                                         Created: {new Date(project.createdAt).toLocaleDateString()}
                                                         {project.imported && ' (Imported)'}
+                                                        {project.isScenario && ' (Scenario)'}
                                                     </p>
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     {project.id === activeProjectId && (
                                                         <span className="text-xs bg-green-500 text-white px-2 py-1 rounded-full">Active</span>
                                                     )}
+                                                    {project.isScenario && (
+                                                        <span className="text-xs bg-purple-500 text-white px-2 py-1 rounded-full">Scenario</span>
+                                                    )}
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            const scenarioName = prompt('Enter scenario name:', `${project.name} (Scenario)`);
+                                                            if (scenarioName) {
+                                                                onCloneProject(project.id, scenarioName);
+                                                            }
+                                                        }}
+                                                        className="w-8 h-8 rounded-full hover:bg-purple-100 dark:hover:bg-purple-900/30 flex items-center justify-center text-purple-500"
+                                                        title="Clone as Scenario"
+                                                    >
+                                                        <i className="fa-solid fa-clone text-sm"></i>
+                                                    </button>
                                                     <button
                                                         onClick={(e) => {
                                                             e.stopPropagation();
@@ -7010,6 +7027,458 @@
                                 ))}
                             </div>
                         )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Scenario Comparison Modal Component
+        function ScenarioComparisonModal({ isOpen, onClose, projects, activeProjectId, categoriesData, selectedCredits }) {
+            const [selectedProjects, setSelectedProjects] = useState([]);
+
+            if (!isOpen) return null;
+
+            // Get project data for comparison
+            const getProjectCredits = (project) => {
+                if (project.id === activeProjectId) {
+                    return selectedCredits;
+                }
+                return project.data?.selectedCredits || {};
+            };
+
+            const getProjectPoints = (project) => {
+                const credits = getProjectCredits(project);
+                return Object.values(credits).reduce((sum, c) => sum + (c.points || 0), 0);
+            };
+
+            const getProjectCategoryPoints = (project, categoryId) => {
+                const credits = getProjectCredits(project);
+                let points = 0;
+                Object.entries(credits).forEach(([key, data]) => {
+                    if (key.startsWith(categoryId + '-')) {
+                        points += data.points || 0;
+                    }
+                });
+                return points;
+            };
+
+            const toggleProjectSelection = (projectId) => {
+                setSelectedProjects(prev => {
+                    if (prev.includes(projectId)) {
+                        return prev.filter(id => id !== projectId);
+                    }
+                    if (prev.length < 3) {
+                        return [...prev, projectId];
+                    }
+                    return prev;
+                });
+            };
+
+            const comparisonProjects = projects.filter(p => selectedProjects.includes(p.id));
+
+            // Get all unique credit keys across selected projects
+            const getAllCreditKeys = () => {
+                const keys = new Set();
+                comparisonProjects.forEach(project => {
+                    Object.keys(getProjectCredits(project)).forEach(key => keys.add(key));
+                });
+                return Array.from(keys).sort();
+            };
+
+            const getCreditInfo = (creditKey) => {
+                for (const cat of categoriesData) {
+                    for (const credit of cat.credits) {
+                        if (`${cat.id}-${credit.id}` === creditKey) {
+                            return { credit, category: cat };
+                        }
+                    }
+                }
+                return null;
+            };
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
+                    <div className="glass-card dark:bg-gray-800 rounded-2xl p-6 max-w-5xl w-full max-h-[85vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="font-display text-xl font-bold text-ink dark:text-white">
+                                <i className="fa-solid fa-code-compare text-indigo-500 mr-2"></i>
+                                Compare Projects & Scenarios
+                            </h2>
+                            <button onClick={onClose} className="w-10 h-10 rounded-full bg-surface-2 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors">
+                                <i className="fa-solid fa-xmark text-ink-2 dark:text-gray-300"></i>
+                            </button>
+                        </div>
+
+                        {/* Project Selection */}
+                        <div className="mb-4 p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-200 dark:border-indigo-800">
+                            <h3 className="font-medium text-indigo-800 dark:text-indigo-300 mb-3">
+                                Select up to 3 projects to compare
+                            </h3>
+                            <div className="flex flex-wrap gap-2">
+                                {projects.map(project => (
+                                    <button
+                                        key={project.id}
+                                        onClick={() => toggleProjectSelection(project.id)}
+                                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                            selectedProjects.includes(project.id)
+                                                ? 'bg-indigo-500 text-white'
+                                                : 'bg-white dark:bg-gray-700 border border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:border-indigo-400'
+                                        }`}
+                                    >
+                                        {project.id === activeProjectId && <i className="fa-solid fa-circle text-xs mr-2 text-green-400"></i>}
+                                        {project.name}
+                                        <span className="ml-2 opacity-70">({getProjectPoints(project)} pts)</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Comparison View */}
+                        {comparisonProjects.length >= 2 ? (
+                            <div className="flex-1 overflow-auto">
+                                {/* Summary Row */}
+                                <div className="mb-4 grid gap-4" style={{ gridTemplateColumns: `200px repeat(${comparisonProjects.length}, 1fr)` }}>
+                                    <div className="font-bold text-ink dark:text-white p-3">Total Points</div>
+                                    {comparisonProjects.map(project => (
+                                        <div key={project.id} className="p-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg text-center">
+                                            <span className="text-2xl font-bold text-green-600 dark:text-green-400">{getProjectPoints(project)}</span>
+                                            <p className="text-sm text-ink-2 dark:text-ink-3">{project.name}</p>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Category Breakdown */}
+                                <table className="w-full border-collapse">
+                                    <thead>
+                                        <tr className="border-b-2 border-line dark:border-gray-700">
+                                            <th className="text-left p-3 font-bold text-ink dark:text-white">Category</th>
+                                            {comparisonProjects.map(project => (
+                                                <th key={project.id} className="text-center p-3 font-bold text-ink dark:text-white">
+                                                    {project.name}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {categoriesData.map(category => {
+                                            const points = comparisonProjects.map(p => getProjectCategoryPoints(p, category.id));
+                                            const maxPoints = Math.max(...points);
+                                            return (
+                                                <tr key={category.id} className="border-b border-line dark:border-gray-700 hover:bg-surface-1 dark:hover:bg-gray-700/50">
+                                                    <td className="p-3">
+                                                        <div className="flex items-center gap-2">
+                                                            <span className={category.colorClasses?.text}><CategoryIcon category={category.id} size={18} /></span>
+                                                            <span className="font-medium text-ink dark:text-gray-200">{category.name}</span>
+                                                        </div>
+                                                    </td>
+                                                    {comparisonProjects.map((project, idx) => (
+                                                        <td key={project.id} className="p-3 text-center">
+                                                            <span className={`font-bold ${points[idx] === maxPoints && points[idx] > 0 ? 'text-green-600 dark:text-green-400' : 'text-ink dark:text-gray-300'}`}>
+                                                                {points[idx]}
+                                                            </span>
+                                                        </td>
+                                                    ))}
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+
+                                {/* Credit Differences */}
+                                <div className="mt-6">
+                                    <h3 className="font-bold text-ink dark:text-white mb-3 flex items-center gap-2">
+                                        <i className="fa-solid fa-not-equal text-amber-500"></i>
+                                        Credit Differences
+                                    </h3>
+                                    <div className="space-y-2 max-h-60 overflow-y-auto">
+                                        {getAllCreditKeys().map(creditKey => {
+                                            const info = getCreditInfo(creditKey);
+                                            if (!info) return null;
+
+                                            const levels = comparisonProjects.map(p => getProjectCredits(p)[creditKey]?.level || null);
+                                            const hasDifference = new Set(levels).size > 1;
+
+                                            if (!hasDifference) return null;
+
+                                            return (
+                                                <div key={creditKey} className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-2">
+                                                            <span className={info.category.colorClasses?.text}><CategoryIcon category={info.category.id} size={16} /></span>
+                                                            <span className="font-medium text-ink dark:text-gray-200">{info.credit.name}</span>
+                                                        </div>
+                                                        <div className="flex gap-4">
+                                                            {comparisonProjects.map((project, idx) => (
+                                                                <span key={project.id} className={`text-sm px-2 py-1 rounded ${
+                                                                    levels[idx] ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400'
+                                                                }`}>
+                                                                    {levels[idx] || 'Not selected'}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
+                                <i className="fa-solid fa-code-compare text-5xl text-gray-300 dark:text-ink-2 mb-4"></i>
+                                <p className="text-ink-2 dark:text-ink-3 text-lg">Select at least 2 projects to compare</p>
+                                <p className="text-sm text-ink-3 dark:text-ink-2 mt-2">Click on the project buttons above to add them to the comparison</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Quick Analysis Panel Component
+        function QuickAnalysisPanel({ isOpen, onClose, categoriesData, selectedCredits, onSelectCredit, onDeselectCredit }) {
+            const [analysisMode, setAnalysisMode] = useState('whatif'); // 'whatif' | 'optimize' | 'category'
+            const [whatIfCredits, setWhatIfCredits] = useState({});
+            const [selectedCategory, setSelectedCategory] = useState(null);
+
+            if (!isOpen) return null;
+
+            // Calculate current points
+            const currentPoints = Object.values(selectedCredits).reduce((sum, c) => sum + (c.points || 0), 0);
+
+            // Calculate what-if points
+            const whatIfPoints = Object.values(whatIfCredits).reduce((sum, c) => sum + (c.points || 0), 0);
+            const totalWithWhatIf = currentPoints + whatIfPoints;
+
+            // Get all available credits not yet selected
+            const getAvailableCredits = () => {
+                const available = [];
+                categoriesData.forEach(cat => {
+                    cat.credits.forEach(credit => {
+                        const key = `${cat.id}-${credit.id}`;
+                        if (!selectedCredits[key] && !whatIfCredits[key]) {
+                            available.push({ key, credit, category: cat });
+                        }
+                    });
+                });
+                return available;
+            };
+
+            // Add credit to what-if analysis
+            const addToWhatIf = (key, credit) => {
+                const points = credit.performanceLevels?.[1]?.points || credit.points || 0;
+                setWhatIfCredits(prev => ({ ...prev, [key]: { level: 'credit', points } }));
+            };
+
+            // Remove from what-if
+            const removeFromWhatIf = (key) => {
+                setWhatIfCredits(prev => {
+                    const next = { ...prev };
+                    delete next[key];
+                    return next;
+                });
+            };
+
+            // Apply what-if selections to actual project
+            const applyWhatIf = () => {
+                Object.entries(whatIfCredits).forEach(([key, data]) => {
+                    onSelectCredit(key, data.level, data.points);
+                });
+                setWhatIfCredits({});
+            };
+
+            // Quick add actions
+            const addAllEasyCredits = () => {
+                categoriesData.forEach(cat => {
+                    cat.credits.forEach(credit => {
+                        const key = `${cat.id}-${credit.id}`;
+                        if (!selectedCredits[key] && !whatIfCredits[key] && credit.difficulty === 'Easy') {
+                            const points = credit.performanceLevels?.[1]?.points || credit.points || 0;
+                            setWhatIfCredits(prev => ({ ...prev, [key]: { level: 'credit', points } }));
+                        }
+                    });
+                });
+            };
+
+            const addCategoryCredits = (categoryId) => {
+                const cat = categoriesData.find(c => c.id === categoryId);
+                if (!cat) return;
+                cat.credits.forEach(credit => {
+                    const key = `${cat.id}-${credit.id}`;
+                    if (!selectedCredits[key] && !whatIfCredits[key]) {
+                        const points = credit.performanceLevels?.[1]?.points || credit.points || 0;
+                        setWhatIfCredits(prev => ({ ...prev, [key]: { level: 'credit', points } }));
+                    }
+                });
+            };
+
+            const clearWhatIf = () => setWhatIfCredits({});
+
+            // Calculate points for star ratings
+            const getStarInfo = (points) => {
+                if (points >= 100) return { stars: 6, name: 'World Leadership', color: 'text-purple-600' };
+                if (points >= 85) return { stars: 5, name: 'Australian Excellence', color: 'text-green-600' };
+                if (points >= 60) return { stars: 4, name: 'Best Practice', color: 'text-blue-600' };
+                if (points >= 45) return { stars: 3, name: 'Good Practice', color: 'text-yellow-600' };
+                return { stars: 0, name: 'Not Certified', color: 'text-gray-500' };
+            };
+
+            const currentStar = getStarInfo(currentPoints);
+            const projectedStar = getStarInfo(totalWithWhatIf);
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
+                    <div className="glass-card dark:bg-gray-800 rounded-2xl p-6 max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="font-display text-xl font-bold text-ink dark:text-white">
+                                <i className="fa-solid fa-flask text-purple-500 mr-2"></i>
+                                Quick Analysis & What-If
+                            </h2>
+                            <button onClick={onClose} className="w-10 h-10 rounded-full bg-surface-2 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors">
+                                <i className="fa-solid fa-xmark text-ink-2 dark:text-gray-300"></i>
+                            </button>
+                        </div>
+
+                        {/* Impact Summary */}
+                        <div className="mb-4 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl border border-purple-200 dark:border-purple-800">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-purple-800 dark:text-purple-300">Current</p>
+                                    <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{currentPoints} pts</p>
+                                    <p className={`text-sm font-medium ${currentStar.color}`}>{currentStar.name}</p>
+                                </div>
+                                {Object.keys(whatIfCredits).length > 0 && (
+                                    <>
+                                        <div className="text-3xl text-purple-400">→</div>
+                                        <div className="text-center">
+                                            <p className="text-sm text-purple-800 dark:text-purple-300">Projected</p>
+                                            <p className="text-2xl font-bold text-green-600 dark:text-green-400">{totalWithWhatIf} pts</p>
+                                            <p className={`text-sm font-medium ${projectedStar.color}`}>{projectedStar.name}</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-sm text-purple-800 dark:text-purple-300">Impact</p>
+                                            <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">+{whatIfPoints} pts</p>
+                                            <p className="text-sm text-ink-2">{Object.keys(whatIfCredits).length} credits</p>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Quick Actions */}
+                        <div className="mb-4 flex flex-wrap gap-2">
+                            <button
+                                onClick={addAllEasyCredits}
+                                className="px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-lg text-sm font-medium hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
+                            >
+                                <i className="fa-solid fa-bolt mr-2"></i>Add All Easy Credits
+                            </button>
+                            <div className="relative group">
+                                <button className="px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors">
+                                    <i className="fa-solid fa-layer-group mr-2"></i>Add Category <i className="fa-solid fa-chevron-down ml-1 text-xs"></i>
+                                </button>
+                                <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-line dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 min-w-48">
+                                    {categoriesData.map(cat => (
+                                        <button
+                                            key={cat.id}
+                                            onClick={() => addCategoryCredits(cat.id)}
+                                            className="w-full px-4 py-2 text-left text-sm hover:bg-surface-1 dark:hover:bg-gray-700 flex items-center gap-2"
+                                        >
+                                            <span className={cat.colorClasses?.text}><CategoryIcon category={cat.id} size={16} /></span>
+                                            {cat.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            {Object.keys(whatIfCredits).length > 0 && (
+                                <>
+                                    <button
+                                        onClick={clearWhatIf}
+                                        className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-ink-2 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                    >
+                                        <i className="fa-solid fa-eraser mr-2"></i>Clear All
+                                    </button>
+                                    <button
+                                        onClick={applyWhatIf}
+                                        className="px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
+                                    >
+                                        <i className="fa-solid fa-check mr-2"></i>Apply to Project
+                                    </button>
+                                </>
+                            )}
+                        </div>
+
+                        {/* What-If Credits List */}
+                        <div className="flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            {/* What-If Selection */}
+                            <div>
+                                <h3 className="font-bold text-ink dark:text-white mb-3 flex items-center gap-2 sticky top-0 bg-white dark:bg-gray-800 py-2">
+                                    <i className="fa-solid fa-plus-circle text-green-500"></i>
+                                    What-If Selection ({Object.keys(whatIfCredits).length})
+                                </h3>
+                                {Object.keys(whatIfCredits).length === 0 ? (
+                                    <p className="text-ink-3 dark:text-ink-2 text-sm italic">Click on credits below to add them to your what-if analysis</p>
+                                ) : (
+                                    <div className="space-y-2">
+                                        {Object.entries(whatIfCredits).map(([key, data]) => {
+                                            let creditInfo = null;
+                                            categoriesData.forEach(cat => {
+                                                cat.credits.forEach(credit => {
+                                                    if (`${cat.id}-${credit.id}` === key) {
+                                                        creditInfo = { credit, category: cat };
+                                                    }
+                                                });
+                                            });
+                                            if (!creditInfo) return null;
+                                            return (
+                                                <div key={key} className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800 flex items-center justify-between">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={creditInfo.category.colorClasses?.text}><CategoryIcon category={creditInfo.category.id} size={16} /></span>
+                                                        <span className="font-medium text-ink dark:text-gray-200 text-sm">{creditInfo.credit.name}</span>
+                                                        <span className="text-green-600 dark:text-green-400 text-sm font-bold">+{data.points}</span>
+                                                    </div>
+                                                    <button onClick={() => removeFromWhatIf(key)} className="text-red-500 hover:text-red-600">
+                                                        <i className="fa-solid fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Available Credits */}
+                            <div>
+                                <h3 className="font-bold text-ink dark:text-white mb-3 flex items-center gap-2 sticky top-0 bg-white dark:bg-gray-800 py-2">
+                                    <i className="fa-solid fa-list text-blue-500"></i>
+                                    Available Credits
+                                </h3>
+                                <div className="space-y-2 max-h-96 overflow-y-auto">
+                                    {getAvailableCredits().slice(0, 30).map(({ key, credit, category }) => (
+                                        <div
+                                            key={key}
+                                            onClick={() => addToWhatIf(key, credit)}
+                                            className="p-3 bg-surface-1 dark:bg-gray-700/50 rounded-lg border border-line dark:border-gray-600 hover:border-green-400 dark:hover:border-green-600 cursor-pointer transition-colors flex items-center justify-between"
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <span className={category.colorClasses?.text}><CategoryIcon category={category.id} size={16} /></span>
+                                                <span className="font-medium text-ink dark:text-gray-200 text-sm">{credit.name}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <span className={`text-xs px-2 py-0.5 rounded ${
+                                                    credit.difficulty === 'Easy' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' :
+                                                    credit.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300' :
+                                                    'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'
+                                                }`}>
+                                                    {credit.difficulty}
+                                                </span>
+                                                <span className="text-ink-2 dark:text-ink-3 text-sm">+{credit.performanceLevels?.[1]?.points || credit.points || 0}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             );
@@ -7425,6 +7894,10 @@
             const [showAdminImport, setShowAdminImport] = useState(false);
             const [targetStarRating, setTargetStarRating] = useState(5); // Target: 4, 5, or 6 stars
 
+            // Scenario analysis
+            const [showComparison, setShowComparison] = useState(false);
+            const [showQuickAnalysis, setShowQuickAnalysis] = useState(false);
+
             // FAQ data
             const [faqData, setFaqData] = useState([]);
 
@@ -7689,6 +8162,39 @@
                         switchProject(remaining[0].id);
                     }
                 }
+            };
+
+            // Clone project as a scenario/variant
+            const cloneProjectAsScenario = (projectId, newName) => {
+                const sourceProject = projects.find(p => p.id === projectId);
+                if (!sourceProject) return;
+
+                // Get source project's data
+                let sourceData;
+                if (projectId === activeProjectId) {
+                    sourceData = { projectName, selectedCredits, creditNotes, creditDocs, creditAssignments };
+                } else {
+                    sourceData = sourceProject.data || {};
+                }
+
+                const clonedProject = {
+                    id: Date.now().toString(),
+                    name: newName || `${sourceProject.name} (Scenario)`,
+                    createdAt: new Date().toISOString(),
+                    parentId: projectId, // Track which project it was cloned from
+                    isScenario: true,
+                    data: {
+                        projectName: newName || `${sourceData.projectName || sourceProject.name} (Scenario)`,
+                        selectedCredits: { ...sourceData.selectedCredits },
+                        creditNotes: { ...sourceData.creditNotes },
+                        creditDocs: { ...sourceData.creditDocs },
+                        creditAssignments: { ...sourceData.creditAssignments }
+                    }
+                };
+
+                setProjects(prev => [...prev, clonedProject]);
+                // Optionally switch to the new scenario
+                switchProject(clonedProject.id);
             };
 
             // Import project from JSON file
@@ -8305,6 +8811,26 @@
                                     </button>
                                 </div>
 
+                                {/* Scenario Analysis */}
+                                <div className="grid grid-cols-2 gap-2 mt-2">
+                                    <button
+                                        onClick={() => setShowQuickAnalysis(true)}
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <i className="fa-solid fa-flask text-purple-500"></i>
+                                        <span>What-If</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setShowComparison(true)}
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                        disabled={projects.length < 2}
+                                        style={{ opacity: projects.length >= 2 ? 1 : 0.5 }}
+                                    >
+                                        <i className="fa-solid fa-code-compare text-indigo-500"></i>
+                                        <span>Compare</span>
+                                    </button>
+                                </div>
+
                                 {/* Admin Section */}
                                 <div className="mt-3 pt-3 border-t border-line dark:border-gray-700 space-y-2">
                                     <a
@@ -8432,6 +8958,7 @@
                         onSwitchProject={switchProject}
                         onDeleteProject={deleteProject}
                         onImport={handleImportProject}
+                        onCloneProject={cloneProjectAsScenario}
                     />
                     <TemplatesModal
                         isOpen={showTemplates}
@@ -8457,6 +8984,22 @@
                         isOpen={showAdminImport}
                         onClose={() => setShowAdminImport(false)}
                         onImportData={(data) => console.log('Imported data:', data)}
+                    />
+                    <ScenarioComparisonModal
+                        isOpen={showComparison}
+                        onClose={() => setShowComparison(false)}
+                        projects={projects}
+                        activeProjectId={activeProjectId}
+                        categoriesData={categoriesData}
+                        selectedCredits={selectedCredits}
+                    />
+                    <QuickAnalysisPanel
+                        isOpen={showQuickAnalysis}
+                        onClose={() => setShowQuickAnalysis(false)}
+                        categoriesData={categoriesData}
+                        selectedCredits={selectedCredits}
+                        onSelectCredit={handleSelectCreditLevel}
+                        onDeselectCredit={(key) => handleSelectCreditLevel(key, null, 0)}
                     />
                     <CreditDetailModal
                         isOpen={creditDetailModal.isOpen}
