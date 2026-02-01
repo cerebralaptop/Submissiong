@@ -7,12 +7,12 @@
 
     <!-- PWA Meta Tags -->
     <meta name="description" content="Green Star Buildings v1.1 Submission Tracker and Assistant">
-    <meta name="theme-color" content="#1B4D3E">
+    <meta name="theme-color" content="#2E6B3F">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Green Star">
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%231B4D3E'/><polygon points='50,15 58,38 82,38 63,53 70,77 50,62 30,77 37,53 18,38 42,38' fill='white'/></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%232E6B3F'/><path d='M50 20 C35 30 25 45 25 60 C25 75 35 85 50 85 C65 85 75 75 75 60 C75 45 65 30 50 20 Z M50 30 C55 35 60 45 60 55 C60 65 55 72 50 75 C45 72 40 65 40 55 C40 45 45 35 50 30 Z' fill='white'/></svg>">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -38,36 +38,77 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        'display': ['Plus Jakarta Sans', 'sans-serif'],
-                        'body': ['Inter', 'system-ui', 'sans-serif'],
+                        'sans': ['ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                        'display': ['Plus Jakarta Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
                     },
                     colors: {
-                        // GBCA Brand Colors - Nature-positive palette
-                        'gbca': {
-                            'green': '#2D5A47',       // Primary sage green
-                            'green-light': '#4A7C6F', // Eucalyptus
-                            'green-muted': '#6B9080', // Muted sage
-                            'teal': '#5B8A72',        // Soft teal-green
-                            'charcoal': '#374151',    // Deep charcoal (not black)
+                        // GBCA Brand Greens
+                        'green': {
+                            '900': '#1F4B2E',
+                            '700': '#2E6B3F',
+                            '500': '#4F8A55',
+                            '300': '#9CCB8A',
+                            '200': '#CDE6C3',
+                            '100': '#EAF4E6',
                         },
-                        // Warm, nature-led backgrounds
-                        'warm': {
-                            'white': '#FAFAF9',       // Warm off-white
-                            'cream': '#F5F5F4',       // Soft cream
-                            'stone': '#E7E5E4',       // Warm stone
-                            'gray': '#A8A29E',        // Warm gray
+                        // Ink colors (text)
+                        'ink': {
+                            DEFAULT: '#1C2320',
+                            '2': '#34403A',
+                            '3': '#5A6A62',
                         },
-                        // Category Colors - Softer, muted tones
+                        // Surface colors
+                        'surface': {
+                            '0': '#FFFFFF',
+                            '1': '#F6F8F6',
+                            '2': '#EFF3EF',
+                        },
+                        'line': '#D7DED8',
+                        // Category Colors
                         'cat': {
-                            'responsible': '#B45309',  // Muted amber
-                            'healthy': '#047857',      // Soft emerald
-                            'resilient': '#1D4ED8',    // Calm blue
-                            'positive': '#B91C1C',     // Muted red
-                            'places': '#6D28D9',       // Soft purple
-                            'people': '#BE185D',       // Muted pink
-                            'nature': '#0F766E',       // Deep teal
-                            'leadership': '#4338CA',   // Soft indigo
+                            'responsible': '#B45309',
+                            'healthy': '#2E6B3F',
+                            'resilient': '#1D4ED8',
+                            'positive': '#B91C1C',
+                            'places': '#6D28D9',
+                            'people': '#BE185D',
+                            'nature': '#0F766E',
+                            'leadership': '#4338CA',
                         }
+                    },
+                    fontSize: {
+                        'xs': '0.8125rem',
+                        'sm': '0.9375rem',
+                        'base': '1rem',
+                        'lg': '1.125rem',
+                        'xl': '1.375rem',
+                        '2xl': '1.75rem',
+                        '3xl': '2.25rem',
+                        '4xl': '3rem',
+                    },
+                    lineHeight: {
+                        'tight': '1.15',
+                        'snug': '1.3',
+                        'normal': '1.55',
+                        'relaxed': '1.75',
+                    },
+                    letterSpacing: {
+                        'tight': '-0.01em',
+                        'normal': '0',
+                        'wide': '0.02em',
+                    },
+                    borderRadius: {
+                        'sm': '0.5rem',
+                        'md': '0.75rem',
+                        'lg': '1.25rem',
+                    },
+                    boxShadow: {
+                        '1': '0 1px 2px rgba(28,35,32,0.06)',
+                        '2': '0 8px 24px rgba(28,35,32,0.10)',
+                    },
+                    spacing: {
+                        '18': '4.5rem',
+                        '22': '5.5rem',
                     }
                 }
             }
@@ -75,57 +116,163 @@
     </script>
 
     <style>
+        /* CSS Design Tokens */
+        :root {
+            /* Brand Greens */
+            --color-green-900: #1F4B2E;
+            --color-green-700: #2E6B3F;
+            --color-green-500: #4F8A55;
+            --color-green-300: #9CCB8A;
+            --color-green-200: #CDE6C3;
+            --color-green-100: #EAF4E6;
+
+            /* Ink (text) colors */
+            --color-ink: #1C2320;
+            --color-ink-2: #34403A;
+            --color-ink-3: #5A6A62;
+
+            /* Surfaces */
+            --color-surface-0: #FFFFFF;
+            --color-surface-1: #F6F8F6;
+            --color-surface-2: #EFF3EF;
+            --color-line: #D7DED8;
+
+            /* Semantic */
+            --color-link: var(--color-green-700);
+            --color-link-hover: var(--color-green-900);
+            --color-focus: #7CCB8B;
+            --heading-color: var(--color-green-900);
+
+            /* Typography */
+            --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --leading-tight: 1.15;
+            --leading-snug: 1.3;
+            --leading-normal: 1.55;
+            --leading-relaxed: 1.75;
+
+            /* Spacing */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.5rem;
+            --space-6: 2rem;
+            --space-7: 3rem;
+            --space-8: 4rem;
+
+            /* Radius & Shadow */
+            --radius-sm: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1.25rem;
+            --shadow-1: 0 1px 2px rgba(28,35,32,0.06);
+            --shadow-2: 0 8px 24px rgba(28,35,32,0.10);
+            --border-1: 1px solid var(--color-line);
+
+            /* Motion */
+            --ease-standard: cubic-bezier(0.2, 0.0, 0.0, 1);
+            --dur-fast: 120ms;
+            --dur-med: 200ms;
+
+            /* Buttons */
+            --btn-primary-bg: var(--color-green-700);
+            --btn-primary-fg: #FFFFFF;
+            --btn-primary-bg-hover: var(--color-green-900);
+
+            /* Cards */
+            --card-bg: var(--color-surface-0);
+            --card-border: var(--border-1);
+            --card-radius: var(--radius-lg);
+            --card-shadow: var(--shadow-1);
+
+            /* Focus ring */
+            --focus-ring: 0 0 0 3px rgba(124,203,139,0.35);
+        }
+
         * {
             box-sizing: border-box;
         }
 
         body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background: #FAFAF9;
+            font-family: var(--font-sans);
+            background: var(--color-surface-1);
             min-height: 100vh;
-            color: #374151;
-            line-height: 1.6;
+            color: var(--color-ink);
+            line-height: var(--leading-normal);
         }
 
         .font-display {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Plus Jakarta Sans', var(--font-sans);
             letter-spacing: -0.01em;
         }
 
-        /* Clean, calm header - no gradient */
-        .gbca-header {
-            background: #2D5A47;
+        /* Headings */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--heading-color);
+            line-height: var(--leading-snug);
+            letter-spacing: -0.01em;
         }
 
-        /* Clean card style - minimal shadow, warm tones */
+        /* Body text */
+        p, span, li, label {
+            color: var(--color-ink);
+        }
+
+        /* Secondary text */
+        .text-secondary {
+            color: var(--color-ink-2);
+        }
+
+        /* Muted text */
+        .text-muted {
+            color: var(--color-ink-3);
+        }
+
+        /* Links */
+        a {
+            color: var(--color-link);
+            text-decoration: none;
+            transition: color var(--dur-med) var(--ease-standard);
+        }
+
+        a:hover {
+            color: var(--color-link-hover);
+        }
+
+        /* Clean, calm header */
+        .gbca-header {
+            background: var(--color-green-700);
+        }
+
+        /* Clean card style */
         .glass-card {
-            background: #FFFFFF;
-            border: 1px solid #E7E5E4;
-            box-shadow: none;
+            background: var(--card-bg);
+            border: var(--card-border);
+            box-shadow: var(--card-shadow);
+            border-radius: var(--radius-md);
         }
 
         .category-badge {
-            transition: all 0.2s ease-in-out;
+            transition: all var(--dur-med) var(--ease-standard);
         }
 
         .category-badge:hover {
             transform: translateY(-1px);
-            border-color: #D6D3D1;
+            border-color: var(--color-line);
         }
 
         .credit-card {
-            transition: all 0.2s ease-in-out;
-            border: 1px solid #E7E5E4;
-            background: #FFFFFF;
+            transition: all var(--dur-med) var(--ease-standard);
+            border: var(--border-1);
+            background: var(--color-surface-0);
         }
 
         .credit-card:hover {
-            border-color: #D6D3D1;
+            border-color: var(--color-green-300);
         }
 
         .credit-card.selected {
-            background-color: #F0FDF4;
-            border-color: #2D5A47;
+            background-color: var(--color-green-100);
+            border-color: var(--color-green-700);
         }
 
         .circular-progress {
@@ -142,7 +289,7 @@
         }
 
         .modal-backdrop {
-            background: rgba(55, 65, 81, 0.4);
+            background: rgba(28, 35, 32, 0.4);
             backdrop-filter: blur(2px);
         }
 
@@ -151,17 +298,17 @@
             appearance: none;
             width: 18px;
             height: 18px;
-            border: 1.5px solid #D6D3D1;
-            border-radius: 4px;
+            border: 1.5px solid var(--color-line);
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all var(--dur-fast) var(--ease-standard);
             position: relative;
-            background: #FFFFFF;
+            background: var(--color-surface-0);
         }
 
         .custom-checkbox:checked {
-            background-color: #2D5A47;
-            border-color: #2D5A47;
+            background-color: var(--color-green-700);
+            border-color: var(--color-green-700);
         }
 
         .custom-checkbox:checked::after {
@@ -176,15 +323,19 @@
             transform: rotate(45deg);
         }
 
+        .custom-checkbox:focus-visible {
+            box-shadow: var(--focus-ring);
+        }
+
         .required-badge {
-            font-size: 0.65rem;
+            font-size: var(--text-xs);
             letter-spacing: 0.05em;
             font-weight: 500;
         }
 
-        /* Credit Detail Modal Styles - clean, no gradients */
+        /* Credit Detail Modal Styles */
         .modal-enter {
-            animation: modalEnter 0.25s ease-out;
+            animation: modalEnter var(--dur-med) var(--ease-standard);
         }
 
         @keyframes modalEnter {
@@ -199,13 +350,13 @@
         }
 
         .section-card {
-            background: #FFFFFF;
-            border: 1px solid #E7E5E4;
-            transition: border-color 0.15s ease;
+            background: var(--color-surface-0);
+            border: var(--border-1);
+            transition: border-color var(--dur-fast) var(--ease-standard);
         }
 
         .section-card:hover {
-            border-color: #D6D3D1;
+            border-color: var(--color-green-300);
         }
 
         .criteria-item {
@@ -221,33 +372,33 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: #2D5A47;
+            background: var(--color-green-700);
         }
 
         .doc-item {
-            transition: background-color 0.15s ease;
+            transition: background-color var(--dur-fast) var(--ease-standard);
         }
 
         .doc-item:hover {
-            background-color: #F5F5F4;
+            background-color: var(--color-surface-2);
         }
 
         .pathway-card {
-            background: #FAFAF9;
-            border: 1px solid #E7E5E4;
-            transition: border-color 0.15s ease;
+            background: var(--color-surface-1);
+            border: var(--border-1);
+            transition: border-color var(--dur-fast) var(--ease-standard);
         }
 
         .pathway-card:hover {
-            border-color: #D6D3D1;
+            border-color: var(--color-green-300);
         }
 
         .points-badge {
-            background: #2D5A47;
+            background: var(--color-green-700);
         }
 
         .info-button {
-            transition: opacity 0.15s ease;
+            transition: opacity var(--dur-fast) var(--ease-standard);
         }
 
         .info-button:hover {
@@ -255,11 +406,11 @@
         }
 
         .tab-button {
-            transition: all 0.15s ease;
+            transition: all var(--dur-fast) var(--ease-standard);
         }
 
         .tab-button.active {
-            background: #2D5A47;
+            background: var(--color-green-700);
             color: white;
         }
 
@@ -268,38 +419,17 @@
         }
 
         .scrollbar-thin::-webkit-scrollbar-track {
-            background: #F5F5F4;
+            background: var(--color-surface-2);
             border-radius: 3px;
         }
 
         .scrollbar-thin::-webkit-scrollbar-thumb {
-            background: #D6D3D1;
+            background: var(--color-line);
             border-radius: 3px;
         }
 
         .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-            background: #A8A29E;
-        }
-
-        /* Typography refinements */
-        h1, h2, h3, h4, h5, h6 {
-            color: #374151;
-            line-height: 1.3;
-        }
-
-        /* Ensure good contrast for body text */
-        p, span, li {
-            color: #4B5563;
-        }
-
-        /* Links - understated */
-        a {
-            color: #2D5A47;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
+            background: var(--color-ink-3);
         }
 
         /* Rating badge - clean, no stars */
@@ -326,8 +456,8 @@
         }
 
         .rating-badge.rating-6 {
-            border-color: #2D5A47;
-            color: #2D5A47;
+            border-color: #2E6B3F;
+            color: #2E6B3F;
             background: #F0FDF4;
         }
 
@@ -574,7 +704,7 @@
             }
 
             h1, h2, h3, h4, h5, h6 {
-                color: #2D5A47 !important;
+                color: #2E6B3F !important;
                 page-break-after: avoid;
             }
 
@@ -590,7 +720,7 @@
 
             /* Clean progress indicators for print */
             .circular-progress {
-                border: 2px solid #2D5A47 !important;
+                border: 2px solid #2E6B3F !important;
             }
 
             /* Optimize rating badges for print */
@@ -4403,7 +4533,7 @@
             if (cappedPoints >= 70) return { stars: 6, name: '6 Star', description: 'World Leadership', color: 'text-yellow-500' };
             if (cappedPoints >= 35) return { stars: 5, name: '5 Star', description: 'Australian Excellence', color: 'text-emerald-500' };
             if (cappedPoints >= 15) return { stars: 4, name: '4 Star', description: 'Best Practice', color: 'text-blue-500' };
-            return { stars: 0, name: 'No Rating', description: 'Need 15+ points', color: 'text-gray-400' };
+            return { stars: 0, name: 'No Rating', description: 'Need 15+ points', color: 'text-ink-3' };
         }
 
         // Get next rating target
@@ -4445,7 +4575,7 @@
                             cy={size / 2}
                             r={radius}
                             fill="none"
-                            stroke="#2D5A47"
+                            stroke="#2E6B3F"
                             strokeWidth={strokeWidth}
                             strokeLinecap="round"
                             strokeDasharray={circumference}
@@ -4454,8 +4584,8 @@
                         />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="font-mono text-3xl font-bold text-stone-700">{current}</span>
-                        <span className="text-sm text-stone-500">/ {max} pts</span>
+                        <span className="font-mono text-3xl font-bold text-ink">{current}</span>
+                        <span className="text-sm text-ink-3">/ {max} pts</span>
                     </div>
                 </div>
             );
@@ -4467,7 +4597,7 @@
                 6: { bg: 'bg-emerald-50', border: 'border-emerald-600', text: 'text-emerald-700' },
                 5: { bg: 'bg-teal-50', border: 'border-teal-600', text: 'text-teal-700' },
                 4: { bg: 'bg-blue-50', border: 'border-blue-600', text: 'text-blue-700' },
-                0: { bg: 'bg-stone-50', border: 'border-stone-400', text: 'text-stone-500' }
+                0: { bg: 'bg-surface-2', border: 'border-stone-400', text: 'text-ink-3' }
             };
             const style = ratingStyles[rating.stars] || ratingStyles[0];
 
@@ -4500,7 +4630,7 @@
                             <div>
                                 <RatingDisplay rating={rating} />
                                 {nextTarget && (
-                                    <p className="text-sm text-gray-500 mt-2">
+                                    <p className="text-sm text-ink-2 mt-2">
                                         <span className="font-semibold">{nextTarget.remaining}</span> more points for {nextTarget.name}
                                     </p>
                                 )}
@@ -4510,18 +4640,18 @@
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2 text-sm">
                                 <i className={`fa-solid fa-check-circle ${requiredMet === 3 ? 'text-green-500' : 'text-gray-300'}`}></i>
-                                <span className={requiredMet === 3 ? 'text-green-600 font-medium' : 'text-gray-500'}>
+                                <span className={requiredMet === 3 ? 'text-green-600 font-medium' : 'text-ink-2'}>
                                     Required Credits: {requiredMet}/3
                                 </span>
                             </div>
-                            <div className="text-xs text-gray-400">
+                            <div className="text-xs text-ink-3">
                                 Energy Source, Energy Use, Upfront Carbon
                             </div>
                         </div>
 
                         <div className="text-right">
-                            <p className="text-sm text-gray-500">Credits Selected</p>
-                            <p className="font-mono text-2xl font-bold text-gray-800">
+                            <p className="text-sm text-ink-2">Credits Selected</p>
+                            <p className="font-mono text-2xl font-bold text-ink">
                                 {Object.values(selectedCredits).filter(v => v > 0).length}
                             </p>
                         </div>
@@ -4539,20 +4669,20 @@
                 <button
                     onClick={onClick}
                     className={`category-badge flex flex-col items-center p-4 rounded-lg cursor-pointer min-w-[120px]
-                        ${isActive ? `bg-stone-50 ${colorClasses.border} border` : 'bg-white border border-stone-200'}
-                        hover:bg-stone-50 transition-colors`}
+                        ${isActive ? `bg-surface-2 ${colorClasses.border} border` : 'bg-white border border-line'}
+                        hover:bg-surface-2 transition-colors`}
                 >
-                    <div className={`mb-2 ${isActive ? colorClasses.text : 'text-stone-500'}`}>
+                    <div className={`mb-2 ${isActive ? colorClasses.text : 'text-ink-3'}`}>
                         <CategoryIcon category={category.id} size={28} />
                     </div>
-                    <span className={`font-medium text-sm ${isActive ? colorClasses.text : 'text-stone-700'}`}>
+                    <span className={`font-medium text-sm ${isActive ? colorClasses.text : 'text-ink'}`}>
                         {category.name}
                     </span>
                     <div className="flex items-center gap-1 mt-1">
-                        <span className={`font-mono text-sm font-bold ${isActive ? colorClasses.text : 'text-stone-600'}`}>
+                        <span className={`font-mono text-sm font-bold ${isActive ? colorClasses.text : 'text-ink-2'}`}>
                             {selectedPoints}
                         </span>
-                        <span className="text-xs text-stone-400">/ {category.maxPoints}</span>
+                        <span className="text-xs text-ink-3">/ {category.maxPoints}</span>
                     </div>
                     {/* Mini progress bar */}
                     <div className="w-full h-1 bg-stone-200 rounded-full mt-2 overflow-hidden">
@@ -4572,7 +4702,7 @@
                 (hasLevels ? credit.performanceLevels.find(l => l.level === selectedLevel)?.points || 0 : credit.points) : 0;
 
             const levelColors = {
-                minimum: { bg: 'bg-gray-100 dark:bg-gray-700', border: 'border-gray-400', text: 'text-gray-600 dark:text-gray-300', gradient: 'from-gray-50 to-white dark:from-gray-800 dark:to-gray-800' },
+                minimum: { bg: 'bg-gray-100 dark:bg-gray-700', border: 'border-gray-400', text: 'text-ink-2 dark:text-gray-300', gradient: 'from-gray-50 to-white dark:from-gray-800 dark:to-gray-800' },
                 credit: { bg: 'bg-blue-100 dark:bg-blue-900/30', border: 'border-blue-500', text: 'text-blue-700 dark:text-blue-300', gradient: 'from-blue-50 to-white dark:from-blue-900/20 dark:to-gray-800' },
                 exceptional: { bg: 'bg-green-100 dark:bg-green-900/30', border: 'border-green-500', text: 'text-green-700 dark:text-green-300', gradient: 'from-green-50 to-white dark:from-green-900/20 dark:to-gray-800' }
             };
@@ -4610,16 +4740,16 @@
                     className={`credit-card rounded-xl border-2 transition-all bg-white dark:bg-gray-800
                         ${selectedLevel
                             ? `${currentLevelColors.border} bg-gradient-to-r ${currentLevelColors.gradient}`
-                            : 'border-gray-200 dark:border-gray-700'}`}
+                            : 'border-line dark:border-gray-700'}`}
                 >
                     {/* Clickable Header row */}
                     <div
-                        className="flex items-center gap-4 p-4 pb-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-t-xl transition-colors"
+                        className="flex items-center gap-4 p-4 pb-2 cursor-pointer hover:bg-surface-2 dark:hover:bg-gray-700/50 rounded-t-xl transition-colors"
                         onClick={onViewDetails}
                     >
                         <div className="flex-grow min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                                <h3 className={`font-medium ${selectedLevel ? currentLevelColors.text : 'text-gray-800 dark:text-gray-200'}`}>
+                                <h3 className={`font-medium ${selectedLevel ? currentLevelColors.text : 'text-ink dark:text-gray-200'}`}>
                                     {credit.name}
                                 </h3>
                                 {credit.required && (
@@ -4644,15 +4774,15 @@
                                 )}
                             </div>
                             {credit.description && (
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{credit.description}</p>
+                                <p className="text-sm text-ink-2 dark:text-ink-3 mt-1 line-clamp-2">{credit.description}</p>
                             )}
                         </div>
 
                         <div className="flex items-center gap-3 flex-shrink-0">
-                            <div className={`font-mono text-xl font-bold min-w-[50px] text-right ${selectedLevel ? currentLevelColors.text : 'text-gray-400'}`}>
+                            <div className={`font-mono text-xl font-bold min-w-[50px] text-right ${selectedLevel ? currentLevelColors.text : 'text-ink-3'}`}>
                                 +{currentPoints}
                             </div>
-                            <i className="fa-solid fa-chevron-right text-gray-400 dark:text-gray-500"></i>
+                            <i className="fa-solid fa-chevron-right text-ink-3 dark:text-ink-2"></i>
                         </div>
                     </div>
 
@@ -4660,7 +4790,7 @@
                     {hasLevels ? (
                         <div className="px-4 pb-4 pt-2">
                             <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                                <div className="flex items-center gap-1 text-xs text-ink-2 dark:text-ink-3">
                                     <i className="fa-solid fa-clipboard-check"></i>
                                     <span>Claim:</span>
                                 </div>
@@ -4672,7 +4802,7 @@
                                         className={`w-full py-2 px-3 pr-8 rounded-lg border-2 transition-all text-sm font-medium appearance-none cursor-pointer
                                             ${selectedLevel
                                                 ? `${levelColors[selectedLevel].bg} ${levelColors[selectedLevel].border} ${levelColors[selectedLevel].text}`
-                                                : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-gray-300'
+                                                : 'bg-white dark:bg-gray-700 border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:border-gray-300'
                                             }`}
                                     >
                                         <option value="">— Not Claimed —</option>
@@ -4683,12 +4813,12 @@
                                         ))}
                                     </select>
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <i className={`fa-solid ${selectedLevel ? levelIcons[selectedLevel] : 'fa-chevron-down'} ${selectedLevel ? levelColors[selectedLevel].text : 'text-gray-400'}`}></i>
+                                        <i className={`fa-solid ${selectedLevel ? levelIcons[selectedLevel] : 'fa-chevron-down'} ${selectedLevel ? levelColors[selectedLevel].text : 'text-ink-3'}`}></i>
                                     </div>
                                 </div>
                             </div>
                             {selectedLevel && (
-                                <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                                <div className="mt-2 text-xs text-ink-2 dark:text-ink-3 flex items-center gap-1">
                                     <i className="fa-solid fa-circle-info"></i>
                                     {selectedLevel === 'exceptional' && <span>Includes Credit Achievement + Minimum Expectation compliance</span>}
                                     {selectedLevel === 'credit' && <span>Includes Minimum Expectation compliance</span>}
@@ -4703,7 +4833,7 @@
                                 className={`w-full py-2 px-3 rounded-lg border-2 transition-all text-sm font-medium
                                     ${selectedLevel
                                         ? 'bg-green-100 dark:bg-green-900/30 border-green-500 text-green-700 dark:text-green-300'
-                                        : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20'
+                                        : 'bg-white dark:bg-gray-700 border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20'
                                     }`}
                             >
                                 <div className="flex items-center justify-center gap-2">
@@ -4730,7 +4860,7 @@
             const hasLevels = credit?.performanceLevels && credit.performanceLevels.length > 0;
 
             const levelColors = {
-                minimum: { bg: 'bg-gray-100', border: 'border-gray-400', text: 'text-gray-600' },
+                minimum: { bg: 'bg-gray-100', border: 'border-gray-400', text: 'text-ink-2' },
                 credit: { bg: 'bg-blue-100', border: 'border-blue-500', text: 'text-blue-700' },
                 exceptional: { bg: 'bg-green-100', border: 'border-green-500', text: 'text-green-700' }
             };
@@ -4832,7 +4962,7 @@
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header */}
-                        <div className={`bg-stone-50 border-b border-stone-200 p-6 relative overflow-hidden`}>
+                        <div className={`bg-surface-2 border-b border-line p-6 relative overflow-hidden`}>
                             <div className="absolute top-4 right-4 opacity-5">
                                 <CategoryIcon category={category.id} size={180} className={category.colorClasses.text} />
                             </div>
@@ -4846,7 +4976,7 @@
                                             <p className={`text-sm font-medium ${category.colorClasses.text} uppercase tracking-wide`}>
                                                 {category.name} Category
                                             </p>
-                                            <h2 className="font-display text-2xl font-bold text-gray-900 mt-1">
+                                            <h2 className="font-display text-2xl font-bold text-ink mt-1">
                                                 {credit.name}
                                             </h2>
                                         </div>
@@ -4855,12 +4985,12 @@
                                         onClick={onClose}
                                         className="w-10 h-10 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors shadow-sm"
                                     >
-                                        <i className="fa-solid fa-xmark text-gray-600"></i>
+                                        <i className="fa-solid fa-xmark text-ink-2"></i>
                                     </button>
                                 </div>
 
                                 <div className="flex items-center gap-4 flex-wrap">
-                                    <div className={`text-white px-4 py-2 rounded-lg flex items-center gap-2 ${selectedLevel ? (selectedLevel === 'exceptional' ? 'bg-emerald-600' : selectedLevel === 'credit' ? 'bg-blue-600' : 'bg-stone-500') : 'bg-stone-400'}`}>
+                                    <div className={`text-white px-4 py-2 rounded-lg flex items-center gap-2 ${selectedLevel ? (selectedLevel === 'exceptional' ? 'bg-emerald-600' : selectedLevel === 'credit' ? 'bg-blue-600' : 'bg-surface-20') : 'bg-stone-400'}`}>
                                         <span className="font-mono font-bold text-lg">{currentPoints}</span>
                                         <span className="text-sm opacity-90">points</span>
                                     </div>
@@ -4881,7 +5011,7 @@
                                 {/* Level Selection Dropdown */}
                                 {hasLevels ? (
                                     <div className="mt-4 flex items-center gap-3">
-                                        <span className="text-sm font-medium text-gray-700">Claim Level:</span>
+                                        <span className="text-sm font-medium text-ink">Claim Level:</span>
                                         <div className="flex-grow relative">
                                             <select
                                                 value={selectedLevel || ''}
@@ -4889,7 +5019,7 @@
                                                 className={`w-full py-2.5 px-4 pr-10 rounded-xl border-2 text-sm font-medium appearance-none cursor-pointer transition-all
                                                     ${selectedLevel
                                                         ? `${levelColors[selectedLevel].bg} ${levelColors[selectedLevel].border} ${levelColors[selectedLevel].text}`
-                                                        : 'bg-white border-gray-300 text-gray-600 hover:border-gray-400'
+                                                        : 'bg-white border-gray-300 text-ink-2 hover:border-gray-400'
                                                     }`}
                                             >
                                                 <option value="">— Not Claimed —</option>
@@ -4900,7 +5030,7 @@
                                                 ))}
                                             </select>
                                             <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                                                <i className={`fa-solid ${selectedLevel ? levelIcons[selectedLevel] : 'fa-chevron-down'} ${selectedLevel ? levelColors[selectedLevel].text : 'text-gray-400'}`}></i>
+                                                <i className={`fa-solid ${selectedLevel ? levelIcons[selectedLevel] : 'fa-chevron-down'} ${selectedLevel ? levelColors[selectedLevel].text : 'text-ink-3'}`}></i>
                                             </div>
                                         </div>
                                     </div>
@@ -4911,7 +5041,7 @@
                                             className={`w-full py-2.5 px-4 rounded-xl font-medium flex items-center justify-center gap-2 transition-all ${
                                                 selectedLevel
                                                     ? 'bg-green-500 text-white hover:bg-green-600'
-                                                    : 'bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-300'
+                                                    : 'bg-white text-ink hover:bg-surface-2 border-2 border-gray-300'
                                             }`}
                                         >
                                             <i className={`fa-solid ${selectedLevel ? 'fa-check' : 'fa-plus'}`}></i>
@@ -4921,7 +5051,7 @@
                                 )}
 
                                 {selectedLevel && (
-                                    <div className="mt-2 text-xs text-gray-600 flex items-center gap-1">
+                                    <div className="mt-2 text-xs text-ink-2 flex items-center gap-1">
                                         <i className="fa-solid fa-circle-info"></i>
                                         {selectedLevel === 'exceptional' && <span>Includes Credit Achievement + Minimum Expectation compliance</span>}
                                         {selectedLevel === 'credit' && <span>Includes Minimum Expectation compliance</span>}
@@ -4932,13 +5062,13 @@
                         </div>
 
                         {/* Tabs */}
-                        <div className="flex gap-2 px-6 py-3 bg-gray-50 border-b border-gray-200">
+                        <div className="flex gap-2 px-6 py-3 bg-surface-2 border-b border-line">
                             {tabs.map(tab => (
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={`tab-button px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${
-                                        activeTab === tab.id ? 'active' : 'text-gray-600 hover:bg-gray-100'
+                                        activeTab === tab.id ? 'active' : 'text-ink-2 hover:bg-gray-100'
                                     }`}
                                 >
                                     <i className={`fa-solid ${tab.icon}`}></i>
@@ -4953,21 +5083,21 @@
                                 <div className="space-y-6 fade-in">
                                     {/* Description */}
                                     <div className="section-card rounded-xl p-5">
-                                        <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                                            <i className="fa-solid fa-quote-left text-gray-400"></i>
+                                        <h3 className="font-semibold text-ink mb-2 flex items-center gap-2">
+                                            <i className="fa-solid fa-quote-left text-ink-3"></i>
                                             Description
                                         </h3>
-                                        <p className="text-gray-600 leading-relaxed">{credit.description}</p>
+                                        <p className="text-ink-2 leading-relaxed">{credit.description}</p>
                                     </div>
 
                                     {/* Aims */}
                                     {credit.aims && (
                                         <div className="section-card rounded-xl p-5">
-                                            <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                            <h3 className="font-semibold text-ink mb-2 flex items-center gap-2">
                                                 <i className="fa-solid fa-bullseye text-green-500"></i>
                                                 Credit Aims
                                             </h3>
-                                            <p className="text-gray-600 leading-relaxed">{credit.aims}</p>
+                                            <p className="text-ink-2 leading-relaxed">{credit.aims}</p>
                                         </div>
                                     )}
 
@@ -5005,7 +5135,7 @@
                                         <div className="grid grid-cols-2 gap-4">
                                             {credit.projectPhases && (
                                                 <div className="section-card rounded-xl p-4">
-                                                    <h4 className="font-medium text-gray-700 mb-2 flex items-center gap-2">
+                                                    <h4 className="font-medium text-ink mb-2 flex items-center gap-2">
                                                         <i className="fa-solid fa-clock text-purple-500"></i>
                                                         Key Project Phases
                                                     </h4>
@@ -5020,7 +5150,7 @@
                                             )}
                                             {credit.difficulty && (
                                                 <div className="section-card rounded-xl p-4">
-                                                    <h4 className="font-medium text-gray-700 mb-2 flex items-center gap-2">
+                                                    <h4 className="font-medium text-ink mb-2 flex items-center gap-2">
                                                         <i className="fa-solid fa-gauge text-blue-500"></i>
                                                         Difficulty
                                                     </h4>
@@ -5037,17 +5167,17 @@
 
                                     {/* Quick Stats */}
                                     <div className="grid grid-cols-3 gap-4">
-                                        <div className="bg-stone-50 border border-stone-200 rounded-lg p-4 text-center">
-                                            <p className="font-mono text-2xl font-bold text-stone-700">{credit.points}</p>
-                                            <p className="text-sm text-stone-500">Points Available</p>
+                                        <div className="bg-surface-2 border border-line rounded-lg p-4 text-center">
+                                            <p className="font-mono text-2xl font-bold text-ink">{credit.points}</p>
+                                            <p className="text-sm text-ink-3">Points Available</p>
                                         </div>
-                                        <div className="bg-stone-50 border border-stone-200 rounded-lg p-4 text-center">
-                                            <p className="font-mono text-2xl font-bold text-stone-700">{credit.criteria?.length || 0}</p>
-                                            <p className="text-sm text-stone-500">Criteria Items</p>
+                                        <div className="bg-surface-2 border border-line rounded-lg p-4 text-center">
+                                            <p className="font-mono text-2xl font-bold text-ink">{credit.criteria?.length || 0}</p>
+                                            <p className="text-sm text-ink-3">Criteria Items</p>
                                         </div>
-                                        <div className="bg-stone-50 border border-stone-200 rounded-lg p-4 text-center">
-                                            <p className="font-mono text-2xl font-bold text-stone-700">{credit.documentation?.length || 0}</p>
-                                            <p className="text-sm text-stone-500">Documents Required</p>
+                                        <div className="bg-surface-2 border border-line rounded-lg p-4 text-center">
+                                            <p className="font-mono text-2xl font-bold text-ink">{credit.documentation?.length || 0}</p>
+                                            <p className="text-sm text-ink-3">Documents Required</p>
                                         </div>
                                     </div>
                                 </div>
@@ -5055,7 +5185,7 @@
 
                             {activeTab === 'levels' && (
                                 <div className="space-y-6 fade-in">
-                                    <p className="text-gray-600 mb-4">
+                                    <p className="text-ink-2 mb-4">
                                         Select a performance level to claim. Higher levels include all requirements from lower levels.
                                     </p>
                                     {credit.performanceLevels && credit.performanceLevels.length > 0 ? (
@@ -5073,8 +5203,8 @@
                                                         border: 'border-gray-300 dark:border-gray-600',
                                                         selectedBorder: 'border-gray-500 ring-2 ring-gray-300',
                                                         icon: 'bg-gray-400',
-                                                        text: 'text-gray-600 dark:text-gray-300',
-                                                        badge: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
+                                                        text: 'text-ink-2 dark:text-gray-300',
+                                                        badge: 'bg-gray-100 text-ink-2 dark:bg-gray-700 dark:text-gray-300'
                                                     },
                                                     credit: {
                                                         bg: 'bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20',
@@ -5139,17 +5269,17 @@
                                                                         {level.points} {level.points === 1 ? 'point' : 'points'}
                                                                     </div>
                                                                 </div>
-                                                                <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                                                <p className="text-xs text-ink-2 dark:text-ink-3 mb-3">
                                                                     {level.level === 'minimum' && 'Baseline requirements - no points but may be required for rating'}
                                                                     {level.level === 'credit' && 'Standard credit achievement level'}
                                                                     {level.level === 'exceptional' && 'Highest level - includes all lower requirements'}
                                                                 </p>
                                                                 <div className="space-y-2">
-                                                                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Requirements:</p>
+                                                                    <p className="text-xs font-semibold text-ink-2 dark:text-ink-3 uppercase tracking-wide">Requirements:</p>
                                                                     {level.requirements && level.requirements.map((req, reqIndex) => (
                                                                         <div key={reqIndex} className="flex items-start gap-2">
                                                                             <i className={`fa-solid ${isIncludedInSelection ? 'fa-circle-check text-green-500' : 'fa-circle'} ${isIncludedInSelection ? '' : colors.text} mt-0.5 text-sm`}></i>
-                                                                            <span className={`text-sm ${isIncludedInSelection ? 'text-gray-700 dark:text-gray-300' : 'text-gray-600 dark:text-gray-400'}`}>{req}</span>
+                                                                            <span className={`text-sm ${isIncludedInSelection ? 'text-ink dark:text-gray-300' : 'text-ink-2 dark:text-ink-3'}`}>{req}</span>
                                                                         </div>
                                                                     ))}
                                                                 </div>
@@ -5160,7 +5290,7 @@
                                             })}
                                         </div>
                                     ) : (
-                                        <div className="text-center py-8 text-gray-500">
+                                        <div className="text-center py-8 text-ink-2">
                                             <i className="fa-solid fa-layer-group text-4xl mb-3 text-gray-300"></i>
                                             <p>Performance levels coming soon</p>
                                             <p className="text-sm mt-2">This credit awards up to {credit.points} points</p>
@@ -5168,9 +5298,9 @@
                                     )}
 
                                     {/* Points Scale Visual */}
-                                    <div className="mt-6 p-4 bg-gray-50 rounded-xl">
-                                        <h4 className="font-medium text-gray-700 mb-3 flex items-center gap-2">
-                                            <i className="fa-solid fa-chart-simple text-gray-500"></i>
+                                    <div className="mt-6 p-4 bg-surface-2 rounded-xl">
+                                        <h4 className="font-medium text-ink mb-3 flex items-center gap-2">
+                                            <i className="fa-solid fa-chart-simple text-ink-2"></i>
                                             Points Scale
                                         </h4>
                                         <div className="flex items-center gap-2">
@@ -5185,10 +5315,10 @@
                                                     <div className="h-full bg-gradient-to-r from-blue-400 to-green-500 w-full"></div>
                                                 )}
                                             </div>
-                                            <span className="font-mono font-bold text-gray-700 w-16 text-right">{credit.points} pts</span>
+                                            <span className="font-mono font-bold text-ink w-16 text-right">{credit.points} pts</span>
                                         </div>
                                         {credit.performanceLevels && (
-                                            <div className="flex justify-between text-xs text-gray-500 mt-2">
+                                            <div className="flex justify-between text-xs text-ink-2 mt-2">
                                                 <span>Minimum (0)</span>
                                                 <span>Credit ({credit.performanceLevels[1]?.points || 0})</span>
                                                 <span>Exceptional ({credit.points})</span>
@@ -5200,7 +5330,7 @@
 
                             {activeTab === 'checklist' && (
                                 <div className="space-y-4 fade-in">
-                                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                    <p className="text-ink-2 dark:text-ink-3 mb-4">
                                         <i className="fa-solid fa-clipboard-check mr-2"></i>
                                         Track your progress gathering required documentation:
                                     </p>
@@ -5213,7 +5343,7 @@
                                                     className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all
                                                         ${completedDocs[index]
                                                             ? 'bg-green-50 border-green-300 dark:bg-green-900/30 dark:border-green-700'
-                                                            : 'bg-gray-50 border-gray-200 hover:border-gray-300 dark:bg-gray-700 dark:border-gray-600'
+                                                            : 'bg-surface-2 border-line hover:border-gray-300 dark:bg-gray-700 dark:border-gray-600'
                                                         }`}
                                                 >
                                                     <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all
@@ -5224,7 +5354,7 @@
                                                     >
                                                         {completedDocs[index] && <i className="fa-solid fa-check text-white text-xs"></i>}
                                                     </div>
-                                                    <span className={`flex-grow ${completedDocs[index] ? 'text-green-700 dark:text-green-400' : 'text-gray-700 dark:text-gray-300'}`}>
+                                                    <span className={`flex-grow ${completedDocs[index] ? 'text-green-700 dark:text-green-400' : 'text-ink dark:text-gray-300'}`}>
                                                         {doc}
                                                     </span>
                                                     {completedDocs[index] && (
@@ -5234,7 +5364,7 @@
                                             ))}
                                         </div>
                                     ) : (
-                                        <div className="text-center py-8 text-gray-500">
+                                        <div className="text-center py-8 text-ink-2">
                                             <i className="fa-solid fa-folder-open text-4xl mb-3 text-gray-300"></i>
                                             <p>No documentation requirements specified</p>
                                         </div>
@@ -5242,10 +5372,10 @@
 
                                     {/* Progress Summary */}
                                     {credit.documentation && credit.documentation.length > 0 && (
-                                        <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                        <div className="mt-6 p-4 bg-surface-2 dark:bg-gray-700 rounded-xl">
                                             <div className="flex items-center justify-between mb-2">
-                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Documentation Progress</span>
-                                                <span className="text-sm font-mono text-gray-600 dark:text-gray-400">
+                                                <span className="text-sm font-medium text-ink dark:text-gray-300">Documentation Progress</span>
+                                                <span className="text-sm font-mono text-ink-2 dark:text-ink-3">
                                                     {Object.values(completedDocs).filter(Boolean).length} / {credit.documentation.length}
                                                 </span>
                                             </div>
@@ -5262,7 +5392,7 @@
 
                             {activeTab === 'notes' && (
                                 <div className="space-y-4 fade-in">
-                                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                    <p className="text-ink-2 dark:text-ink-3 mb-4">
                                         <i className="fa-solid fa-sticky-note mr-2"></i>
                                         Add project-specific notes for this credit:
                                     </p>
@@ -5271,9 +5401,9 @@
                                         onChange={(e) => setLocalNote(e.target.value)}
                                         onBlur={handleNoteSave}
                                         placeholder="Enter your notes here... (e.g., responsible team member, specific requirements, deadlines, etc.)"
-                                        className="w-full h-48 p-4 border border-gray-200 dark:border-gray-600 rounded-xl resize-none focus:ring-2 focus:ring-green-200 focus:border-green-500 transition-all dark:bg-gray-700 dark:text-white"
+                                        className="w-full h-48 p-4 border border-line dark:border-gray-600 rounded-xl resize-none focus:ring-2 focus:ring-green-200 focus:border-green-500 transition-all dark:bg-gray-700 dark:text-white"
                                     />
-                                    <div className="flex justify-between items-center text-sm text-gray-500">
+                                    <div className="flex justify-between items-center text-sm text-ink-2">
                                         <span>Auto-saves when you click outside</span>
                                         <button
                                             onClick={handleNoteSave}
@@ -5308,7 +5438,7 @@
 
                             {activeTab === 'criteria' && (
                                 <div className="space-y-6 fade-in">
-                                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                    <p className="text-ink-2 dark:text-ink-3 mb-4">
                                         Requirements for each performance level. Higher levels include all requirements from lower levels.
                                     </p>
 
@@ -5327,7 +5457,7 @@
                                                         header: 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600',
                                                         icon: 'bg-gray-400',
                                                         iconSymbol: 'fa-minus',
-                                                        text: 'text-gray-700 dark:text-gray-300'
+                                                        text: 'text-ink dark:text-gray-300'
                                                     },
                                                     credit: {
                                                         header: 'bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700',
@@ -5346,7 +5476,7 @@
                                                 const style = levelStyles[level.level] || levelStyles.credit;
 
                                                 return (
-                                                    <div key={level.level} className={`rounded-xl border-2 overflow-hidden transition-all ${isThisLevelSelected ? 'ring-2 ring-offset-2 ring-green-500 dark:ring-offset-gray-800' : 'border-gray-200 dark:border-gray-700'}`}>
+                                                    <div key={level.level} className={`rounded-xl border-2 overflow-hidden transition-all ${isThisLevelSelected ? 'ring-2 ring-offset-2 ring-green-500 dark:ring-offset-gray-800' : 'border-line dark:border-gray-700'}`}>
                                                         <div className={`${style.header} border-b px-4 py-3 flex items-center justify-between`}>
                                                             <div className="flex items-center gap-3">
                                                                 <div className={`w-8 h-8 ${style.icon} rounded-lg flex items-center justify-center`}>
@@ -5354,7 +5484,7 @@
                                                                 </div>
                                                                 <div>
                                                                     <h4 className={`font-semibold ${style.text}`}>{level.name}</h4>
-                                                                    <span className="text-xs text-gray-500 dark:text-gray-400">{level.points} points</span>
+                                                                    <span className="text-xs text-ink-2 dark:text-ink-3">{level.points} points</span>
                                                                 </div>
                                                             </div>
                                                             <div className="flex items-center gap-2">
@@ -5383,19 +5513,19 @@
                                                                                 <i className={`fa-solid text-xs ${
                                                                                     isIncludedInSelection
                                                                                         ? 'fa-check text-green-600 dark:text-green-400'
-                                                                                        : 'fa-circle text-gray-400 dark:text-gray-500'
+                                                                                        : 'fa-circle text-ink-3 dark:text-ink-2'
                                                                                 }`}></i>
                                                                             </div>
                                                                             <span className={`text-sm ${
                                                                                 isIncludedInSelection
-                                                                                    ? 'text-gray-800 dark:text-gray-200'
-                                                                                    : 'text-gray-600 dark:text-gray-400'
+                                                                                    ? 'text-ink dark:text-gray-200'
+                                                                                    : 'text-ink-2 dark:text-ink-3'
                                                                             }`}>{req}</span>
                                                                         </li>
                                                                     ))}
                                                                 </ul>
                                                             ) : (
-                                                                <p className="text-sm text-gray-500 dark:text-gray-400 italic">No specific requirements at this level</p>
+                                                                <p className="text-sm text-ink-2 dark:text-ink-3 italic">No specific requirements at this level</p>
                                                             )}
                                                         </div>
                                                     </div>
@@ -5414,15 +5544,15 @@
                                                             <span className="text-white font-bold text-sm">{index + 1}</span>
                                                         </div>
                                                         <div>
-                                                            <h4 className="font-semibold text-gray-800 dark:text-gray-200">{title}</h4>
-                                                            {desc && <p className="text-gray-600 dark:text-gray-400 mt-1">{desc}</p>}
+                                                            <h4 className="font-semibold text-ink dark:text-gray-200">{title}</h4>
+                                                            {desc && <p className="text-ink-2 dark:text-ink-3 mt-1">{desc}</p>}
                                                         </div>
                                                     </div>
                                                 </div>
                                             );
                                         })
                                     ) : (
-                                        <div className="text-center py-8 text-gray-500">
+                                        <div className="text-center py-8 text-ink-2">
                                             <i className="fa-solid fa-clipboard-list text-4xl mb-3 text-gray-300"></i>
                                             <p>Detailed criteria coming soon</p>
                                         </div>
@@ -5432,7 +5562,7 @@
 
                             {activeTab === 'pathways' && credit.pathways && (
                                 <div className="space-y-4 fade-in">
-                                    <p className="text-gray-600 mb-4">
+                                    <p className="text-ink-2 mb-4">
                                         Choose one of the following pathways to demonstrate compliance:
                                     </p>
                                     {credit.pathways.map((pathway, index) => (
@@ -5442,8 +5572,8 @@
                                                     <i className="fa-solid fa-route text-white"></i>
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-semibold text-gray-800">{pathway.name}</h4>
-                                                    <p className="text-gray-600 mt-1">{pathway.description}</p>
+                                                    <h4 className="font-semibold text-ink">{pathway.name}</h4>
+                                                    <p className="text-ink-2 mt-1">{pathway.description}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -5453,22 +5583,22 @@
 
                             {activeTab === 'documentation' && (
                                 <div className="space-y-4 fade-in">
-                                    <p className="text-gray-600 mb-4">
+                                    <p className="text-ink-2 mb-4">
                                         The following documentation is required for submission:
                                     </p>
                                     {credit.documentation && credit.documentation.length > 0 ? (
                                         <div className="space-y-2">
                                             {credit.documentation.map((doc, index) => (
-                                                <div key={index} className="doc-item flex items-center gap-3 p-4 rounded-xl bg-gray-50 border border-gray-100 fade-in" style={{ animationDelay: `${index * 50}ms` }}>
+                                                <div key={index} className="doc-item flex items-center gap-3 p-4 rounded-xl bg-surface-2 border border-gray-100 fade-in" style={{ animationDelay: `${index * 50}ms` }}>
                                                     <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center flex-shrink-0">
                                                         <i className="fa-solid fa-file-alt text-purple-600"></i>
                                                     </div>
-                                                    <span className="text-gray-700">{doc}</span>
+                                                    <span className="text-ink">{doc}</span>
                                                 </div>
                                             ))}
                                         </div>
                                     ) : (
-                                        <div className="text-center py-8 text-gray-500">
+                                        <div className="text-center py-8 text-ink-2">
                                             <i className="fa-solid fa-folder-open text-4xl mb-3 text-gray-300"></i>
                                             <p>Documentation requirements coming soon</p>
                                         </div>
@@ -5496,7 +5626,7 @@
 
                             {activeTab === 'faqs' && (
                                 <div className="space-y-4 fade-in">
-                                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                    <p className="text-ink-2 dark:text-ink-3 mb-4">
                                         <i className="fa-solid fa-circle-question mr-2"></i>
                                         Frequently asked questions related to this credit from GBCA:
                                     </p>
@@ -5543,11 +5673,11 @@
                                                         {isExpanded && (
                                                             <div className="px-4 pb-4 pt-0">
                                                                 <div className="ml-11 pl-4 border-l-2 border-teal-300 dark:border-teal-600">
-                                                                    <div className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
+                                                                    <div className="text-sm text-ink dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
                                                                         {cleanDescription}
                                                                     </div>
                                                                     {faq.tools && (
-                                                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-3 pt-3 border-t border-teal-200 dark:border-teal-700">
+                                                                        <p className="text-xs text-ink-2 dark:text-ink-3 mt-3 pt-3 border-t border-teal-200 dark:border-teal-700">
                                                                             <i className="fa-solid fa-wrench mr-1"></i>
                                                                             Applies to: {faq.tools}
                                                                         </p>
@@ -5560,15 +5690,15 @@
                                             })}
                                         </div>
                                     ) : (
-                                        <div className="text-center py-8 text-gray-500">
+                                        <div className="text-center py-8 text-ink-2">
                                             <i className="fa-solid fa-circle-question text-4xl mb-3 text-gray-300"></i>
                                             <p>No FAQs available for this credit</p>
                                         </div>
                                     )}
 
                                     {/* FAQ Source Note */}
-                                    <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                                    <div className="mt-6 p-4 bg-surface-2 dark:bg-gray-700 rounded-xl">
+                                        <p className="text-xs text-ink-2 dark:text-ink-3 flex items-center gap-2">
                                             <i className="fa-solid fa-info-circle"></i>
                                             FAQs sourced from GBCA Green Star Buildings Technical Manual
                                         </p>
@@ -5639,7 +5769,7 @@
             if (!hasAnyCredits) {
                 return (
                     <div className="glass-card rounded-2xl p-6 shadow-lg dark:bg-gray-800/80">
-                        <p className="text-center text-gray-400 py-12">
+                        <p className="text-center text-ink-3 py-12">
                             <i className="fa-solid fa-filter-circle-xmark text-4xl mb-3 block"></i>
                             No credits match your current filters
                             <br />
@@ -5662,8 +5792,8 @@
                                     <div className="flex items-center gap-3">
                                         <span className={category.colorClasses.text}><CategoryIcon category={category.id} size={32} /></span>
                                         <div>
-                                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">{category.name}</h2>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">{category.description}</p>
+                                            <h2 className="font-display text-xl font-bold text-ink dark:text-white">{category.name}</h2>
+                                            <p className="text-sm text-ink-2 dark:text-ink-3">{category.description}</p>
                                         </div>
                                     </div>
                                     <div className={`${category.colorClasses.bgLight} ${category.colorClasses.text} px-4 py-2 rounded-lg`}>
@@ -5723,8 +5853,8 @@
                     <div className="flex items-center gap-3 mb-6">
                         <i className="fa-solid fa-timeline text-2xl text-purple-500"></i>
                         <div>
-                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">Project Timeline</h2>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Credits organized by primary project phase</p>
+                            <h2 className="font-display text-xl font-bold text-ink dark:text-white">Project Timeline</h2>
+                            <p className="text-sm text-ink-2 dark:text-ink-3">Credits organized by primary project phase</p>
                         </div>
                     </div>
 
@@ -5737,8 +5867,8 @@
                                             <i className={`fa-solid ${phase.icon} text-purple-600 text-sm`}></i>
                                         </div>
                                         <div>
-                                            <h3 className="font-semibold text-gray-800 dark:text-white text-sm">{phase.name}</h3>
-                                            <span className="text-xs text-gray-500">{creditsByPhase[phase.id].length} credits</span>
+                                            <h3 className="font-semibold text-ink dark:text-white text-sm">{phase.name}</h3>
+                                            <span className="text-xs text-ink-2">{creditsByPhase[phase.id].length} credits</span>
                                         </div>
                                     </div>
 
@@ -5754,11 +5884,11 @@
                                                     className={`timeline-credit p-3 rounded-lg border cursor-pointer
                                                         ${isSelected
                                                             ? 'bg-green-50 border-green-300 dark:bg-green-900/30 dark:border-green-700'
-                                                            : 'bg-white border-gray-200 hover:border-purple-300 dark:bg-gray-700 dark:border-gray-600'
+                                                            : 'bg-white border-line hover:border-purple-300 dark:bg-gray-700 dark:border-gray-600'
                                                         }`}
                                                 >
                                                     <div className="flex items-center gap-2 mb-1">
-                                                        <span className={category.colorClasses?.text || 'text-stone-500'}><CategoryIcon category={category.id} size={20} /></span>
+                                                        <span className={category.colorClasses?.text || 'text-ink-3'}><CategoryIcon category={category.id} size={20} /></span>
                                                         <span className={`text-xs px-1.5 py-0.5 rounded ${
                                                             credit.difficulty === 'Easy' ? 'bg-green-100 text-green-600 dark:bg-green-900/50' :
                                                             credit.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/50' :
@@ -5767,9 +5897,9 @@
                                                             {credit.difficulty}
                                                         </span>
                                                     </div>
-                                                    <h4 className="font-medium text-sm text-gray-800 dark:text-white">{credit.name}</h4>
+                                                    <h4 className="font-medium text-sm text-ink dark:text-white">{credit.name}</h4>
                                                     <div className="flex items-center justify-between mt-1">
-                                                        <span className="text-xs text-gray-500">{credit.points} pts</span>
+                                                        <span className="text-xs text-ink-2">{credit.points} pts</span>
                                                         {isSelected && <i className="fa-solid fa-check text-green-500 text-xs"></i>}
                                                     </div>
                                                 </div>
@@ -5777,7 +5907,7 @@
                                         })}
 
                                         {creditsByPhase[phase.id].length === 0 && (
-                                            <p className="text-xs text-gray-400 italic py-2">No credits in this phase</p>
+                                            <p className="text-xs text-ink-3 italic py-2">No credits in this phase</p>
                                         )}
                                     </div>
                                 </div>
@@ -5815,25 +5945,25 @@
                     <div className="flex items-center gap-3 mb-6">
                         <i className="fa-solid fa-table-cells text-2xl text-blue-500"></i>
                         <div>
-                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">Responsibility Matrix</h2>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Assign team responsibilities for selected credits</p>
+                            <h2 className="font-display text-xl font-bold text-ink dark:text-white">Responsibility Matrix</h2>
+                            <p className="text-sm text-ink-2 dark:text-ink-3">Assign team responsibilities for selected credits</p>
                         </div>
                     </div>
 
                     {selectedCreditsList.length === 0 ? (
                         <div className="text-center py-12">
                             <i className="fa-solid fa-clipboard-list text-4xl text-gray-300 mb-3"></i>
-                            <p className="text-gray-500">No credits selected yet</p>
-                            <p className="text-sm text-gray-400">Select credits from the Credits view to assign responsibilities</p>
+                            <p className="text-ink-2">No credits selected yet</p>
+                            <p className="text-sm text-ink-3">Select credits from the Credits view to assign responsibilities</p>
                         </div>
                     ) : (
                         <div className="overflow-x-auto">
                             <table className="w-full">
                                 <thead>
-                                    <tr className="border-b border-gray-200 dark:border-gray-700">
-                                        <th className="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">Credit</th>
+                                    <tr className="border-b border-line dark:border-gray-700">
+                                        <th className="text-left py-3 px-4 font-semibold text-ink dark:text-gray-300">Credit</th>
                                         {teamRoles.map(role => (
-                                            <th key={role.id} className="text-center py-3 px-2 font-semibold text-gray-700 dark:text-gray-300">
+                                            <th key={role.id} className="text-center py-3 px-2 font-semibold text-ink dark:text-gray-300">
                                                 <div className="flex flex-col items-center gap-1">
                                                     <i className={`fa-solid ${role.icon} text-${role.color}-500`}></i>
                                                     <span className="text-xs">{role.name}</span>
@@ -5844,16 +5974,16 @@
                                 </thead>
                                 <tbody>
                                     {selectedCreditsList.map(({ credit, category, creditKey }) => (
-                                        <tr key={creditKey} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                        <tr key={creditKey} className="border-b border-gray-100 dark:border-gray-700 hover:bg-surface-2 dark:hover:bg-gray-700/50">
                                             <td className="py-3 px-4">
                                                 <button
                                                     onClick={() => onViewCreditDetails(credit, category)}
                                                     className="flex items-center gap-2 hover:text-green-600 transition-colors text-left"
                                                 >
-                                                    <span className={category.colorClasses?.text || 'text-stone-500'}><CategoryIcon category={category.id} size={20} /></span>
+                                                    <span className={category.colorClasses?.text || 'text-ink-3'}><CategoryIcon category={category.id} size={20} /></span>
                                                     <div>
-                                                        <div className="font-medium text-gray-800 dark:text-white text-sm">{credit.name}</div>
-                                                        <div className="text-xs text-gray-500">{category.name}</div>
+                                                        <div className="font-medium text-ink dark:text-white text-sm">{credit.name}</div>
+                                                        <div className="text-xs text-ink-2">{category.name}</div>
                                                     </div>
                                                 </button>
                                             </td>
@@ -5887,11 +6017,11 @@
                     )}
 
                     {/* Legend */}
-                    <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <p className="text-xs text-gray-500 mb-2">Team Roles:</p>
+                    <div className="mt-6 pt-4 border-t border-line dark:border-gray-700">
+                        <p className="text-xs text-ink-2 mb-2">Team Roles:</p>
                         <div className="flex flex-wrap gap-3">
                             {teamRoles.map(role => (
-                                <div key={role.id} className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
+                                <div key={role.id} className="flex items-center gap-1.5 text-xs text-ink-2 dark:text-ink-3">
                                     <i className={`fa-solid ${role.icon} text-${role.color}-500`}></i>
                                     <span>{role.name}</span>
                                 </div>
@@ -5934,8 +6064,8 @@
                         <div className="flex items-center gap-3">
                             <i className="fa-solid fa-file-lines text-2xl text-purple-500"></i>
                             <div>
-                                <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">Documentation Checklist</h2>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Track required documentation for your selected credits</p>
+                                <h2 className="font-display text-xl font-bold text-ink dark:text-white">Documentation Checklist</h2>
+                                <p className="text-sm text-ink-2 dark:text-ink-3">Track required documentation for your selected credits</p>
                             </div>
                         </div>
                         {totalDocs > 0 && (
@@ -5943,7 +6073,7 @@
                                 <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                                     {Math.round((completedDocs / totalDocs) * 100)}%
                                 </div>
-                                <div className="text-xs text-gray-500">{completedDocs} of {totalDocs} complete</div>
+                                <div className="text-xs text-ink-2">{completedDocs} of {totalDocs} complete</div>
                             </div>
                         )}
                     </div>
@@ -5963,8 +6093,8 @@
                     {selectedCreditsList.length === 0 ? (
                         <div className="text-center py-12">
                             <i className="fa-solid fa-folder-open text-4xl text-gray-300 mb-3"></i>
-                            <p className="text-gray-500">No credits selected yet</p>
-                            <p className="text-sm text-gray-400">Select credits from the Credits view to see required documentation</p>
+                            <p className="text-ink-2">No credits selected yet</p>
+                            <p className="text-sm text-ink-3">Select credits from the Credits view to see required documentation</p>
                         </div>
                     ) : (
                         <div className="space-y-6">
@@ -5975,22 +6105,22 @@
                                 const isComplete = creditCompleted === creditTotal;
 
                                 return (
-                                    <div key={creditKey} className={`rounded-xl border-2 overflow-hidden transition-all ${isComplete ? 'border-green-300 bg-green-50/50 dark:border-green-700 dark:bg-green-900/20' : 'border-gray-200 dark:border-gray-700'}`}>
+                                    <div key={creditKey} className={`rounded-xl border-2 overflow-hidden transition-all ${isComplete ? 'border-green-300 bg-green-50/50 dark:border-green-700 dark:bg-green-900/20' : 'border-line dark:border-gray-700'}`}>
                                         {/* Credit Header */}
                                         <div
-                                            className={`p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${isComplete ? 'bg-green-50 dark:bg-green-900/30' : 'bg-gray-50 dark:bg-gray-800'}`}
+                                            className={`p-4 cursor-pointer hover:bg-surface-2 dark:hover:bg-gray-700/50 transition-colors ${isComplete ? 'bg-green-50 dark:bg-green-900/30' : 'bg-surface-2 dark:bg-gray-800'}`}
                                             onClick={() => onViewCreditDetails(credit, category)}
                                         >
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-3">
-                                                    <span className={category.colorClasses?.text || 'text-stone-500'}><CategoryIcon category={category.id} size={24} /></span>
+                                                    <span className={category.colorClasses?.text || 'text-ink-3'}><CategoryIcon category={category.id} size={24} /></span>
                                                     <div>
-                                                        <h3 className="font-semibold text-gray-800 dark:text-white">{credit.name}</h3>
-                                                        <p className="text-xs text-gray-500">{category.name}</p>
+                                                        <h3 className="font-semibold text-ink dark:text-white">{credit.name}</h3>
+                                                        <p className="text-xs text-ink-2">{category.name}</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-3">
-                                                    <span className={`text-sm font-medium ${isComplete ? 'text-green-600 dark:text-green-400' : 'text-gray-500'}`}>
+                                                    <span className={`text-sm font-medium ${isComplete ? 'text-green-600 dark:text-green-400' : 'text-ink-2'}`}>
                                                         {creditCompleted}/{creditTotal}
                                                     </span>
                                                     {isComplete && <i className="fa-solid fa-circle-check text-green-500 text-xl"></i>}
@@ -6027,7 +6157,7 @@
                                                         >
                                                             {isChecked && <i className="fa-solid fa-check text-white text-xs"></i>}
                                                         </div>
-                                                        <span className={`text-sm ${isChecked ? 'text-green-700 dark:text-green-300 line-through' : 'text-gray-700 dark:text-gray-300'}`}>
+                                                        <span className={`text-sm ${isChecked ? 'text-green-700 dark:text-green-300 line-through' : 'text-ink dark:text-gray-300'}`}>
                                                             {doc}
                                                         </span>
                                                     </div>
@@ -6055,14 +6185,14 @@
                     >
                         <div className="flex items-center justify-between mb-6">
                             <div>
-                                <h2 className="font-display text-2xl font-bold text-gray-800">Green Star Calculators</h2>
-                                <p className="text-gray-500">Required calculators for specific credits</p>
+                                <h2 className="font-display text-2xl font-bold text-ink">Green Star Calculators</h2>
+                                <p className="text-ink-2">Required calculators for specific credits</p>
                             </div>
                             <button
                                 onClick={onClose}
                                 className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
                             >
-                                <i className="fa-solid fa-xmark text-gray-600"></i>
+                                <i className="fa-solid fa-xmark text-ink-2"></i>
                             </button>
                         </div>
 
@@ -6070,13 +6200,13 @@
                             {calculatorsData.map((calc) => (
                                 <div
                                     key={calc.id}
-                                    className="bg-white rounded-xl p-4 border border-gray-200 hover:border-green-300 hover:shadow-md transition-all cursor-pointer"
+                                    className="bg-white rounded-xl p-4 border border-line hover:border-green-300 hover:shadow-md transition-all cursor-pointer"
                                 >
                                     <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center mb-3">
                                         <i className={`fa-solid ${calc.icon} text-xl text-green-600`}></i>
                                     </div>
-                                    <h3 className="font-medium text-gray-800 mb-1">{calc.name}</h3>
-                                    <p className="text-sm text-gray-500 mb-3">{calc.description}</p>
+                                    <h3 className="font-medium text-ink mb-1">{calc.name}</h3>
+                                    <p className="text-sm text-ink-2 mb-3">{calc.description}</p>
                                     <button className="text-sm text-green-600 font-medium hover:text-green-700">
                                         Open Calculator <i className="fa-solid fa-arrow-right ml-1"></i>
                                     </button>
@@ -6084,7 +6214,7 @@
                             ))}
                         </div>
 
-                        <p className="text-center text-sm text-gray-400 mt-6">
+                        <p className="text-center text-sm text-ink-3 mt-6">
                             Calculator functionality coming in Phase 3
                         </p>
                     </div>
@@ -6169,23 +6299,23 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Arial, sans-serif; padding: 40px; color: #374151; line-height: 1.6; }
-        .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #2D5A47; padding-bottom: 20px; }
-        .header h1 { color: #2D5A47; font-size: 28px; margin-bottom: 10px; }
-        .header .rating { font-size: 20px; color: #2D5A47; margin: 10px 0; font-weight: 500; }
+        .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #2E6B3F; padding-bottom: 20px; }
+        .header h1 { color: #2E6B3F; font-size: 28px; margin-bottom: 10px; }
+        .header .rating { font-size: 20px; color: #2E6B3F; margin: 10px 0; font-weight: 500; }
         .header .meta { color: #6B7280; font-size: 14px; }
         .summary { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
         .summary-box { flex: 1; min-width: 150px; background: #FAFAF9; border: 1px solid #E7E5E4; border-radius: 8px; padding: 15px; text-align: center; }
         .summary-box h3 { color: #374151; font-size: 14px; margin-bottom: 5px; }
-        .summary-box .value { font-size: 24px; font-weight: bold; color: #2D5A47; }
+        .summary-box .value { font-size: 24px; font-weight: bold; color: #2E6B3F; }
         .category { margin-bottom: 30px; page-break-inside: avoid; }
-        .category-header { background: #2D5A47; color: white; padding: 12px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; }
+        .category-header { background: #2E6B3F; color: white; padding: 12px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; }
         .category-header h2 { font-size: 18px; }
         .category-header .points { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 14px; }
         .credit { border: 1px solid #E7E5E4; border-top: none; padding: 15px 20px; }
         .credit:last-child { border-radius: 0 0 8px 8px; }
         .credit-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
         .credit-name { font-weight: 600; color: #374151; }
-        .credit-points { background: #F0FDF4; color: #2D5A47; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 500; }
+        .credit-points { background: #F0FDF4; color: #2E6B3F; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 500; }
         .credit-level { font-size: 12px; color: #6B7280; margin-top: 2px; }
         .credit-required { background: #FEF2F2; color: #DC2626; padding: 1px 6px; border-radius: 4px; font-size: 11px; margin-left: 8px; }
         .credit-notes { background: #FFFBEB; padding: 10px; border-radius: 6px; margin-top: 10px; font-size: 13px; }
@@ -6194,7 +6324,7 @@
         .documentation h4 { color: #4B5563; margin-bottom: 5px; }
         .doc-item { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
         .doc-item .checkbox { width: 14px; height: 14px; border: 2px solid #D6D3D1; border-radius: 3px; display: inline-block; }
-        .doc-item .checkbox.checked { background: #2D5A47; border-color: #2D5A47; }
+        .doc-item .checkbox.checked { background: #2E6B3F; border-color: #2E6B3F; }
         .no-credits { color: #9CA3AF; font-style: italic; padding: 15px 20px; border: 1px solid #E7E5E4; border-top: none; border-radius: 0 0 8px 8px; }
         .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #E7E5E4; text-align: center; color: #9CA3AF; font-size: 12px; }
         @media print {
@@ -6484,65 +6614,65 @@
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="font-display text-xl font-bold text-gray-800">Export Submission</h2>
+                            <h2 className="font-display text-xl font-bold text-ink">Export Submission</h2>
                             <button
                                 onClick={onClose}
                                 className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
                             >
-                                <i className="fa-solid fa-xmark text-gray-600"></i>
+                                <i className="fa-solid fa-xmark text-ink-2"></i>
                             </button>
                         </div>
 
                         <div className="space-y-3">
                             <button
                                 onClick={() => handleExport('pdf')}
-                                className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-all"
+                                className="w-full flex items-center gap-4 p-4 rounded-xl border border-line hover:border-red-300 hover:bg-red-50 transition-all"
                             >
                                 <div className="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center">
                                     <i className="fa-solid fa-file-pdf text-xl text-red-600"></i>
                                 </div>
                                 <div className="text-left">
-                                    <p className="font-medium text-gray-800">PDF Checklist</p>
-                                    <p className="text-sm text-gray-500">Printable submission checklist</p>
+                                    <p className="font-medium text-ink">PDF Checklist</p>
+                                    <p className="text-sm text-ink-2">Printable submission checklist</p>
                                 </div>
                             </button>
 
                             <button
                                 onClick={() => handleExport('json')}
-                                className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all"
+                                className="w-full flex items-center gap-4 p-4 rounded-xl border border-line hover:border-blue-300 hover:bg-blue-50 transition-all"
                             >
                                 <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
                                     <i className="fa-solid fa-file-code text-xl text-blue-600"></i>
                                 </div>
                                 <div className="text-left">
-                                    <p className="font-medium text-gray-800">JSON Data</p>
-                                    <p className="text-sm text-gray-500">Machine-readable format</p>
+                                    <p className="font-medium text-ink">JSON Data</p>
+                                    <p className="text-sm text-ink-2">Machine-readable format</p>
                                 </div>
                             </button>
 
                             <button
                                 onClick={() => handleExport('excel')}
-                                className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-all"
+                                className="w-full flex items-center gap-4 p-4 rounded-xl border border-line hover:border-green-300 hover:bg-green-50 transition-all"
                             >
                                 <div className="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center">
                                     <i className="fa-solid fa-file-excel text-xl text-green-600"></i>
                                 </div>
                                 <div className="text-left">
-                                    <p className="font-medium text-gray-800">Excel Progress Report</p>
-                                    <p className="text-sm text-gray-500">Multi-sheet workbook with full details</p>
+                                    <p className="font-medium text-ink">Excel Progress Report</p>
+                                    <p className="text-sm text-ink-2">Multi-sheet workbook with full details</p>
                                 </div>
                             </button>
 
                             <button
                                 onClick={() => handleExport('checklist')}
-                                className="w-full flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-purple-300 hover:bg-purple-50 transition-all"
+                                className="w-full flex items-center gap-4 p-4 rounded-xl border border-line hover:border-purple-300 hover:bg-purple-50 transition-all"
                             >
                                 <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center">
                                     <i className="fa-solid fa-clipboard-list text-xl text-purple-600"></i>
                                 </div>
                                 <div className="text-left">
-                                    <p className="font-medium text-gray-800">Submission Checklist</p>
-                                    <p className="text-sm text-gray-500">Print-ready document checklist</p>
+                                    <p className="font-medium text-ink">Submission Checklist</p>
+                                    <p className="text-sm text-ink-2">Print-ready document checklist</p>
                                 </div>
                             </button>
                         </div>
@@ -6561,12 +6691,12 @@
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
                     <div className="glass-card dark:bg-gray-800 rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">
+                            <h2 className="font-display text-xl font-bold text-ink dark:text-white">
                                 <i className="fa-solid fa-folder-open text-blue-500 mr-2"></i>
                                 Project Manager
                             </h2>
                             <button onClick={onClose} className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors">
-                                <i className="fa-solid fa-xmark text-gray-600 dark:text-gray-300"></i>
+                                <i className="fa-solid fa-xmark text-ink-2 dark:text-gray-300"></i>
                             </button>
                         </div>
 
@@ -6605,10 +6735,10 @@
 
                         {/* Projects List */}
                         <div className="flex-1 overflow-y-auto">
-                            <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-3">Your Projects ({projects.length})</h3>
+                            <h3 className="font-medium text-ink dark:text-gray-300 mb-3">Your Projects ({projects.length})</h3>
                             <div className="space-y-2">
                                 {projects.length === 0 ? (
-                                    <p className="text-gray-500 text-sm italic">No projects yet. Create your first project above.</p>
+                                    <p className="text-ink-2 text-sm italic">No projects yet. Create your first project above.</p>
                                 ) : (
                                     projects.map(project => (
                                         <div
@@ -6616,14 +6746,14 @@
                                             className={`p-3 rounded-xl border-2 transition-all cursor-pointer ${
                                                 project.id === activeProjectId
                                                     ? 'border-green-500 bg-green-50 dark:bg-green-900/30'
-                                                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                                                    : 'border-line dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                                             }`}
                                             onClick={() => onSwitchProject(project.id)}
                                         >
                                             <div className="flex items-center justify-between">
                                                 <div>
-                                                    <p className="font-medium text-gray-800 dark:text-white">{project.name}</p>
-                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                    <p className="font-medium text-ink dark:text-white">{project.name}</p>
+                                                    <p className="text-xs text-ink-2 dark:text-ink-3">
                                                         Created: {new Date(project.createdAt).toLocaleDateString()}
                                                         {project.imported && ' (Imported)'}
                                                     </p>
@@ -6663,32 +6793,32 @@
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
                     <div className="glass-card dark:bg-gray-800 rounded-2xl p-6 max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">
+                            <h2 className="font-display text-xl font-bold text-ink dark:text-white">
                                 <i className="fa-solid fa-wand-magic-sparkles text-purple-500 mr-2"></i>
                                 Project Templates
                             </h2>
                             <button onClick={onClose} className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors">
-                                <i className="fa-solid fa-xmark text-gray-600 dark:text-gray-300"></i>
+                                <i className="fa-solid fa-xmark text-ink-2 dark:text-gray-300"></i>
                             </button>
                         </div>
 
-                        <p className="text-gray-600 dark:text-gray-400 mb-4">Choose a template to pre-populate credits suitable for your building type.</p>
+                        <p className="text-ink-2 dark:text-ink-3 mb-4">Choose a template to pre-populate credits suitable for your building type.</p>
 
                         <div className="flex-1 overflow-y-auto">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {projectTemplates.map(template => (
-                                    <div key={template.id} className="p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700 transition-all">
+                                    <div key={template.id} className="p-4 rounded-xl border-2 border-line dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700 transition-all">
                                         <div className="flex items-center gap-3 mb-2">
                                             <div className="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
                                                 <i className={`fa-solid ${template.icon} text-xl text-purple-600 dark:text-purple-400`}></i>
                                             </div>
                                             <div>
-                                                <h3 className="font-bold text-gray-800 dark:text-white">{template.name}</h3>
-                                                <p className="text-xs text-gray-500">Target: {template.targetRating} Star</p>
+                                                <h3 className="font-bold text-ink dark:text-white">{template.name}</h3>
+                                                <p className="text-xs text-ink-2">Target: {template.targetRating} Star</p>
                                             </div>
                                         </div>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{template.description}</p>
-                                        <p className="text-xs text-gray-500 mb-3">{template.suggestedCredits.length} credits pre-selected</p>
+                                        <p className="text-sm text-ink-2 dark:text-ink-3 mb-3">{template.description}</p>
+                                        <p className="text-xs text-ink-2 mb-3">{template.suggestedCredits.length} credits pre-selected</p>
                                         <div className="flex gap-2">
                                             <button
                                                 onClick={() => onApplyTemplate(template.id)}
@@ -6720,12 +6850,12 @@
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
                     <div className="glass-card dark:bg-gray-800 rounded-2xl p-6 max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">
+                            <h2 className="font-display text-xl font-bold text-ink dark:text-white">
                                 <i className="fa-solid fa-chart-line text-amber-500 mr-2"></i>
                                 Gap Analysis
                             </h2>
                             <button onClick={onClose} className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors">
-                                <i className="fa-solid fa-xmark text-gray-600 dark:text-gray-300"></i>
+                                <i className="fa-solid fa-xmark text-ink-2 dark:text-gray-300"></i>
                             </button>
                         </div>
 
@@ -6744,7 +6874,7 @@
 
                         {/* Recommended Credits */}
                         <div className="mb-4">
-                            <h3 className="font-bold text-gray-800 dark:text-white mb-3 flex items-center gap-2">
+                            <h3 className="font-bold text-ink dark:text-white mb-3 flex items-center gap-2">
                                 <i className="fa-solid fa-lightbulb text-yellow-500"></i>
                                 Recommended Path ({gapAnalysis.recommended.length} credits)
                             </h3>
@@ -6752,10 +6882,10 @@
                                 {gapAnalysis.recommended.map(({ key, credit, category, points, difficulty }) => (
                                     <div key={key} className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                                         <div className="flex items-center gap-3">
-                                            <span className={category.colorClasses?.text || 'text-stone-500'}><CategoryIcon category={category.id} size={20} /></span>
+                                            <span className={category.colorClasses?.text || 'text-ink-3'}><CategoryIcon category={category.id} size={20} /></span>
                                             <div>
-                                                <p className="font-medium text-gray-800 dark:text-white text-sm">{credit.name}</p>
-                                                <p className="text-xs text-gray-500">{category.name} • {difficulty}</p>
+                                                <p className="font-medium text-ink dark:text-white text-sm">{credit.name}</p>
+                                                <p className="text-xs text-ink-2">{category.name} • {difficulty}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
@@ -6774,22 +6904,22 @@
 
                         {/* Other Suggestions */}
                         <div className="flex-1 overflow-y-auto">
-                            <h3 className="font-bold text-gray-800 dark:text-white mb-3">All Suggestions (sorted by value)</h3>
+                            <h3 className="font-bold text-ink dark:text-white mb-3">All Suggestions (sorted by value)</h3>
                             <div className="space-y-2">
                                 {gapAnalysis.suggestions.map(({ key, credit, category, points, difficulty, required }) => (
                                     <div
                                         key={key}
-                                        className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                                        className="flex items-center justify-between p-3 bg-surface-2 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                                         onClick={() => onViewCredit(credit, category)}
                                     >
                                         <div className="flex items-center gap-3">
-                                            <span className={category.colorClasses?.text || 'text-stone-500'}><CategoryIcon category={category.id} size={20} /></span>
+                                            <span className={category.colorClasses?.text || 'text-ink-3'}><CategoryIcon category={category.id} size={20} /></span>
                                             <div>
-                                                <p className="font-medium text-gray-800 dark:text-white text-sm">
+                                                <p className="font-medium text-ink dark:text-white text-sm">
                                                     {credit.name}
                                                     {required && <span className="ml-2 text-xs bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2 py-0.5 rounded">Required</span>}
                                                 </p>
-                                                <p className="text-xs text-gray-500">{category.name}</p>
+                                                <p className="text-xs text-ink-2">{category.name}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3">
@@ -6798,7 +6928,7 @@
                                                 difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
                                                 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                                             }`}>{difficulty}</span>
-                                            <span className="font-bold text-gray-700 dark:text-gray-300">+{points}</span>
+                                            <span className="font-bold text-ink dark:text-gray-300">+{points}</span>
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
@@ -6826,24 +6956,24 @@
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
                     <div className="glass-card dark:bg-gray-800 rounded-2xl p-6 max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">
+                            <h2 className="font-display text-xl font-bold text-ink dark:text-white">
                                 <i className="fa-solid fa-link text-cyan-500 mr-2"></i>
                                 Credit Synergies
                             </h2>
                             <button onClick={onClose} className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors">
-                                <i className="fa-solid fa-xmark text-gray-600 dark:text-gray-300"></i>
+                                <i className="fa-solid fa-xmark text-ink-2 dark:text-gray-300"></i>
                             </button>
                         </div>
 
-                        <p className="text-gray-600 dark:text-gray-400 mb-4">
+                        <p className="text-ink-2 dark:text-ink-3 mb-4">
                             These credits complement your current selections and may be easier to achieve together.
                         </p>
 
                         {synergies.length === 0 ? (
                             <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
-                                <i className="fa-solid fa-puzzle-piece text-4xl text-gray-300 dark:text-gray-600 mb-4"></i>
-                                <p className="text-gray-500 dark:text-gray-400">No synergies found for your current selection.</p>
-                                <p className="text-sm text-gray-400 dark:text-gray-500">Select more credits to discover synergies.</p>
+                                <i className="fa-solid fa-puzzle-piece text-4xl text-gray-300 dark:text-ink-2 mb-4"></i>
+                                <p className="text-ink-2 dark:text-ink-3">No synergies found for your current selection.</p>
+                                <p className="text-sm text-ink-3 dark:text-ink-2">Select more credits to discover synergies.</p>
                             </div>
                         ) : (
                             <div className="flex-1 overflow-y-auto space-y-3">
@@ -6855,10 +6985,10 @@
                                     >
                                         <div className="flex items-center justify-between mb-2">
                                             <div className="flex items-center gap-3">
-                                                <span className={category.colorClasses?.text || 'text-stone-500'}><CategoryIcon category={category.id} size={22} /></span>
+                                                <span className={category.colorClasses?.text || 'text-ink-3'}><CategoryIcon category={category.id} size={22} /></span>
                                                 <div>
-                                                    <p className="font-bold text-gray-800 dark:text-white">{credit.name}</p>
-                                                    <p className="text-xs text-gray-500 dark:text-gray-400">{category.name}</p>
+                                                    <p className="font-bold text-ink dark:text-white">{credit.name}</p>
+                                                    <p className="text-xs text-ink-2 dark:text-ink-3">{category.name}</p>
                                                 </div>
                                             </div>
                                             <button
@@ -7069,12 +7199,12 @@
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
                     <div className="glass-card dark:bg-gray-800 rounded-2xl p-6 max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="font-display text-xl font-bold text-gray-800 dark:text-white">
+                            <h2 className="font-display text-xl font-bold text-ink dark:text-white">
                                 <i className="fa-solid fa-file-import text-indigo-500 mr-2"></i>
                                 Admin Data Import
                             </h2>
                             <button onClick={onClose} className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors">
-                                <i className="fa-solid fa-xmark text-gray-600 dark:text-gray-300"></i>
+                                <i className="fa-solid fa-xmark text-ink-2 dark:text-gray-300"></i>
                             </button>
                         </div>
 
@@ -7104,7 +7234,7 @@
                             >
                                 <i className={`fa-solid ${isProcessing ? 'fa-spinner fa-spin' : 'fa-cloud-arrow-up'} text-3xl`}></i>
                                 <span className="font-medium">{isProcessing ? 'Processing...' : 'Click to upload Excel file'}</span>
-                                <span className="text-xs text-gray-500">.xlsx or .xls files only</span>
+                                <span className="text-xs text-ink-2">.xlsx or .xls files only</span>
                             </button>
                         </div>
 
@@ -7126,7 +7256,7 @@
                         {/* Preview */}
                         {importPreview && (
                             <div className="flex-1 overflow-y-auto mb-4">
-                                <h3 className="font-bold text-gray-800 dark:text-white mb-3">Import Preview</h3>
+                                <h3 className="font-bold text-ink dark:text-white mb-3">Import Preview</h3>
                                 <div className="grid grid-cols-2 gap-3">
                                     {[
                                         { name: 'Categories', count: importPreview.categories, icon: 'fa-folder', color: 'blue' },
@@ -7140,7 +7270,7 @@
                                         <div key={item.name} className={`p-3 bg-${item.color}-50 dark:bg-${item.color}-900/20 rounded-lg border border-${item.color}-200 dark:border-${item.color}-800`}>
                                             <div className="flex items-center gap-2">
                                                 <i className={`fa-solid ${item.icon} text-${item.color}-500`}></i>
-                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.name}</span>
+                                                <span className="text-sm font-medium text-ink dark:text-gray-300">{item.name}</span>
                                                 <span className={`ml-auto font-bold text-${item.color}-600 dark:text-${item.color}-400`}>{item.count}</span>
                                             </div>
                                         </div>
@@ -7150,10 +7280,10 @@
                         )}
 
                         {/* Actions */}
-                        <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <div className="flex gap-3 pt-4 border-t border-line dark:border-gray-700">
                             <button
                                 onClick={handleDownloadTemplate}
-                                className="flex-1 py-2 px-4 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                className="flex-1 py-2 px-4 bg-gray-100 dark:bg-gray-700 text-ink dark:text-gray-300 rounded-lg font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                             >
                                 <i className="fa-solid fa-download mr-2"></i>
                                 Get Template
@@ -7238,18 +7368,18 @@
                 <div className="flex gap-3 mb-6">
                     <button
                         onClick={onOpenCalculators}
-                        className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl hover:border-green-300 hover:bg-green-50 transition-all"
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-line rounded-xl hover:border-green-300 hover:bg-green-50 transition-all"
                     >
                         <i className="fa-solid fa-calculator text-green-600"></i>
-                        <span className="font-medium text-gray-700">Calculators</span>
+                        <span className="font-medium text-ink">Calculators</span>
                     </button>
 
                     <button
                         onClick={onOpenExport}
-                        className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition-all"
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-line rounded-xl hover:border-blue-300 hover:bg-blue-50 transition-all"
                     >
                         <i className="fa-solid fa-download text-blue-600"></i>
-                        <span className="font-medium text-gray-700">Export</span>
+                        <span className="font-medium text-ink">Export</span>
                     </button>
 
                     <button
@@ -7910,7 +8040,7 @@
                         onClick={() => setSidebarOpen(!sidebarOpen)}
                         className={`sidebar-toggle ${!sidebarOpen ? 'collapsed' : ''}`}
                     >
-                        <i className={`fa-solid ${sidebarOpen ? 'fa-chevron-left' : 'fa-chevron-right'} text-gray-500 text-sm`}></i>
+                        <i className={`fa-solid ${sidebarOpen ? 'fa-chevron-left' : 'fa-chevron-right'} text-ink-2 text-sm`}></i>
                     </button>
 
                     {/* Collapsible Sidebar */}
@@ -7918,18 +8048,20 @@
                         <div className="p-4">
                             {/* Logo & Project Name */}
                             <div className="flex items-center gap-3 mb-6">
-                                <div className="w-10 h-10 rounded-xl gbca-header flex items-center justify-center shadow-lg">
-                                    <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M24 4L28.5 17.5H42L31 26.5L35.5 40L24 31L12.5 40L17 26.5L6 17.5H19.5L24 4Z" fill="white" opacity="0.9"/>
-                                    </svg>
+                                <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg">
+                                    <img
+                                        src="gbca-logo.svg"
+                                        alt="Green Star Rating"
+                                        className="w-full h-full object-cover"
+                                    />
                                 </div>
                                 <div className="flex-grow min-w-0">
-                                    <h1 className="font-display font-bold text-gray-800 dark:text-white text-sm">Green Star</h1>
+                                    <h1 className="font-display font-bold text-ink dark:text-white text-sm">Green Star</h1>
                                     <input
                                         type="text"
                                         value={projectName}
                                         onChange={(e) => setProjectName(e.target.value)}
-                                        className="text-xs text-gray-500 dark:text-gray-400 bg-transparent border-none p-0 w-full focus:ring-0 truncate"
+                                        className="text-xs text-ink-2 dark:text-ink-3 bg-transparent border-none p-0 w-full focus:ring-0 truncate"
                                         placeholder="Project name..."
                                     />
                                 </div>
@@ -7938,34 +8070,34 @@
                             {/* Score Display - GBCA Style */}
                             <div className="bg-gradient-to-br from-[#1B4D3E]/5 to-[#0D9488]/10 dark:from-[#1B4D3E]/30 dark:to-[#0D9488]/20 rounded-xl p-4 mb-4 border border-[#1B4D3E]/10">
                                 <div className="flex items-center justify-between mb-2">
-                                    <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Current Score</span>
+                                    <span className="text-xs font-medium text-ink-2 dark:text-ink-3">Current Score</span>
                                     <span className="text-xs font-semibold text-[#1B4D3E] dark:text-teal-400">{currentRating.label}</span>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <span className="text-3xl font-bold text-[#2D5A47] dark:text-teal-400">{totalPoints}</span>
-                                    <span className="text-sm font-medium text-stone-500 dark:text-stone-400">points</span>
+                                    <span className="text-3xl font-bold text-[#2E6B3F] dark:text-teal-400">{totalPoints}</span>
+                                    <span className="text-sm font-medium text-ink-3 dark:text-ink-3">points</span>
                                 </div>
                                 <div className="mt-2 h-1.5 bg-stone-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                    <div className="h-full bg-[#2D5A47] transition-all" style={{ width: `${Math.min(100, (totalPoints / 100) * 100)}%` }}></div>
+                                    <div className="h-full bg-[#2E6B3F] transition-all" style={{ width: `${Math.min(100, (totalPoints / 100) * 100)}%` }}></div>
                                 </div>
                             </div>
 
                             {/* Target Rating Selector */}
-                            <div className="mb-4 p-3 bg-white dark:bg-gray-800 rounded-lg border border-stone-200 dark:border-gray-700">
+                            <div className="mb-4 p-3 bg-white dark:bg-gray-800 rounded-lg border border-line dark:border-gray-700">
                                 <div className="mb-2">
-                                    <span className="text-xs font-medium text-stone-600 dark:text-gray-400">Target Rating</span>
+                                    <span className="text-xs font-medium text-ink-2 dark:text-ink-3">Target Rating</span>
                                 </div>
                                 <div className="relative">
                                     <select
                                         value={targetStarRating}
                                         onChange={(e) => setTargetStarRating(Number(e.target.value))}
-                                        className="w-full py-2 px-3 pr-8 rounded-lg border border-stone-200 dark:border-gray-600 bg-stone-50 dark:bg-gray-700 text-stone-700 dark:text-gray-200 text-sm font-medium appearance-none cursor-pointer hover:border-[#2D5A47] dark:hover:border-teal-500 transition-colors focus:ring-2 focus:ring-[#2D5A47]/20 focus:border-[#2D5A47]"
+                                        className="w-full py-2 px-3 pr-8 rounded-lg border border-line dark:border-gray-600 bg-surface-2 dark:bg-gray-700 text-ink dark:text-gray-200 text-sm font-medium appearance-none cursor-pointer hover:border-[#2E6B3F] dark:hover:border-teal-500 transition-colors focus:ring-2 focus:ring-[#2E6B3F]/20 focus:border-[#2E6B3F]"
                                     >
                                         <option value={4}>4 Star Best Practice (15+ pts)</option>
                                         <option value={5}>5 Star Australian Excellence (35+ pts)</option>
                                         <option value={6}>6 Star World Leadership (70+ pts)</option>
                                     </select>
-                                    <i className="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+                                    <i className="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-ink-3 text-xs pointer-events-none"></i>
                                 </div>
                                 {(() => {
                                     const targetPoints = targetStarRating === 4 ? 15 : targetStarRating === 5 ? 35 : 70;
@@ -7974,8 +8106,8 @@
                                     return (
                                         <div className="mt-3">
                                             <div className="flex justify-between text-xs mb-1">
-                                                <span className="text-gray-600 dark:text-gray-400">{totalPoints} / {targetPoints} pts</span>
-                                                <span className={remaining <= 0 ? 'text-[#1B4D3E] dark:text-teal-400 font-semibold' : 'text-gray-500 dark:text-gray-400'}>
+                                                <span className="text-ink-2 dark:text-ink-3">{totalPoints} / {targetPoints} pts</span>
+                                                <span className={remaining <= 0 ? 'text-[#1B4D3E] dark:text-teal-400 font-semibold' : 'text-ink-2 dark:text-ink-3'}>
                                                     {remaining <= 0 ? 'Target Achieved!' : `${remaining} pts needed`}
                                                 </span>
                                             </div>
@@ -7992,16 +8124,16 @@
 
                             {/* Search */}
                             <div className="relative mb-4">
-                                <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                                <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-ink-3 text-sm"></i>
                                 <input
                                     type="text"
                                     placeholder="Search credits..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full pl-9 pr-8 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-green-500 focus:ring-1 focus:ring-green-200"
+                                    className="w-full pl-9 pr-8 py-2 text-sm rounded-lg border border-line dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-green-500 focus:ring-1 focus:ring-green-200"
                                 />
                                 {searchQuery && (
-                                    <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                    <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-3 hover:text-ink-2">
                                         <i className="fa-solid fa-xmark text-sm"></i>
                                     </button>
                                 )}
@@ -8009,7 +8141,7 @@
 
                             {/* View Toggle */}
                             <div className="mb-4">
-                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">View</label>
+                                <label className="text-xs font-medium text-ink-2 dark:text-ink-3 mb-2 block">View</label>
                                 <div className="grid grid-cols-4 gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
                                     {[
                                         { id: 'credits', icon: 'fa-grip', label: 'Cards' },
@@ -8021,7 +8153,7 @@
                                             key={view.id}
                                             onClick={() => setActiveView(view.id)}
                                             className={`py-2 px-2 rounded-md text-xs font-medium transition-all flex flex-col items-center gap-1
-                                                ${activeView === view.id ? 'bg-white dark:bg-gray-600 shadow-sm text-green-600 dark:text-green-400' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'}`}
+                                                ${activeView === view.id ? 'bg-white dark:bg-gray-600 shadow-sm text-green-600 dark:text-green-400' : 'text-ink-2 hover:text-ink dark:text-ink-3'}`}
                                         >
                                             <i className={`fa-solid ${view.icon}`}></i>
                                             <span>{view.label}</span>
@@ -8032,14 +8164,14 @@
 
                             {/* Filters */}
                             <div className="mb-4">
-                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Filters</label>
+                                <label className="text-xs font-medium text-ink-2 dark:text-ink-3 mb-2 block">Filters</label>
                                 <div className="space-y-2">
                                     <button
                                         onClick={() => setShowQuickWins(!showQuickWins)}
                                         className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2
                                             ${showQuickWins
                                                 ? 'bg-amber-600 text-white'
-                                                : 'bg-white dark:bg-gray-700 border border-stone-200 dark:border-gray-600 text-stone-600 dark:text-gray-300 hover:bg-amber-50'
+                                                : 'bg-white dark:bg-gray-700 border border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:bg-amber-50'
                                             }`}
                                     >
                                         <i className="fa-solid fa-bolt"></i>
@@ -8051,7 +8183,7 @@
                                         className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2
                                             ${showRequired
                                                 ? 'bg-amber-600 text-white'
-                                                : 'bg-white dark:bg-gray-700 border border-stone-200 dark:border-gray-600 text-stone-600 dark:text-gray-300 hover:bg-amber-50'
+                                                : 'bg-white dark:bg-gray-700 border border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:bg-amber-50'
                                             }`}
                                     >
                                         <i className="fa-solid fa-clipboard-list"></i>
@@ -8063,14 +8195,14 @@
 
                             {/* Categories */}
                             <div className="mb-4">
-                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Categories</label>
+                                <label className="text-xs font-medium text-ink-2 dark:text-ink-3 mb-2 block">Categories</label>
                                 <div className="space-y-1">
                                     <button
                                         onClick={() => setActiveCategory('all')}
                                         className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2
                                             ${activeCategory === 'all'
-                                                ? 'bg-[#2D5A47] text-white'
-                                                : 'bg-white dark:bg-gray-700 border border-stone-200 dark:border-gray-600 text-stone-600 dark:text-gray-300 hover:bg-stone-50 dark:hover:bg-gray-600'
+                                                ? 'bg-[#2E6B3F] text-white'
+                                                : 'bg-white dark:bg-gray-700 border border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:bg-surface-2 dark:hover:bg-gray-600'
                                             }`}
                                     >
                                         <i className="fa-solid fa-layer-group"></i>
@@ -8084,10 +8216,10 @@
                                             className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2
                                                 ${activeCategory === category.id
                                                     ? `${category.colorClasses.bgLight} ${category.colorClasses.text} shadow-sm`
-                                                    : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
+                                                    : 'bg-white dark:bg-gray-700 border border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:bg-surface-2 dark:hover:bg-gray-600'
                                                 }`}
                                         >
-                                            <span className={category.colorClasses?.text || 'text-stone-500'}><CategoryIcon category={category.id} size={20} /></span>
+                                            <span className={category.colorClasses?.text || 'text-ink-3'}><CategoryIcon category={category.id} size={20} /></span>
                                             <span className="flex-grow text-left truncate">{category.name}</span>
                                             <span className="text-xs font-mono opacity-70">{getCategoryPoints(category.id)}/{category.maxPoints}</span>
                                         </button>
@@ -8097,7 +8229,7 @@
 
                             {/* Project Phase Filter */}
                             <div className="mb-4">
-                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Project Phase</label>
+                                <label className="text-xs font-medium text-ink-2 dark:text-ink-3 mb-2 block">Project Phase</label>
                                 <div className="space-y-1">
                                     {projectPhases.map(phase => (
                                         <button
@@ -8106,7 +8238,7 @@
                                             className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2 text-left
                                                 ${phaseFilter === phase.id
                                                     ? 'bg-purple-500 text-white shadow-md'
-                                                    : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-600'
+                                                    : 'bg-white dark:bg-gray-700 border border-line dark:border-gray-600 text-ink-2 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-600'
                                                 }`}
                                         >
                                             <i className={`fa-solid ${phase.icon} text-xs w-4`}></i>
@@ -8117,19 +8249,19 @@
                             </div>
 
                             {/* Tools & Analysis */}
-                            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
-                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 block">Tools & Analysis</label>
+                            <div className="border-t border-line dark:border-gray-700 pt-4 mt-4">
+                                <label className="text-xs font-medium text-ink-2 dark:text-ink-3 mb-2 block">Tools & Analysis</label>
                                 <div className="grid grid-cols-2 gap-2 mb-2">
                                     <button
                                         onClick={() => setShowTemplates(true)}
-                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
                                     >
                                         <i className="fa-solid fa-wand-magic-sparkles text-purple-500"></i>
                                         <span>Templates</span>
                                     </button>
                                     <button
                                         onClick={() => setShowGapAnalysis(true)}
-                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-amber-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-amber-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
                                         disabled={!gapAnalysis}
                                         style={{ opacity: gapAnalysis ? 1 : 0.5 }}
                                     >
@@ -8140,7 +8272,7 @@
                                 <div className="grid grid-cols-2 gap-2 mb-2">
                                     <button
                                         onClick={() => setShowSynergies(true)}
-                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-cyan-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2 relative"
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-cyan-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2 relative"
                                     >
                                         <i className="fa-solid fa-link text-cyan-500"></i>
                                         <span>Synergies</span>
@@ -8150,7 +8282,7 @@
                                     </button>
                                     <button
                                         onClick={() => setShowCalculators(true)}
-                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
                                     >
                                         <i className="fa-solid fa-calculator text-green-500"></i>
                                         <span>Calcs</span>
@@ -8159,14 +8291,14 @@
                                 <div className="grid grid-cols-2 gap-2">
                                     <button
                                         onClick={() => setShowProjectManager(true)}
-                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
                                     >
                                         <i className="fa-solid fa-folder-open text-blue-500"></i>
                                         <span>Projects</span>
                                     </button>
                                     <button
                                         onClick={() => setShowExport(true)}
-                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
+                                        className="py-2 px-3 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 rounded-lg text-sm font-medium text-ink-2 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
                                     >
                                         <i className="fa-solid fa-download text-red-500"></i>
                                         <span>Export</span>
@@ -8174,7 +8306,7 @@
                                 </div>
 
                                 {/* Admin Section */}
-                                <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
+                                <div className="mt-3 pt-3 border-t border-line dark:border-gray-700 space-y-2">
                                     <a
                                         href="admin.html"
                                         className="w-full py-2 px-3 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-200 dark:border-indigo-700 rounded-lg text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-all flex items-center justify-center gap-2"
@@ -8207,12 +8339,12 @@
                             </div>
 
                             {/* Dark Mode Toggle */}
-                            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                            <div className="border-t border-line dark:border-gray-700 pt-4 mt-4">
                                 <button
                                     onClick={() => setDarkMode(!darkMode)}
-                                    className="w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300"
+                                    className="w-full py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center gap-2 bg-white dark:bg-gray-700 border border-line dark:border-gray-600 text-ink-2 dark:text-gray-300"
                                 >
-                                    <i className={`fa-solid ${darkMode ? 'fa-sun text-yellow-400' : 'fa-moon text-gray-400'}`}></i>
+                                    <i className={`fa-solid ${darkMode ? 'fa-sun text-yellow-400' : 'fa-moon text-ink-3'}`}></i>
                                     <span>{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
                                     <div className={`ml-auto w-10 h-5 rounded-full transition-colors ${darkMode ? 'bg-green-500' : 'bg-gray-300'} relative`}>
                                         <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${darkMode ? 'left-5' : 'left-0.5'}`}></div>
@@ -8273,7 +8405,7 @@
                                 )}
 
                                 {/* Footer */}
-                                <footer className="mt-8 text-center text-sm text-gray-400">
+                                <footer className="mt-8 text-center text-sm text-ink-3">
                                     <p>Green Star Buildings v1.1 Submission Assistant</p>
                                     <p className="mt-1">Based on GBCA Green Star Buildings Submission Guidelines</p>
                                 </footer>
