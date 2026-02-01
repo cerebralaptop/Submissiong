@@ -891,8 +891,7 @@
                             <tbody>
                                 {filteredIndices.map((originalIndex) => {
                                     const row = data[originalIndex];
-                                    return (
-                                    <tr key={row._id || row.id || originalIndex} className={`animate-fade-in ${selectedRows.has(originalIndex) ? 'bg-green-50' : ''}`}>
+                                    return (<tr key={row._id || row.id || originalIndex} className={`animate-fade-in ${selectedRows.has(originalIndex) ? 'bg-green-50' : ''}`}>
                                         <td>
                                             <input
                                                 type="checkbox"
