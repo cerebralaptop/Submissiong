@@ -380,28 +380,180 @@
         const defaultLevels = [
             // Industry Development
             { creditId: "ind-dev", level: "minimum", points: 0, summary: "No specific requirements", description: "No minimum expectation for this credit" },
-            { creditId: "ind-dev", level: "credit", points: 1, summary: "Training and events", description: "Team training and industry event participation" },
-            { creditId: "ind-dev", level: "exceptional", points: 2, summary: "Leadership", description: "Multiple events and research contribution" },
+            { creditId: "ind-dev", level: "credit", points: 1, summary: "Training and events", description: "At least 2 team members complete Green Star training; participate in one industry event" },
+            { creditId: "ind-dev", level: "exceptional", points: 2, summary: "Leadership", description: "At least 4 team members trained; multiple events; contribute to research or innovation" },
             // Responsible Construction
-            { creditId: "resp-const", level: "minimum", points: 0, summary: "Basic EMP", description: "Basic Environmental Management Plan" },
-            { creditId: "resp-const", level: "credit", points: 3, summary: "80% waste diversion", description: "80% construction waste diverted from landfill" },
-            { creditId: "resp-const", level: "exceptional", points: 5, summary: "95% waste diversion", description: "95% construction waste diverted from landfill" },
+            { creditId: "resp-const", level: "minimum", points: 0, summary: "Basic EMP", description: "Basic Environmental Management Plan in place; compliance with regulations" },
+            { creditId: "resp-const", level: "credit", points: 3, summary: "80% waste diversion", description: "Comprehensive EMP with monitoring; air, noise, stormwater controls; 80% waste diversion" },
+            { creditId: "resp-const", level: "exceptional", points: 5, summary: "95% waste diversion", description: "Third-party certified EMP (ISO 14001); real-time monitoring; 95% waste diversion; zero non-conformances" },
+            // Verification and Handover
+            { creditId: "verify-hand", level: "minimum", points: 0, summary: "Basic commissioning", description: "Basic commissioning of major systems; standard handover documentation" },
+            { creditId: "verify-hand", level: "credit", points: 2, summary: "Independent commissioning", description: "Independent Commissioning Agent; all systems tested; comprehensive O&M manuals; operator training" },
+            { creditId: "verify-hand", level: "exceptional", points: 3, summary: "Enhanced commissioning", description: "Seasonal testing; 12-month building tuning; digital building logbook; ongoing monitoring system" },
+            // Responsible Resource Management
+            { creditId: "resp-resource", level: "minimum", points: 0, summary: "Basic waste management", description: "Basic waste management plan; waste streams separated on site" },
+            { creditId: "resp-resource", level: "credit", points: 2, summary: "80% diversion", description: "At least 80% construction waste diverted; tracking system; dedicated sorting bins" },
+            { creditId: "resp-resource", level: "exceptional", points: 3, summary: "95% diversion", description: "95% diversion; salvaged materials incorporated (5% by cost); closed-loop recycling partnerships" },
+            // Responsible Procurement
+            { creditId: "resp-proc", level: "minimum", points: 0, summary: "Basic procurement", description: "Basic procurement documentation; awareness of sustainable options" },
+            { creditId: "resp-proc", level: "credit", points: 1, summary: "50% certified products", description: "Sustainable procurement policy; 50% products with certifications; supply chain tracking" },
+            { creditId: "resp-proc", level: "exceptional", points: 2, summary: "80% certified products", description: "Comprehensive policy with review; 80% third-party verified products; full supply chain transparency" },
+            // Responsible Structure
+            { creditId: "resp-struct", level: "minimum", points: 0, summary: "Code compliance", description: "Materials comply with code; basic specifications documented" },
+            { creditId: "resp-struct", level: "credit", points: 3, summary: "50% responsible materials", description: "50% concrete uses SCMs/low-carbon cement; ResponsibleSteel certified; FSC/PEFC timber; 50% EPDs" },
+            { creditId: "resp-struct", level: "exceptional", points: 5, summary: "80% responsible materials", description: "80% low-carbon concrete; 100% certified steel; certified timber with chain of custody; 90% EPDs; material passports" },
+            // Responsible Envelope
+            { creditId: "resp-envelope", level: "minimum", points: 0, summary: "Thermal compliance", description: "Envelope meets minimum thermal performance; basic documentation" },
+            { creditId: "resp-envelope", level: "credit", points: 3, summary: "50% certified products", description: "50% facade materials certified; insulation free from harmful substances; 50% EPDs; certified glazing" },
+            { creditId: "resp-envelope", level: "exceptional", points: 5, summary: "80% certified products", description: "80% third-party certified; all insulation with EPDs and Red List free; 90% EPDs; whole-envelope LCA showing 20% reduction" },
+            // Responsible Systems
+            { creditId: "resp-systems", level: "minimum", points: 0, summary: "Code compliance", description: "Building systems meet code; basic equipment schedules documented" },
+            { creditId: "resp-systems", level: "credit", points: 3, summary: "50% certified systems", description: "50% HVAC equipment certified; electrical with certifications; WELS-rated plumbing; 50% EPDs" },
+            { creditId: "resp-systems", level: "exceptional", points: 5, summary: "80% certified systems", description: "80% systems certified; low-GWP refrigerants (GWP<750); 90% EPDs; whole-systems LCA; end-of-life recovery design" },
+            // Responsible Finishes
+            { creditId: "resp-finishes", level: "minimum", points: 0, summary: "Code compliance", description: "Interior finishes comply with code; basic schedules documented" },
+            { creditId: "resp-finishes", level: "credit", points: 2, summary: "50% certified finishes", description: "50% flooring certified; certified ceilings; all paints GECA low-VOC; 50% EPDs" },
+            { creditId: "resp-finishes", level: "exceptional", points: 3, summary: "80% certified finishes", description: "80% finishes certified; all Declare labelled or HPD compliant; zero Red List; 90% EPDs; bio-based/recycled content" },
+            // Impacts Disclosure
+            { creditId: "impacts-disc", level: "minimum", points: 0, summary: "Basic data collection", description: "Basic environmental data collected; internal reporting" },
+            { creditId: "impacts-disc", level: "credit", points: 1, summary: "Public disclosure", description: "Whole-building LCA (EN 15978); public disclosure of GWP, water use, waste" },
+            { creditId: "impacts-disc", level: "exceptional", points: 2, summary: "Third-party verified", description: "Third-party verified LCA; comprehensive public disclosure; ongoing reporting commitment; industry benchmarking" },
             // Clean Air
-            { creditId: "clean-air", level: "minimum", points: 0, summary: "Code compliance", description: "Meet minimum ventilation rates per AS 1668.2" },
-            { creditId: "clean-air", level: "credit", points: 4, summary: "Enhanced ventilation", description: "50% improvement on code minimum fresh air" },
-            { creditId: "clean-air", level: "exceptional", points: 6, summary: "Premium air quality", description: "100% improvement plus air quality monitoring" },
+            { creditId: "clean-air", level: "minimum", points: 0, summary: "Code compliance", description: "Ventilation complies with AS 1668.2; basic exhaust for toilets and kitchens" },
+            { creditId: "clean-air", level: "credit", points: 4, summary: "50% above code", description: "Ventilation 50% above code; MERV 13 filtration; CO2 sensors in all spaces; GECA paints; direct exhaust" },
+            { creditId: "clean-air", level: "exceptional", points: 6, summary: "100% above code", description: "Ventilation 100% above code; MERV 16 with activated carbon; real-time IAQ monitoring displayed; WELL Air materials; pre-occupancy flush-out" },
+            // Light Quality
+            { creditId: "light-quality", level: "minimum", points: 0, summary: "Code compliance", description: "Lighting meets AS/NZS 1680; basic daylight to perimeter" },
+            { creditId: "light-quality", level: "credit", points: 3, summary: "60% daylight", description: "60% NLA achieves 2% daylight factor; glare control; 100m² lighting zones with dimming; CRI 80+" },
+            { creditId: "light-quality", level: "exceptional", points: 5, summary: "80% daylight", description: "80% NLA with 2%+ daylight; 2+ hours direct sunlight; circadian lighting (2700K-6500K); 75% views to outdoors; SDA>55%" },
+            // Acoustic Comfort
+            { creditId: "acoustic", level: "minimum", points: 0, summary: "BCA compliance", description: "Building meets BCA acoustic requirements; basic tenancy separation" },
+            { creditId: "acoustic", level: "credit", points: 3, summary: "Enhanced acoustics", description: "HVAC noise <40dB(A) open/<35dB(A) enclosed; RT<0.8s; Rw≥45 between spaces; 50% ceiling treatment" },
+            { creditId: "acoustic", level: "exceptional", points: 5, summary: "Premium acoustics", description: "HVAC <35dB(A) all spaces; STC≥50 speech privacy; dedicated quiet zones; external noise <40dB(A); post-occupancy testing" },
+            // Exposure to Toxins
+            { creditId: "toxins", level: "minimum", points: 0, summary: "Regulatory compliance", description: "Compliance with hazardous materials regulations; no asbestos" },
+            { creditId: "toxins", level: "credit", points: 2, summary: "HPDs for 20 products", description: "HPDs for 20+ products; GECA furniture; no lead paint; no halogenated flame retardants" },
+            { creditId: "toxins", level: "exceptional", points: 4, summary: "Red List free", description: "Red List free interiors; Declare labels/HPDs for 50+ products; PVC-free finishes; no PFAS; third-party verification" },
+            // Amenity and Comfort
+            { creditId: "amenity", level: "minimum", points: 0, summary: "BCA compliance", description: "Meets BCA thermal comfort; basic amenities provided" },
+            { creditId: "amenity", level: "credit", points: 2, summary: "Enhanced comfort", description: "PMV -1 to +1 for 95% hours; thermostats per 100m²; end-of-trip (1 locker/10 occupants); breakout spaces" },
+            { creditId: "amenity", level: "exceptional", points: 3, summary: "Premium comfort", description: "PMV -0.5 to +0.5; operable windows/personal fans; premium end-of-trip with repair station; outdoor access for 25%; wellness rooms" },
+            // Connection to Nature
+            { creditId: "nature-conn", level: "minimum", points: 0, summary: "Basic views", description: "Basic exterior views; some natural elements in finishes" },
+            { creditId: "nature-conn", level: "credit", points: 1, summary: "Biophilic design", description: "50% spaces with vegetation views; indoor plants in commons; 25% natural materials; documented biophilic strategy" },
+            { creditId: "nature-conn", level: "exceptional", points: 2, summary: "Extensive biophilia", description: "75% quality nature views; living walls or 1 plant/10m²; water features; natural patterns; direct nature access" },
+            // Climate Resilience
+            { creditId: "climate-res", level: "minimum", points: 0, summary: "Code compliance", description: "Building complies with current codes; basic climate consideration" },
+            { creditId: "climate-res", level: "credit", points: 2, summary: "Climate risk assessment", description: "Climate risk assessment for building lifespan; adaptation measures identified and implemented" },
+            { creditId: "climate-res", level: "exceptional", points: 4, summary: "Comprehensive resilience", description: "Multiple climate scenarios modelled; passive survivability demonstrated; adaptive capacity built in" },
+            // Operations Resilience
+            { creditId: "ops-res", level: "minimum", points: 0, summary: "Basic emergency planning", description: "Basic emergency procedures; standard evacuation plans" },
+            { creditId: "ops-res", level: "credit", points: 2, summary: "Business continuity", description: "Business continuity plan; backup power for critical systems; emergency water storage" },
+            { creditId: "ops-res", level: "exceptional", points: 3, summary: "Extended independence", description: "72+ hours self-sufficiency; on-site generation; comprehensive supplies; community refuge capability" },
+            // Community Resilience
+            { creditId: "comm-res", level: "minimum", points: 0, summary: "Basic planning", description: "Awareness of community emergency needs; basic coordination" },
+            { creditId: "comm-res", level: "credit", points: 2, summary: "Community support", description: "Building can serve as cooling/heating refuge; emergency supplies for community; coordination with emergency services" },
+            { creditId: "comm-res", level: "exceptional", points: 3, summary: "Community hub", description: "Designated community resilience hub; full emergency facilities; trained staff; integrated with local emergency plans" },
+            // Heat Resilience
+            { creditId: "heat-res", level: "minimum", points: 0, summary: "Code compliance", description: "Meets thermal comfort requirements during normal conditions" },
+            { creditId: "heat-res", level: "credit", points: 2, summary: "Passive cooling", description: "Passive cooling strategies; building habitable during power outage in heat wave" },
+            { creditId: "heat-res", level: "exceptional", points: 3, summary: "Cool refuge", description: "Building serves as cool refuge; significant heat island reduction; outdoor comfort strategies" },
+            // Grid Resilience
+            { creditId: "grid-res", level: "minimum", points: 0, summary: "Grid connected", description: "Standard grid connection; basic backup for life safety" },
+            { creditId: "grid-res", level: "credit", points: 1, summary: "Partial independence", description: "Battery storage for critical loads; load management capability" },
+            { creditId: "grid-res", level: "exceptional", points: 2, summary: "Grid independence", description: "Full islanding capability; on-site generation; vehicle-to-building capability; grid services provision" },
             // Energy Source
             { creditId: "energy-source", level: "minimum", points: 0, summary: "Grid connection", description: "Standard grid electricity connection" },
-            { creditId: "energy-source", level: "credit", points: 4, summary: "Partial renewable", description: "50% renewable energy" },
-            { creditId: "energy-source", level: "exceptional", points: 6, summary: "100% renewable", description: "100% renewable energy or better" },
+            { creditId: "energy-source", level: "credit", points: 4, summary: "50% renewable", description: "50% energy from renewable sources (on-site or PPA)" },
+            { creditId: "energy-source", level: "exceptional", points: 6, summary: "100% renewable", description: "100% renewable energy; on-site generation priority; renewable gas or electrification" },
             // Energy Use
             { creditId: "energy-use", level: "minimum", points: 0, summary: "Code compliance", description: "Meet NCC Section J requirements" },
-            { creditId: "energy-use", level: "credit", points: 6, summary: "30% improvement", description: "30% improvement on reference building" },
-            { creditId: "energy-use", level: "exceptional", points: 10, summary: "Net zero ready", description: "50%+ improvement, net zero carbon ready" },
+            { creditId: "energy-use", level: "credit", points: 6, summary: "30% improvement", description: "30% improvement on reference building; all cost-effective measures implemented" },
+            { creditId: "energy-use", level: "exceptional", points: 10, summary: "Net zero ready", description: "50%+ improvement; net zero carbon ready; innovative efficiency measures" },
             // Upfront Carbon Reduction
             { creditId: "upfront-carbon-red", level: "minimum", points: 0, summary: "LCA completed", description: "Life Cycle Assessment completed" },
-            { creditId: "upfront-carbon-red", level: "credit", points: 6, summary: "20% reduction", description: "20% reduction in upfront carbon" },
-            { creditId: "upfront-carbon-red", level: "exceptional", points: 10, summary: "40%+ reduction", description: "40%+ reduction in upfront carbon" },
+            { creditId: "upfront-carbon-red", level: "credit", points: 6, summary: "20% reduction", description: "20% reduction in upfront carbon vs benchmark" },
+            { creditId: "upfront-carbon-red", level: "exceptional", points: 10, summary: "40%+ reduction", description: "40%+ reduction in upfront carbon; innovative low-carbon solutions" },
+            // Upfront Carbon Compensation
+            { creditId: "upfront-carbon-comp", level: "minimum", points: 0, summary: "Offset awareness", description: "Understanding of carbon offset options" },
+            { creditId: "upfront-carbon-comp", level: "credit", points: 2, summary: "Partial offset", description: "50% of residual upfront carbon offset with verified credits" },
+            { creditId: "upfront-carbon-comp", level: "exceptional", points: 3, summary: "Full offset", description: "100% of upfront carbon offset; high-quality verified offsets; long-term sequestration" },
+            // Refrigerant Systems Impacts
+            { creditId: "refrigerant", level: "minimum", points: 0, summary: "Code compliance", description: "Refrigerants comply with phase-down requirements" },
+            { creditId: "refrigerant", level: "credit", points: 2, summary: "Low GWP", description: "All refrigerants GWP < 750; leak detection systems" },
+            { creditId: "refrigerant", level: "exceptional", points: 3, summary: "Ultra-low GWP", description: "Natural refrigerants (CO2, ammonia) or GWP < 150; full lifecycle refrigerant management" },
+            // Low-Emissions Transport
+            { creditId: "low-emissions", level: "minimum", points: 0, summary: "EV ready", description: "Electrical infrastructure allows future EV charging" },
+            { creditId: "low-emissions", level: "credit", points: 2, summary: "EV charging", description: "EV charging for 10% of parking spaces; smart charging capability" },
+            { creditId: "low-emissions", level: "exceptional", points: 3, summary: "Comprehensive EV", description: "EV charging for 25%+ spaces; vehicle-to-building capability; e-bike charging" },
+            // Design for Circularity
+            { creditId: "circularity", level: "minimum", points: 0, summary: "Waste planning", description: "Construction waste minimisation considered" },
+            { creditId: "circularity", level: "credit", points: 1, summary: "Design for disassembly", description: "Design for disassembly principles applied; material passports for key elements" },
+            { creditId: "circularity", level: "exceptional", points: 2, summary: "Full circularity", description: "Comprehensive circular design; reused materials incorporated; take-back schemes for products" },
+            // Water Use
+            { creditId: "water-use", level: "minimum", points: 0, summary: "Code compliance", description: "Fixtures comply with WELS minimum requirements" },
+            { creditId: "water-use", level: "credit", points: 2, summary: "30% reduction", description: "30% potable water reduction; high WELS-rated fixtures; water-efficient landscaping" },
+            { creditId: "water-use", level: "exceptional", points: 3, summary: "50% reduction", description: "50% potable water reduction; rainwater/greywater systems; water monitoring" },
+            // Movement and Place
+            { creditId: "movement", level: "minimum", points: 0, summary: "Basic access", description: "Site accessible by public transport; basic bike parking" },
+            { creditId: "movement", level: "credit", points: 3, summary: "Enhanced access", description: "Within 400m of quality public transport; secure bike parking; end-of-trip facilities" },
+            { creditId: "movement", level: "exceptional", points: 5, summary: "Premium access", description: "Multiple transport options; car share; comprehensive cycling; reduced parking provision" },
+            // Enjoyable Places
+            { creditId: "enjoyable", level: "minimum", points: 0, summary: "Basic amenity", description: "Basic outdoor areas; minimal public realm contribution" },
+            { creditId: "enjoyable", level: "credit", points: 2, summary: "Quality public space", description: "Quality public spaces; pedestrian comfort; seating and shade; active edges" },
+            { creditId: "enjoyable", level: "exceptional", points: 4, summary: "Exceptional places", description: "Award-quality public realm; extensive greening; public art; community programming" },
+            // Contribution to Place
+            { creditId: "contribution", level: "minimum", points: 0, summary: "Basic compliance", description: "Development complies with local requirements" },
+            { creditId: "contribution", level: "credit", points: 2, summary: "Positive contribution", description: "Positive contribution to local area; community consultation; local partnerships" },
+            { creditId: "contribution", level: "exceptional", points: 3, summary: "Significant benefit", description: "Significant community benefit; legacy programs; ongoing community partnerships" },
+            // Culture, Heritage and Identity
+            { creditId: "culture", level: "minimum", points: 0, summary: "Heritage compliance", description: "Compliance with heritage requirements; basic cultural consideration" },
+            { creditId: "culture", level: "credit", points: 2, summary: "Cultural recognition", description: "Traditional Owner engagement; cultural interpretation; heritage conservation" },
+            { creditId: "culture", level: "exceptional", points: 3, summary: "Cultural celebration", description: "Deep cultural engagement; collaborative design with Traditional Owners; ongoing cultural programs" },
+            // Inclusive Construction Practices
+            { creditId: "inclusive-const", level: "minimum", points: 0, summary: "Legal compliance", description: "Compliance with WHS and anti-discrimination requirements" },
+            { creditId: "inclusive-const", level: "credit", points: 2, summary: "Inclusive practices", description: "Diversity targets in workforce; mental health support; inclusive facilities on site" },
+            { creditId: "inclusive-const", level: "exceptional", points: 4, summary: "Industry leading", description: "Industry-leading diversity; comprehensive wellbeing programs; training and development pathways" },
+            // First Nations Inclusion
+            { creditId: "first-nations", level: "minimum", points: 0, summary: "Basic engagement", description: "Acknowledgement of Country; awareness of Traditional Owners" },
+            { creditId: "first-nations", level: "credit", points: 2, summary: "Meaningful engagement", description: "Ongoing Traditional Owner engagement; Indigenous employment targets; Indigenous procurement" },
+            { creditId: "first-nations", level: "exceptional", points: 4, summary: "Partnership", description: "Genuine partnership with Traditional Owners; significant Indigenous employment; cultural legacy" },
+            // Procurement and Workforce Inclusion
+            { creditId: "proc-workforce", level: "minimum", points: 0, summary: "Basic compliance", description: "Compliance with employment requirements" },
+            { creditId: "proc-workforce", level: "credit", points: 2, summary: "Social procurement", description: "Social procurement targets; trainee/apprentice employment; local employment" },
+            { creditId: "proc-workforce", level: "exceptional", points: 4, summary: "Significant impact", description: "Significant social enterprise spend; comprehensive training programs; community employment" },
+            // Design for Equity
+            { creditId: "design-equity", level: "minimum", points: 0, summary: "DDA compliance", description: "Compliance with Disability Discrimination Act; basic accessibility" },
+            { creditId: "design-equity", level: "credit", points: 2, summary: "Enhanced accessibility", description: "Beyond minimum accessibility; Changing Places toilet; sensory considerations" },
+            { creditId: "design-equity", level: "exceptional", points: 3, summary: "Universal design", description: "Universal design throughout; neurodiversity considered; co-design with disability community" },
+            // Impacts to Nature
+            { creditId: "impacts-nature", level: "minimum", points: 0, summary: "Regulatory compliance", description: "Compliance with environmental regulations; basic site assessment" },
+            { creditId: "impacts-nature", level: "credit", points: 3, summary: "Minimised impacts", description: "Ecology assessment; protection of existing habitat; no net loss of ecological value" },
+            { creditId: "impacts-nature", level: "exceptional", points: 6, summary: "Net positive", description: "Net positive biodiversity; habitat restoration; threatened species protection; certified ecological management" },
+            // Biodiversity Enhancement
+            { creditId: "biodiversity", level: "minimum", points: 0, summary: "Basic landscaping", description: "Standard landscaping; minimal ecological consideration" },
+            { creditId: "biodiversity", level: "credit", points: 3, summary: "Habitat creation", description: "Native plantings; habitat features; green roof/walls; documented biodiversity plan" },
+            { creditId: "biodiversity", level: "exceptional", points: 6, summary: "Significant enhancement", description: "Significant habitat creation; species recovery support; ongoing ecological monitoring; certified net gain" },
+            // Nature Connectivity
+            { creditId: "nature-connectivity", level: "minimum", points: 0, summary: "Basic greening", description: "Standard landscape design; isolated green spaces" },
+            { creditId: "nature-connectivity", level: "credit", points: 2, summary: "Ecological corridors", description: "Landscape connects to broader ecological networks; wildlife corridors; canopy connectivity" },
+            { creditId: "nature-connectivity", level: "exceptional", points: 3, summary: "Network contribution", description: "Significant contribution to regional ecological network; fauna crossing features; documented connectivity improvement" },
+            // Nature Stewardship
+            { creditId: "nature-steward", level: "minimum", points: 0, summary: "Basic maintenance", description: "Standard landscape maintenance provisions" },
+            { creditId: "nature-steward", level: "credit", points: 2, summary: "Long-term management", description: "Funded ecological management plan; regular monitoring; adaptive management" },
+            { creditId: "nature-steward", level: "exceptional", points: 3, summary: "Conservation commitment", description: "Long-term conservation covenant; community involvement; citizen science programs" },
+            // Waterway Protection
+            { creditId: "waterway", level: "minimum", points: 0, summary: "Basic controls", description: "Basic erosion and sediment control; compliance with stormwater requirements" },
+            { creditId: "waterway", level: "credit", points: 1, summary: "Water quality treatment", description: "Stormwater treatment to best practice; pollutant reduction; flow management" },
+            { creditId: "waterway", level: "exceptional", points: 2, summary: "Waterway enhancement", description: "Stormwater harvesting; waterway restoration; water sensitive urban design throughout" },
+            // Market Transformation
+            { creditId: "market-transform", level: "minimum", points: 0, summary: "Standard practice", description: "Following current industry practice" },
+            { creditId: "market-transform", level: "credit", points: 1, summary: "Industry contribution", description: "Documented industry contribution; case study publication; knowledge sharing" },
+            { creditId: "market-transform", level: "exceptional", points: 2, summary: "Market leadership", description: "Significant innovation; industry-first achievements; transformational influence on practice" },
+            // Leadership Challenges
+            { creditId: "leadership-challenge", level: "minimum", points: 0, summary: "Standard targets", description: "Meeting standard Green Star requirements" },
+            { creditId: "leadership-challenge", level: "credit", points: 2, summary: "Ambitious targets", description: "Targets significantly exceed credit requirements in chosen challenge area" },
+            { creditId: "leadership-challenge", level: "exceptional", points: 3, summary: "Exceptional achievement", description: "Exceptional performance in leadership challenge; documented transformational outcomes" },
         ];
 
         const defaultCriteria = [
