@@ -8,10 +8,11 @@
 5. [User Flows](#user-flows)
 6. [Implemented Features](#implemented-features-v11)
 7. [Multi-Project & Scenario Analysis](#multi-project--scenario-analysis)
-8. [Technical Specifications](#technical-specifications)
-9. [Security](#security)
-10. [Deployment](#deployment)
-11. [Visual Design System](#visual-design-system)
+8. [Onboarding Tours](#onboarding-tours)
+9. [Technical Specifications](#technical-specifications)
+10. [Security](#security)
+11. [Deployment](#deployment)
+12. [Visual Design System](#visual-design-system)
 
 ---
 
@@ -1076,7 +1077,180 @@ Test credit additions without modifying the actual project.
 
 ---
 
-## 8. Technical Specifications
+## 8. Onboarding Tours
+
+### 8.1 Overview
+
+The application includes interactive onboarding tours to help first-time users understand key features. Tours are available for both the main application and the admin panel.
+
+### 8.2 Main Application Tour
+
+The main app tour guides users through 9 key features:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    MAIN APP TOUR STEPS                           │
+└─────────────────────────────────────────────────────────────────┘
+
+Step 1: Welcome
+┌─────────────────────────────────────────────────────────────────┐
+│ Welcome to Green Star! 🌟                                        │
+│ Your personal assistant for tracking Green Star certification.  │
+│ Let's take a quick tour of the main features.                   │
+│                                              [Skip] [Start Tour]│
+└─────────────────────────────────────────────────────────────────┘
+
+Step 2: Project Selector       (Targets: data-tour="project-selector")
+Step 3: Score Display          (Targets: data-tour="score-display")
+Step 4: Target Rating          (Targets: data-tour="target-rating")
+Step 5: Categories             (Targets: data-tour="categories")
+Step 6: Analysis Tools         (Targets: data-tour="tools")
+Step 7: Scenario Tools         (Targets: data-tour="scenario-tools")
+Step 8: Credit Cards           (Targets: data-tour="credit-cards")
+Step 9: Finish                 (Center modal)
+```
+
+**Tour Features**:
+- **Progress Dots**: Visual indicator of current step and total steps
+- **Element Highlighting**: Active elements are highlighted with spotlight effect
+- **Skip Option**: Users can skip the tour at any time
+- **Navigation**: Back/Next buttons for step-by-step progression
+- **Positioning**: Steps target specific elements or display in center
+
+### 8.3 Admin Panel Tour
+
+The admin tour covers 8 essential admin functions:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ADMIN TOUR STEPS                              │
+└─────────────────────────────────────────────────────────────────┘
+
+Step 1: Welcome to Admin Panel
+Step 2: Navigation Menu
+Step 3: Dashboard Overview
+Step 4: Editing Data
+Step 5: Import & Export
+Step 6: Save to Main App
+Step 7: Undo & Redo
+Step 8: You're Ready!
+```
+
+### 8.4 Tour Implementation
+
+#### Technical Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    TOUR SYSTEM                                   │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────┐      ┌─────────────────┐      ┌──────────────┐
+│ First Visit     │      │ Tour Component  │      │ localStorage │
+│ Detection       │─────►│                 │◄────►│              │
+│ (useEffect)     │      │ - Step state    │      │ tour-        │
+│                 │      │ - Navigation    │      │ completed    │
+└─────────────────┘      │ - Overlay       │      │ flag         │
+                         │ - Highlighting  │      └──────────────┘
+                         └─────────────────┘
+```
+
+#### Component Structure
+
+```javascript
+// OnboardingTour Component
+function OnboardingTour({ isOpen, onComplete }) {
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const tourSteps = [
+    {
+      title: "Step Title",
+      content: "Step description",
+      target: "data-tour-attribute",  // Optional: element to highlight
+      position: "center" | "element"
+    },
+    // ... more steps
+  ];
+
+  // Navigation handlers
+  const handleNext = () => {...};
+  const handlePrev = () => {...};
+
+  return (
+    <div className="tour-overlay">
+      <div className="tour-modal">
+        {/* Title, content, navigation, progress dots */}
+      </div>
+    </div>
+  );
+}
+```
+
+#### localStorage Keys
+
+| Key | Purpose |
+|-----|---------|
+| `greenstar-tour-completed` | Main app tour completion flag |
+| `greenstar-admin-tour-completed` | Admin panel tour completion flag |
+
+### 8.5 Restart Tour
+
+Users can restart the tour at any time:
+
+**Main App**: "Take a Tour" button in the sidebar footer
+**Admin Panel**: "Take a Tour" button in the sidebar footer
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ Sidebar Footer                                                   │
+├─────────────────────────────────────────────────────────────────┤
+│  [?] Take a Tour                                                 │
+│  [←] Back to App                                                 │
+│  [→] Sign Out                                                    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 8.6 Styling
+
+Tours use the GBCA design system:
+
+```css
+/* Tour Overlay */
+.tour-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* Tour Modal */
+.tour-modal {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  max-width: 400px;
+  box-shadow: var(--shadow-xl);
+}
+
+/* Progress Dots */
+.tour-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-line);
+}
+.tour-dot.active {
+  background: var(--color-green-900);
+}
+
+/* GBCA Branded Icon */
+.tour-icon {
+  background: linear-gradient(135deg, #1F4B2E, #2E6B3F);
+  border-radius: var(--radius-xl);
+}
+```
+
+---
+
+## 9. Technical Specifications
 
 ### Browser Support
 | Browser | Minimum Version |
@@ -1107,7 +1281,7 @@ Test credit additions without modifying the actual project.
 
 ---
 
-## 8. Security
+## 10. Security
 
 ### Current Security Measures
 | Measure | Implementation |
@@ -1143,7 +1317,7 @@ Test credit additions without modifying the actual project.
 
 ---
 
-## 9. Deployment
+## 11. Deployment
 
 ### Current Deployment
 - Static files served directly
@@ -1185,7 +1359,7 @@ Test credit additions without modifying the actual project.
 
 ---
 
-## 10. Visual Design System
+## 12. Visual Design System
 
 ### Design Principles
 
@@ -1434,6 +1608,7 @@ Print-optimized CSS for generating professional documentation:
 | `SynergiesModal` | Credit synergies view | synergies, onSelectCredit |
 | `TemplatesModal` | Project templates | templates, onApply |
 | `ExportModal` | Export to PDF/Excel | projectData |
+| `OnboardingTour` | First-time user tour | isOpen, onComplete |
 
 ### Admin Panel Components
 | Component | Purpose | Props |
@@ -1445,6 +1620,7 @@ Print-optimized CSS for generating professional documentation:
 | `CategoriesEditor` | Category management | data, onUpdate |
 | `CreditsEditor` | Credit management | data, onUpdate, categories |
 | `ImportModal` | Excel import | isOpen, onImport |
+| `AdminOnboardingTour` | Admin first-time user tour | isOpen, onComplete |
 
 ---
 
@@ -1493,13 +1669,21 @@ Print-optimized CSS for generating professional documentation:
 
 ---
 
-*Document Version: 1.2*
+*Document Version: 1.3*
 *Last Updated: February 1, 2026*
 *Author: Green Star Development Team*
 
 ---
 
 ## Changelog
+
+### v1.3 (February 1, 2026)
+- Added Onboarding Tours section (Section 8)
+- Implemented interactive 9-step tour for main application
+- Implemented interactive 8-step tour for admin panel
+- Tours auto-trigger on first visit, with localStorage tracking
+- Added "Take a Tour" button in both app sidebars for tour restart
+- Updated component reference with tour components
 
 ### v1.2 (February 1, 2026)
 - Added Multi-Project & Scenario Analysis section (Section 7)
@@ -1511,7 +1695,7 @@ Print-optimized CSS for generating professional documentation:
 - Updated component reference with new modals
 
 ### v1.1 (February 1, 2026)
-- Added Visual Design System section (Section 11)
+- Added Visual Design System section (Section 12)
 - Implemented CSS design tokens
 - Added GBCA brand colors and typography
 - Created custom SVG icon system

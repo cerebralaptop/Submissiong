@@ -482,7 +482,7 @@
         // ============================================================
 
         // Sidebar Navigation
-        function Sidebar({ activeTab, setActiveTab, dataStats, onLogout }) {
+        function Sidebar({ activeTab, setActiveTab, dataStats, onLogout, onStartTour }) {
             const navItems = [
                 { id: 'dashboard', icon: 'fa-chart-pie', label: 'Dashboard' },
                 { id: 'categories', icon: 'fa-folder', label: 'Categories', count: dataStats.categories },
@@ -545,6 +545,13 @@
 
                     {/* Footer */}
                     <div className="p-4 border-t border-line space-y-2">
+                        <button
+                            onClick={onStartTour}
+                            className="w-full flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium text-ink-2 hover:bg-surface-1 hover:text-ink transition-all"
+                        >
+                            <i className="fa-solid fa-circle-question w-5"></i>
+                            Take a Tour
+                        </button>
                         <a
                             href="index.html"
                             className="flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium text-ink-2 hover:bg-surface-1 hover:text-ink transition-all"
@@ -1482,6 +1489,127 @@
         }
 
         // ============================================================
+        // ADMIN ONBOARDING TOUR
+        // ============================================================
+        function AdminOnboardingTour({ isOpen, onComplete }) {
+            const [currentStep, setCurrentStep] = useState(0);
+
+            const tourSteps = [
+                {
+                    title: "Welcome to Admin Panel! 🛠️",
+                    content: "This panel lets you manage all the data for the Green Star Submission Assistant. Let's walk through the key features.",
+                    position: "center"
+                },
+                {
+                    title: "Navigation Menu",
+                    content: "Use the sidebar to switch between different data sections: Categories, Credits, Levels, Criteria, Documentation, Templates, Synergies, and more.",
+                    position: "center"
+                },
+                {
+                    title: "Dashboard Overview",
+                    content: "The Dashboard shows a summary of all your data: how many credits, levels, and templates you have. Great for a quick overview.",
+                    position: "center"
+                },
+                {
+                    title: "Editing Data",
+                    content: "Click on any section to edit its data. You can add new rows, edit existing ones, or delete items. Changes auto-save as you work.",
+                    position: "center"
+                },
+                {
+                    title: "Import & Export",
+                    content: "Use the Import button to load data from Excel, or Export to download your current data. Great for backups or bulk editing.",
+                    position: "center"
+                },
+                {
+                    title: "Save to Main App",
+                    content: "When you're happy with your changes, click 'Save Changes' to update the main Green Star app. Users will see your updates immediately.",
+                    position: "center"
+                },
+                {
+                    title: "Undo & Redo",
+                    content: "Made a mistake? Use Ctrl+Z to undo or Ctrl+Y to redo. The Undo/Redo buttons in the header work too.",
+                    position: "center"
+                },
+                {
+                    title: "You're Ready! ✅",
+                    content: "You now know the basics of the Admin Panel. Start by exploring the Dashboard, then dive into the sections you need to update. Happy editing!",
+                    position: "center"
+                }
+            ];
+
+            if (!isOpen) return null;
+
+            const step = tourSteps[currentStep];
+            const isFirstStep = currentStep === 0;
+            const isLastStep = currentStep === tourSteps.length - 1;
+
+            const handleNext = () => {
+                if (isLastStep) {
+                    onComplete();
+                } else {
+                    setCurrentStep(prev => prev + 1);
+                }
+            };
+
+            const handlePrev = () => {
+                if (currentStep > 0) {
+                    setCurrentStep(prev => prev - 1);
+                }
+            };
+
+            return (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+                        <div className="text-center mb-6">
+                            <div className="w-16 h-16 bg-gradient-to-br from-[#1F4B2E] to-[#2E6B3F] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <i className="fa-solid fa-cog text-white text-2xl"></i>
+                            </div>
+                            <h2 className="font-display text-2xl font-bold text-ink mb-2">{step.title}</h2>
+                            <p className="text-ink-2">{step.content}</p>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                            <button
+                                onClick={onComplete}
+                                className="text-ink-3 hover:text-ink text-sm"
+                            >
+                                Skip Tour
+                            </button>
+                            <div className="flex items-center gap-2">
+                                {!isFirstStep && (
+                                    <button
+                                        onClick={handlePrev}
+                                        className="px-4 py-2 text-ink-2 hover:text-ink"
+                                    >
+                                        Back
+                                    </button>
+                                )}
+                                <button
+                                    onClick={handleNext}
+                                    className="px-6 py-2 bg-[#1F4B2E] text-white rounded-lg font-medium hover:bg-[#2E6B3F] transition-colors"
+                                >
+                                    {isLastStep ? "Get Started" : isFirstStep ? "Start Tour" : "Next"}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Progress dots */}
+                        <div className="flex justify-center gap-1.5 mt-6">
+                            {tourSteps.map((_, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`w-2 h-2 rounded-full transition-colors ${
+                                        idx === currentStep ? 'bg-[#1F4B2E]' : 'bg-gray-200'
+                                    }`}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // ============================================================
         // MAIN APP
         // ============================================================
         function App() {
@@ -1489,6 +1617,20 @@
             const [activeTab, setActiveTab] = useState('dashboard');
             const [showImportModal, setShowImportModal] = useState(false);
             const [toast, setToast] = useState(null);
+            const [showTour, setShowTour] = useState(false);
+
+            // Check if first visit and show tour
+            React.useEffect(() => {
+                const hasSeenTour = localStorage.getItem('greenstar-admin-tour-completed');
+                if (!hasSeenTour) {
+                    setTimeout(() => setShowTour(true), 500);
+                }
+            }, []);
+
+            const completeTour = () => {
+                setShowTour(false);
+                localStorage.setItem('greenstar-admin-tour-completed', 'true');
+            };
 
             // Handle logout
             const handleLogout = () => {
@@ -1881,7 +2023,7 @@
 
             return (
                 <div className="flex min-h-screen">
-                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} dataStats={dataStats} onLogout={handleLogout} />
+                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} dataStats={dataStats} onLogout={handleLogout} onStartTour={() => setShowTour(true)} />
                     <main className="flex-1 bg-surface-1">
                         <Header
                             title={title}
@@ -1910,6 +2052,11 @@
                             onClose={() => setToast(null)}
                         />
                     )}
+
+                    <AdminOnboardingTour
+                        isOpen={showTour}
+                        onComplete={completeTour}
+                    />
                 </div>
             );
         }
