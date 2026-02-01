@@ -29,23 +29,29 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        'display': ['Outfit', 'sans-serif'],
-                        'body': ['Inter', 'system-ui', 'sans-serif'],
+                        'sans': ['ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                        'display': ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
                     },
                     colors: {
-                        // GBCA Brand Colors - Nature-positive palette
-                        'gbca': {
-                            'green': '#2D5A47',
-                            'green-light': '#4A7C6F',
-                            'green-muted': '#6B9080',
-                            'charcoal': '#374151',
+                        'green': {
+                            '900': '#1F4B2E',
+                            '700': '#2E6B3F',
+                            '500': '#4F8A55',
+                            '300': '#9CCB8A',
+                            '200': '#CDE6C3',
+                            '100': '#EAF4E6',
                         },
-                        // Warm, nature-led backgrounds
-                        'warm': {
-                            'white': '#FAFAF9',
-                            'cream': '#F5F5F4',
-                            'stone': '#E7E5E4',
-                        }
+                        'ink': {
+                            DEFAULT: '#1C2320',
+                            '2': '#34403A',
+                            '3': '#5A6A62',
+                        },
+                        'surface': {
+                            '0': '#FFFFFF',
+                            '1': '#F6F8F6',
+                            '2': '#EFF3EF',
+                        },
+                        'line': '#D7DED8',
                     }
                 }
             }
@@ -53,50 +59,72 @@
     </script>
 
     <style>
-        body { font-family: 'Inter', system-ui, sans-serif; background: #FAFAF9; color: #374151; }
+        :root {
+            --color-green-900: #1F4B2E;
+            --color-green-700: #2E6B3F;
+            --color-green-500: #4F8A55;
+            --color-green-300: #9CCB8A;
+            --color-green-100: #EAF4E6;
+            --color-ink: #1C2320;
+            --color-ink-2: #34403A;
+            --color-ink-3: #5A6A62;
+            --color-surface-0: #FFFFFF;
+            --color-surface-1: #F6F8F6;
+            --color-surface-2: #EFF3EF;
+            --color-line: #D7DED8;
+            --heading-color: var(--color-green-900);
+            --ease-standard: cubic-bezier(0.2, 0.0, 0.0, 1);
+            --dur-fast: 120ms;
+            --dur-med: 200ms;
+            --focus-ring: 0 0 0 3px rgba(124,203,139,0.35);
+        }
+        body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: var(--color-surface-1); color: var(--color-ink); line-height: 1.55; }
         .font-display { font-family: 'Outfit', sans-serif; }
+        h1, h2, h3, h4, h5, h6 { color: var(--heading-color); line-height: 1.3; }
 
         /* Custom scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #F5F5F4; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb { background: #D6D3D1; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #A8A29E; }
+        ::-webkit-scrollbar-track { background: var(--color-surface-2); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: var(--color-line); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--color-ink-3); }
 
         /* Table styles */
         .data-table { width: 100%; border-collapse: collapse; }
         .data-table th {
-            background: #F5F5F4;
+            background: var(--color-surface-2);
             padding: 12px 16px;
             text-align: left;
             font-weight: 600;
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #57534E;
-            border-bottom: 1px solid #E7E5E4;
+            color: var(--color-ink-2);
+            border-bottom: 1px solid var(--color-line);
             position: sticky;
             top: 0;
             z-index: 10;
         }
         .data-table td {
             padding: 12px 16px;
-            border-bottom: 1px solid #F5F5F4;
+            border-bottom: 1px solid var(--color-surface-2);
             vertical-align: top;
+            color: var(--color-ink);
         }
-        .data-table tr:hover { background: #FAFAF9; }
+        .data-table tr:hover { background: var(--color-surface-1); }
         .data-table input, .data-table select, .data-table textarea {
             width: 100%;
             padding: 6px 10px;
-            border: 1px solid #E7E5E4;
+            border: 1px solid var(--color-line);
             border-radius: 6px;
             font-size: 14px;
-            transition: border-color 0.15s ease;
-            background: #FFFFFF;
+            transition: border-color var(--dur-fast) var(--ease-standard);
+            background: var(--color-surface-0);
+            color: var(--color-ink);
         }
         .data-table input:focus, .data-table select:focus, .data-table textarea:focus {
             outline: none;
-            border-color: #2D5A47;
-            box-shadow: 0 0 0 2px rgba(45, 90, 71, 0.1);
+            border-color: var(--color-green-700);
+            box-shadow: var(--focus-ring);
         }
         .data-table textarea { resize: vertical; min-height: 60px; }
 
@@ -198,14 +226,14 @@
 
             return (
                 <div className="min-h-screen bg-[#FAFAF9] flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl border border-stone-200 p-8 w-full max-w-md animate-fade-in">
+                    <div className="bg-white rounded-xl border border-line p-8 w-full max-w-md animate-fade-in">
                         {/* Logo */}
                         <div className="text-center mb-8">
                             <div className="w-16 h-16 rounded-xl bg-[#2D5A47] flex items-center justify-center mx-auto mb-4">
                                 <i className="fa-solid fa-leaf text-white text-2xl"></i>
                             </div>
-                            <h1 className="font-display text-2xl font-bold text-stone-800">Admin Access</h1>
-                            <p className="text-stone-500 mt-2">Green Star Content Manager</p>
+                            <h1 className="font-display text-2xl font-bold text-ink">Admin Access</h1>
+                            <p className="text-ink-3 mt-2">Green Star Content Manager</p>
                         </div>
 
                         {/* Security Notice */}
@@ -222,7 +250,7 @@
                         {/* Login Form */}
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-ink-2 mb-2">
                                     Admin Password
                                 </label>
                                 <div className="relative">
@@ -231,11 +259,11 @@
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         placeholder="Enter admin password"
-                                        className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#2D5A47]/20 focus:border-[#2D5A47] transition-colors"
+                                        className="w-full px-4 py-3 border border-line rounded-lg focus:ring-2 focus:ring-[#2D5A47]/20 focus:border-[#2D5A47] transition-colors"
                                         autoFocus
                                         required
                                     />
-                                    <i className="fa-solid fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-stone-400"></i>
+                                    <i className="fa-solid fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-ink-3"></i>
                                 </div>
                             </div>
 
@@ -269,7 +297,7 @@
                         <div className="mt-6 text-center">
                             <a
                                 href="index.html"
-                                className="text-sm text-gray-500 hover:text-gray-700 flex items-center justify-center gap-2"
+                                className="text-sm text-ink-3 hover:text-ink-2 flex items-center justify-center gap-2"
                             >
                                 <i className="fa-solid fa-arrow-left"></i>
                                 Back to Green Star App
@@ -469,16 +497,16 @@
             ];
 
             return (
-                <aside className="w-64 bg-white border-r border-stone-200 min-h-screen flex flex-col">
+                <aside className="w-64 bg-white border-r border-line min-h-screen flex flex-col">
                     {/* Logo */}
-                    <div className="p-6 border-b border-stone-200">
+                    <div className="p-6 border-b border-line">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-lg bg-[#2D5A47] flex items-center justify-center">
                                 <i className="fa-solid fa-leaf text-white"></i>
                             </div>
                             <div>
-                                <h1 className="font-display font-bold text-stone-800">Green Star</h1>
-                                <p className="text-xs text-stone-500">Admin Panel</p>
+                                <h1 className="font-display font-bold text-ink">Green Star</h1>
+                                <p className="text-xs text-ink-3">Admin Panel</p>
                             </div>
                         </div>
                     </div>
@@ -492,15 +520,15 @@
                                         onClick={() => setActiveTab(item.id)}
                                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors
                                             ${activeTab === item.id
-                                                ? 'bg-stone-100 text-[#2D5A47] border-l-4 border-[#2D5A47]'
-                                                : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
+                                                ? 'bg-surface-2 text-[#2D5A47] border-l-4 border-[#2D5A47]'
+                                                : 'text-ink-2 hover:bg-surface-1 hover:text-ink'
                                             }`}
                                     >
                                         <i className={`fa-solid ${item.icon} w-5`}></i>
                                         <span className="flex-1 text-left">{item.label}</span>
                                         {item.count !== undefined && (
                                             <span className={`px-2 py-0.5 rounded-full text-xs ${
-                                                activeTab === item.id ? 'bg-green-200 text-green-800' : 'bg-gray-100 text-gray-600'
+                                                activeTab === item.id ? 'bg-green-200 text-green-800' : 'bg-surface-2 text-ink-2'
                                             }`}>
                                                 {item.count}
                                             </span>
@@ -512,10 +540,10 @@
                     </nav>
 
                     {/* Footer */}
-                    <div className="p-4 border-t border-gray-200 space-y-2">
+                    <div className="p-4 border-t border-line space-y-2">
                         <a
                             href="index.html"
-                            className="flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all"
+                            className="flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium text-ink-2 hover:bg-surface-1 hover:text-ink transition-all"
                         >
                             <i className="fa-solid fa-arrow-left w-5"></i>
                             Back to App
@@ -535,19 +563,19 @@
         // Header with actions
         function Header({ title, subtitle, onImport, onExport, onSave, onUndo, onRedo, canUndo, canRedo }) {
             return (
-                <header className="bg-white border-b border-gray-200 px-8 py-6">
+                <header className="bg-white border-b border-line px-8 py-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="font-display text-2xl font-bold text-gray-800">{title}</h1>
-                            {subtitle && <p className="text-gray-500 mt-1">{subtitle}</p>}
+                            <h1 className="font-display text-2xl font-bold text-ink">{title}</h1>
+                            {subtitle && <p className="text-ink-3 mt-1">{subtitle}</p>}
                         </div>
                         <div className="flex items-center gap-3">
                             {/* Undo/Redo buttons */}
-                            <div className="flex items-center gap-1 mr-2 border-r border-gray-200 pr-4">
+                            <div className="flex items-center gap-1 mr-2 border-r border-line pr-4">
                                 <button
                                     onClick={onUndo}
                                     disabled={!canUndo}
-                                    className={`p-2 rounded-lg transition-all flex items-center gap-1 ${canUndo ? 'text-gray-700 hover:bg-gray-100' : 'text-gray-300 cursor-not-allowed'}`}
+                                    className={`p-2 rounded-lg transition-all flex items-center gap-1 ${canUndo ? 'text-ink-2 hover:bg-surface-2' : 'text-green-300 cursor-not-allowed'}`}
                                     title="Undo (Ctrl+Z)"
                                 >
                                     <i className="fa-solid fa-undo"></i>
@@ -555,7 +583,7 @@
                                 <button
                                     onClick={onRedo}
                                     disabled={!canRedo}
-                                    className={`p-2 rounded-lg transition-all flex items-center gap-1 ${canRedo ? 'text-gray-700 hover:bg-gray-100' : 'text-gray-300 cursor-not-allowed'}`}
+                                    className={`p-2 rounded-lg transition-all flex items-center gap-1 ${canRedo ? 'text-ink-2 hover:bg-surface-2' : 'text-green-300 cursor-not-allowed'}`}
                                     title="Redo (Ctrl+Y)"
                                 >
                                     <i className="fa-solid fa-redo"></i>
@@ -563,14 +591,14 @@
                             </div>
                             <button
                                 onClick={onImport}
-                                className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all flex items-center gap-2"
+                                className="px-4 py-2 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:bg-surface-1 transition-all flex items-center gap-2"
                             >
                                 <i className="fa-solid fa-upload"></i>
                                 Import Excel
                             </button>
                             <button
                                 onClick={onExport}
-                                className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all flex items-center gap-2"
+                                className="px-4 py-2 bg-white border border-line rounded-lg text-sm font-medium text-ink-2 hover:bg-surface-1 transition-all flex items-center gap-2"
                             >
                                 <i className="fa-solid fa-download"></i>
                                 Export Excel
@@ -613,8 +641,8 @@
             return (
                 <div className="p-8">
                     <div className="mb-8">
-                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Welcome to the Admin Panel</h2>
-                        <p className="text-gray-500">Manage all Green Star credit data from one place. Click on any card to edit that section.</p>
+                        <h2 className="font-display text-xl font-bold text-ink mb-2">Welcome to the Admin Panel</h2>
+                        <p className="text-ink-3">Manage all Green Star credit data from one place. Click on any card to edit that section.</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -622,14 +650,14 @@
                             <button
                                 key={card.id}
                                 onClick={() => onNavigate(card.id)}
-                                className={`p-6 rounded-lg border ${colorClasses[card.color]} hover:border-stone-300 transition-colors text-left group`}
+                                className={`p-6 rounded-lg border ${colorClasses[card.color]} hover:border-line transition-colors text-left group`}
                             >
                                 <div className="flex items-start justify-between mb-4">
                                     <i className={`fa-solid ${card.icon} text-2xl`}></i>
                                     <span className="text-3xl font-bold">{card.count}</span>
                                 </div>
-                                <h3 className="font-semibold text-stone-800 mb-1">{card.label}</h3>
-                                <p className="text-sm text-stone-500">{card.description}</p>
+                                <h3 className="font-semibold text-ink mb-1">{card.label}</h3>
+                                <p className="text-sm text-ink-3">{card.description}</p>
                                 <div className="mt-4 flex items-center text-sm font-medium group-hover:translate-x-1 transition-transform">
                                     Edit <i className="fa-solid fa-arrow-right ml-2"></i>
                                 </div>
@@ -638,12 +666,12 @@
                     </div>
 
                     {/* Quick Tips */}
-                    <div className="mt-8 p-6 bg-stone-50 rounded-lg border border-stone-200">
+                    <div className="mt-8 p-6 bg-surface-1 rounded-lg border border-line">
                         <h3 className="font-semibold text-[#2D5A47] mb-3 flex items-center gap-2">
                             <i className="fa-solid fa-lightbulb"></i>
                             Quick Tips
                         </h3>
-                        <ul className="text-sm text-stone-600 space-y-2">
+                        <ul className="text-sm text-ink-2 space-y-2">
                             <li><i className="fa-solid fa-check mr-2 text-[#2D5A47]"></i>Changes are saved to your browser's local storage automatically</li>
                             <li><i className="fa-solid fa-check mr-2 text-[#2D5A47]"></i>Use "Export Excel" to download a spreadsheet backup</li>
                             <li><i className="fa-solid fa-check mr-2 text-[#2D5A47]"></i>Use "Save Changes" to push updates to the main app</li>
@@ -752,30 +780,30 @@
             };
 
             return (
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                <div className="bg-white rounded-xl border border-line overflow-hidden">
                     {/* Search and Bulk Actions Bar */}
-                    <div className="p-4 border-b border-gray-200 bg-gray-50 flex flex-wrap items-center gap-3">
+                    <div className="p-4 border-b border-line bg-surface-1 flex flex-wrap items-center gap-3">
                         <div className="flex-1 min-w-[200px]">
                             <div className="relative">
-                                <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-ink-3"></i>
                                 <input
                                     type="text"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Search in table..."
-                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#2D5A47]/20 focus:border-[#2D5A47]"
+                                    className="w-full pl-10 pr-4 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-[#2D5A47]/20 focus:border-[#2D5A47]"
                                 />
                                 {searchQuery && (
                                     <button
                                         onClick={() => setSearchQuery('')}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-3 hover:text-ink-2"
                                     >
                                         <i className="fa-solid fa-times"></i>
                                     </button>
                                 )}
                             </div>
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-ink-3">
                             {searchQuery ? `${filteredData.length} of ${data.length} rows` : `${data.length} rows`}
                         </div>
                         {selectedRows.size > 0 && (
@@ -799,12 +827,12 @@
 
                     {/* Bulk Edit Panel */}
                     {showBulkEdit && selectedRows.size > 0 && (
-                        <div className="p-4 border-b border-gray-200 bg-blue-50 flex items-center gap-3">
-                            <span className="text-sm font-medium text-gray-700">Bulk edit {selectedRows.size} rows:</span>
+                        <div className="p-4 border-b border-line bg-blue-50 flex items-center gap-3">
+                            <span className="text-sm font-medium text-ink-2">Bulk edit {selectedRows.size} rows:</span>
                             <select
                                 value={bulkEditField}
                                 onChange={(e) => setBulkEditField(e.target.value)}
-                                className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                                className="px-3 py-1.5 border border-line rounded-lg text-sm"
                             >
                                 <option value="">Select field...</option>
                                 {columns.filter(c => c.type !== 'textarea').map(col => (
@@ -818,7 +846,7 @@
                                         <select
                                             value={bulkEditValue}
                                             onChange={(e) => setBulkEditValue(e.target.value)}
-                                            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                                            className="px-3 py-1.5 border border-line rounded-lg text-sm"
                                         >
                                             <option value="">Select value...</option>
                                             {col.options.map(opt => (
@@ -833,7 +861,7 @@
                                         <select
                                             value={bulkEditValue}
                                             onChange={(e) => setBulkEditValue(e.target.value)}
-                                            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                                            className="px-3 py-1.5 border border-line rounded-lg text-sm"
                                         >
                                             <option value="">Select...</option>
                                             <option value="true">Yes / Checked</option>
@@ -846,7 +874,7 @@
                                             type="number"
                                             value={bulkEditValue}
                                             onChange={(e) => setBulkEditValue(e.target.value)}
-                                            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm w-24"
+                                            className="px-3 py-1.5 border border-line rounded-lg text-sm w-24"
                                             placeholder="Value"
                                         />
                                     );
@@ -856,7 +884,7 @@
                                             type="text"
                                             value={bulkEditValue}
                                             onChange={(e) => setBulkEditValue(e.target.value)}
-                                            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                                            className="px-3 py-1.5 border border-line rounded-lg text-sm"
                                             placeholder="New value"
                                         />
                                     );
@@ -871,7 +899,7 @@
                             </button>
                             <button
                                 onClick={() => { setShowBulkEdit(false); setBulkEditField(''); setBulkEditValue(''); }}
-                                className="px-3 py-1.5 text-gray-600 hover:text-gray-800"
+                                className="px-3 py-1.5 text-ink-2 hover:text-ink"
                             >
                                 Cancel
                             </button>
@@ -887,7 +915,7 @@
                                             type="checkbox"
                                             checked={selectedRows.size === filteredIndices.length && filteredIndices.length > 0}
                                             onChange={selectAll}
-                                            className="w-4 h-4 rounded border-gray-300 text-[#2D5A47] focus:ring-[#2D5A47]/20"
+                                            className="w-4 h-4 rounded border-line text-[#2D5A47] focus:ring-[#2D5A47]/20"
                                         />
                                     </th>
                                     {columns.map(col => (
@@ -906,7 +934,7 @@
                                                 type="checkbox"
                                                 checked={selectedRows.has(originalIndex)}
                                                 onChange={() => toggleRowSelection(originalIndex)}
-                                                className="w-4 h-4 rounded border-gray-300 text-[#2D5A47] focus:ring-[#2D5A47]/20"
+                                                className="w-4 h-4 rounded border-line text-[#2D5A47] focus:ring-[#2D5A47]/20"
                                             />
                                         </td>
                                         {columns.map(col => (
@@ -928,7 +956,7 @@
                                                         type="checkbox"
                                                         checked={row[col.key] || false}
                                                         onChange={(e) => handleChange(originalIndex, col.key, e.target.checked)}
-                                                        className="w-5 h-5 rounded border-gray-300 text-[#2D5A47] focus:ring-[#2D5A47]/20"
+                                                        className="w-5 h-5 rounded border-line text-[#2D5A47] focus:ring-[#2D5A47]/20"
                                                     />
                                                 ) : col.type === 'textarea' ? (
                                                     <textarea
@@ -968,7 +996,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div className="p-4 border-t border-gray-200 bg-gray-50">
+                    <div className="p-4 border-t border-line bg-surface-1">
                         <button
                             onClick={handleAdd}
                             className="px-4 py-2 bg-[#2D5A47] text-white rounded-lg text-sm font-medium hover:bg-[#234538] transition-all flex items-center gap-2"
@@ -997,8 +1025,8 @@
             return (
                 <div className="p-8">
                     <div className="mb-6">
-                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Categories</h2>
-                        <p className="text-gray-500">Manage the 8 main category groups. Icon names are from Font Awesome (fa-xxx).</p>
+                        <h2 className="font-display text-xl font-bold text-ink mb-2">Categories</h2>
+                        <p className="text-ink-3">Manage the 8 main category groups. Icon names are from Font Awesome (fa-xxx).</p>
                     </div>
                     <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
                 </div>
@@ -1031,8 +1059,8 @@
             return (
                 <div className="p-8">
                     <div className="mb-6">
-                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Credits</h2>
-                        <p className="text-gray-500">Manage individual credits. Set difficulty to "Easy" for Quick Wins. Project phases are comma-separated.</p>
+                        <h2 className="font-display text-xl font-bold text-ink mb-2">Credits</h2>
+                        <p className="text-ink-3">Manage individual credits. Set difficulty to "Easy" for Quick Wins. Project phases are comma-separated.</p>
                     </div>
                     <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
                 </div>
@@ -1061,8 +1089,8 @@
             return (
                 <div className="p-8">
                     <div className="mb-6">
-                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Performance Levels</h2>
-                        <p className="text-gray-500">Define Minimum, Credit, and Exceptional levels for each credit.</p>
+                        <h2 className="font-display text-xl font-bold text-ink mb-2">Performance Levels</h2>
+                        <p className="text-ink-3">Define Minimum, Credit, and Exceptional levels for each credit.</p>
                     </div>
                     <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
                 </div>
@@ -1093,8 +1121,8 @@
             return (
                 <div className="p-8">
                     <div className="mb-6">
-                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Criteria</h2>
-                        <p className="text-gray-500">Define requirements for each performance level. These appear in the Criteria tab.</p>
+                        <h2 className="font-display text-xl font-bold text-ink mb-2">Criteria</h2>
+                        <p className="text-ink-3">Define requirements for each performance level. These appear in the Criteria tab.</p>
                     </div>
                     <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
                 </div>
@@ -1127,8 +1155,8 @@
             return (
                 <div className="p-8">
                     <div className="mb-6">
-                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Documentation</h2>
-                        <p className="text-gray-500">Define required documents for each credit. Optionally provide template links.</p>
+                        <h2 className="font-display text-xl font-bold text-ink mb-2">Documentation</h2>
+                        <p className="text-ink-3">Define required documents for each credit. Optionally provide template links.</p>
                     </div>
                     <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
                 </div>
@@ -1155,8 +1183,8 @@
             return (
                 <div className="p-8">
                     <div className="mb-6">
-                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Project Templates</h2>
-                        <p className="text-gray-500">Pre-configured credit selections for different building types. List credit IDs separated by commas.</p>
+                        <h2 className="font-display text-xl font-bold text-ink mb-2">Project Templates</h2>
+                        <p className="text-ink-3">Pre-configured credit selections for different building types. List credit IDs separated by commas.</p>
                     </div>
                     <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
                 </div>
@@ -1182,8 +1210,8 @@
             return (
                 <div className="p-8">
                     <div className="mb-6">
-                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Credit Synergies</h2>
-                        <p className="text-gray-500">Define relationships between credits. Strong synergies are highlighted in the app.</p>
+                        <h2 className="font-display text-xl font-bold text-ink mb-2">Credit Synergies</h2>
+                        <p className="text-ink-3">Define relationships between credits. Strong synergies are highlighted in the app.</p>
                     </div>
                     <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
                 </div>
@@ -1208,8 +1236,8 @@
             return (
                 <div className="p-8">
                     <div className="mb-6">
-                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Calculators</h2>
-                        <p className="text-gray-500">Manage the calculators available in the main app. Use FontAwesome icon class names.</p>
+                        <h2 className="font-display text-xl font-bold text-ink mb-2">Calculators</h2>
+                        <p className="text-ink-3">Manage the calculators available in the main app. Use FontAwesome icon class names.</p>
                     </div>
                     <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
                 </div>
@@ -1234,8 +1262,8 @@
             return (
                 <div className="p-8">
                     <div className="mb-6">
-                        <h2 className="font-display text-xl font-bold text-gray-800 mb-2">Common Mistakes</h2>
-                        <p className="text-gray-500">Define common mistakes for each credit to help users avoid pitfalls during submission.</p>
+                        <h2 className="font-display text-xl font-bold text-ink mb-2">Common Mistakes</h2>
+                        <p className="text-ink-3">Define common mistakes for each credit to help users avoid pitfalls during submission.</p>
                     </div>
                     <TableEditor data={data} columns={columns} onUpdate={onUpdate} emptyRow={emptyRow} />
                 </div>
@@ -1390,8 +1418,8 @@
             return (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={onClose}>
                     <div className="bg-white rounded-2xl p-6 max-w-md w-full" onClick={e => e.stopPropagation()}>
-                        <h2 className="font-display text-xl font-bold text-gray-800 mb-4">Import from Excel</h2>
-                        <p className="text-gray-600 mb-6">Upload an Excel file to import data. This will replace existing data.</p>
+                        <h2 className="font-display text-xl font-bold text-ink mb-4">Import from Excel</h2>
+                        <p className="text-ink-2 mb-6">Upload an Excel file to import data. This will replace existing data.</p>
 
                         <input
                             ref={fileInputRef}
@@ -1403,7 +1431,7 @@
 
                         <button
                             onClick={() => fileInputRef.current?.click()}
-                            className="w-full py-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-[#2D5A47] transition-colors flex flex-col items-center gap-2 text-gray-500 hover:text-[#2D5A47]"
+                            className="w-full py-4 border-2 border-dashed border-line rounded-xl hover:border-[#2D5A47] transition-colors flex flex-col items-center gap-2 text-ink-3 hover:text-[#2D5A47]"
                         >
                             <i className="fa-solid fa-cloud-arrow-up text-3xl"></i>
                             <span>Click to upload Excel file</span>
@@ -1421,7 +1449,7 @@
 
                         <button
                             onClick={onClose}
-                            className="w-full mt-4 py-2 text-gray-600 hover:text-gray-800"
+                            className="w-full mt-4 py-2 text-ink-2 hover:text-ink"
                         >
                             Cancel
                         </button>
@@ -1850,7 +1878,7 @@
             return (
                 <div className="flex min-h-screen">
                     <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} dataStats={dataStats} onLogout={handleLogout} />
-                    <main className="flex-1 bg-gray-50">
+                    <main className="flex-1 bg-surface-1">
                         <Header
                             title={title}
                             subtitle={subtitle}

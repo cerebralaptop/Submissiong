@@ -6,10 +6,11 @@
 3. [Current Features](#current-features)
 4. [Data Model](#data-model)
 5. [User Flows](#user-flows)
-6. [Proposed Features](#proposed-features)
+6. [Implemented Features](#implemented-features-v11)
 7. [Technical Specifications](#technical-specifications)
 8. [Security](#security)
 9. [Deployment](#deployment)
+10. [Visual Design System](#visual-design-system)
 
 ---
 
@@ -75,10 +76,10 @@ The Green Star Submission Assistant is a web-based application designed to help 
 | Layer | Technology | Purpose |
 |-------|------------|---------|
 | UI Framework | React 18 | Component-based UI |
-| Styling | Tailwind CSS | Utility-first styling |
+| Styling | Tailwind CSS + CSS Custom Properties | Utility-first styling with design tokens |
 | Transpilation | Babel (browser) | JSX support |
-| Icons | Font Awesome 6 | UI icons |
-| Fonts | Plus Jakarta Sans | GBCA brand typography |
+| Icons | Custom SVG Icons | GBCA-style architectural icons |
+| Fonts | Outfit (headings), System UI (body) | GBCA brand typography |
 | Excel Processing | SheetJS (xlsx) | Excel import/export |
 | Storage | localStorage | Client-side persistence |
 | PDF Generation | html2pdf.js | Export to PDF |
@@ -969,6 +970,235 @@ const recordChange = (newState) => {
 
 ---
 
+## 10. Visual Design System
+
+### Design Principles
+
+The Green Star Submission Assistant follows GBCA's visual design language:
+
+1. **Modern & Clean**: Minimal, purposeful design with clear visual hierarchy
+2. **Accessible**: High contrast text, keyboard navigation, screen reader support
+3. **Consistent**: Unified color palette and spacing system across all components
+4. **Professional**: Serious, trustworthy aesthetic appropriate for building certification
+
+### CSS Design Tokens
+
+All design values are defined as CSS Custom Properties for consistency and maintainability.
+
+#### Color Tokens
+
+```css
+:root {
+  /* Primary Green Palette */
+  --color-green-900: #1F4B2E;    /* Darkest - headings, emphasis */
+  --color-green-700: #2E6B3F;    /* Primary actions, links */
+  --color-green-500: #4F8A55;    /* Hover states, accents */
+  --color-green-300: #9CCB8A;    /* Success indicators */
+  --color-green-200: #CDE6C3;    /* Light accents */
+  --color-green-100: #EAF4E6;    /* Subtle backgrounds */
+
+  /* Ink Colors (Text) */
+  --color-ink: #1C2320;          /* Primary text - headings, body */
+  --color-ink-2: #34403A;        /* Secondary text - labels */
+  --color-ink-3: #5A6A62;        /* Tertiary text - captions, muted */
+
+  /* Surface Colors (Backgrounds) */
+  --color-surface-0: #FFFFFF;    /* Primary background */
+  --color-surface-1: #F6F8F6;    /* Secondary background */
+  --color-surface-2: #EFF3EF;    /* Tertiary background, hover states */
+
+  /* Borders */
+  --color-line: #D7DED8;         /* All borders and dividers */
+
+  /* Headings */
+  --heading-color: var(--color-green-900);
+}
+```
+
+#### Typography Tokens
+
+```css
+:root {
+  /* Font Families */
+  --font-display: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --font-body: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;     /* 12px - captions */
+  --text-sm: 0.875rem;    /* 14px - small text */
+  --text-base: 1rem;      /* 16px - body */
+  --text-lg: 1.125rem;    /* 18px - large text */
+  --text-xl: 1.25rem;     /* 20px - h4 */
+  --text-2xl: 1.5rem;     /* 24px - h3 */
+  --text-3xl: 1.875rem;   /* 30px - h2 */
+  --text-4xl: 2.25rem;    /* 36px - h1 */
+
+  /* Font Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* Line Heights */
+  --leading-tight: 1.3;   /* Headings */
+  --leading-normal: 1.55; /* Body text */
+  --leading-relaxed: 1.7; /* Long-form content */
+}
+```
+
+#### Spacing Tokens
+
+```css
+:root {
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+}
+```
+
+#### Other Tokens
+
+```css
+:root {
+  /* Border Radius */
+  --radius-sm: 0.25rem;   /* 4px - small elements */
+  --radius-md: 0.5rem;    /* 8px - buttons, inputs */
+  --radius-lg: 0.75rem;   /* 12px - cards */
+  --radius-xl: 1rem;      /* 16px - modals */
+  --radius-2xl: 1.5rem;   /* 24px - large panels */
+  --radius-full: 9999px;  /* Pills, avatars */
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+  --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+
+  /* Focus Ring */
+  --focus-ring: 0 0 0 3px rgba(124,203,139,0.35);
+
+  /* Motion/Animation */
+  --ease-standard: cubic-bezier(0.2, 0.0, 0.0, 1);
+  --dur-fast: 120ms;
+  --dur-med: 200ms;
+  --dur-slow: 300ms;
+}
+```
+
+### Icon System
+
+Custom SVG icons follow the GBCA architectural style:
+- **Line weight**: 1.5px stroke
+- **Style**: Fine-line, minimal, architectural
+- **Size**: 24x24 default, scalable via size prop
+- **Color**: Uses currentColor for theming
+
+Available icon categories:
+- **Category Icons**: responsible, healthy, resilient, positive, places, sustainable, people, innovation
+- **Action Icons**: checkCircle, alertCircle, infoCircle, document, download, upload, search
+- **Navigation Icons**: chevronDown, chevronRight, menu, close, arrowRight
+
+### Component Primitives
+
+#### Buttons
+
+```css
+/* Primary Button */
+.btn-primary {
+  background: var(--color-green-700);
+  color: white;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-semibold);
+  transition: all var(--dur-fast) var(--ease-standard);
+}
+.btn-primary:hover {
+  background: var(--color-green-500);
+}
+.btn-primary:focus {
+  box-shadow: var(--focus-ring);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background: var(--color-surface-0);
+  color: var(--color-ink-2);
+  border: 1px solid var(--color-line);
+}
+.btn-secondary:hover {
+  background: var(--color-surface-2);
+  border-color: var(--color-green-700);
+}
+```
+
+#### Cards
+
+```css
+.card {
+  background: var(--color-surface-0);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.card:hover {
+  border-color: var(--color-green-300);
+}
+```
+
+#### Form Inputs
+
+```css
+.input {
+  background: var(--color-surface-0);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-ink);
+  transition: border-color var(--dur-fast) var(--ease-standard);
+}
+.input:focus {
+  outline: none;
+  border-color: var(--color-green-700);
+  box-shadow: var(--focus-ring);
+}
+```
+
+### Print Styles
+
+Print-optimized CSS for generating professional documentation:
+
+```css
+@media print {
+  body { background: white; font-size: 11pt; }
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+
+  /* Ensure black text for readability */
+  h1, h2, h3 { color: #1F4B2E !important; }
+  body { color: #1C2320 !important; }
+
+  /* Remove shadows and decorations */
+  * { box-shadow: none !important; }
+}
+```
+
+### Accessibility Standards
+
+- **Color Contrast**: All text meets WCAG 2.1 AA (4.5:1 for normal text, 3:1 for large text)
+- **Focus Indicators**: Visible focus ring on all interactive elements
+- **Keyboard Navigation**: Full keyboard support for all features
+- **Screen Readers**: ARIA labels on icons and interactive elements
+- **Reduced Motion**: Respects `prefers-reduced-motion` media query
+
+---
+
 ## Appendix A: Component Reference
 
 ### Main App Components
@@ -1041,6 +1271,6 @@ const recordChange = (newState) => {
 
 ---
 
-*Document Version: 1.0*
-*Last Updated: January 31, 2026*
+*Document Version: 1.1*
+*Last Updated: February 1, 2026*
 *Author: Green Star Development Team*
