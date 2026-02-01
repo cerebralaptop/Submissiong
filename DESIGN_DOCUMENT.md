@@ -1152,6 +1152,8 @@ Step 8: You're Ready!
 │                 │      │ - Navigation    │      │ completed    │
 └─────────────────┘      │ - Overlay       │      │ flag         │
                          │ - Highlighting  │      └──────────────┘
+                         │ - Dynamic       │
+                         │   Positioning   │
                          └─────────────────┘
 ```
 
@@ -1161,16 +1163,29 @@ Step 8: You're Ready!
 // OnboardingTour Component
 function OnboardingTour({ isOpen, onComplete }) {
   const [currentStep, setCurrentStep] = useState(0);
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
   const tourSteps = [
     {
       title: "Step Title",
       content: "Step description",
       target: "data-tour-attribute",  // Optional: element to highlight
-      position: "center" | "element"
+      position: "right" | "left" | "center"  // Position relative to target
     },
     // ... more steps
   ];
+
+  // Dynamic positioning using getBoundingClientRect
+  useEffect(() => {
+    if (!isOpen || !step.target) return;
+
+    const targetEl = document.querySelector(step.target);
+    if (!targetEl) return;
+
+    const rect = targetEl.getBoundingClientRect();
+    // Calculate position based on step.position and element bounds
+    // Constrain to viewport to prevent off-screen tooltips
+  }, [currentStep, isOpen]);
 
   // Navigation handlers
   const handleNext = () => {...};
@@ -1178,12 +1193,41 @@ function OnboardingTour({ isOpen, onComplete }) {
 
   return (
     <div className="tour-overlay">
-      <div className="tour-modal">
+      <div className="tour-modal" style={{ top, left }}>
         {/* Title, content, navigation, progress dots */}
       </div>
     </div>
   );
 }
+```
+
+#### Tooltip Positioning
+
+The tour uses dynamic positioning based on `getBoundingClientRect()` to ensure tooltips appear correctly relative to their target elements:
+
+| Position | Behavior |
+|----------|----------|
+| `right` | Tooltip appears to the right of the sidebar element |
+| `left` | Tooltip appears to the left of the main content area |
+| `center` | Tooltip appears centered in viewport (welcome/finish screens) |
+
+**Positioning Logic:**
+```javascript
+// Position to the right of sidebar elements
+if (step.position === 'right') {
+    left = rect.right + padding;
+    top = rect.top + (rect.height / 2) - (tooltipHeight / 2);
+}
+
+// Position to the left of main content
+if (step.position === 'left') {
+    left = rect.left - tooltipWidth - padding;
+    top = rect.top;
+}
+
+// Constrain to viewport bounds
+top = Math.max(padding, Math.min(top, window.innerHeight - tooltipHeight - padding));
+left = Math.max(padding, Math.min(left, window.innerWidth - tooltipWidth - padding));
 ```
 
 #### localStorage Keys
@@ -1669,13 +1713,23 @@ Print-optimized CSS for generating professional documentation:
 
 ---
 
-*Document Version: 1.3*
+*Document Version: 1.4*
 *Last Updated: February 1, 2026*
 *Author: Green Star Development Team*
 
 ---
 
 ## Changelog
+
+### v1.4 (February 1, 2026)
+- **Tour Positioning Overhaul**: Replaced fixed positioning with dynamic `getBoundingClientRect()` positioning
+- Tour tooltips now appear directly adjacent to their target elements
+- Sidebar elements (steps 1-6) show tooltips to the right
+- Credit cards section (step 7) shows tooltip to the left
+- Added viewport boundary constraints to prevent off-screen tooltips
+- **Official GBCA Icons**: Integrated official Green Star PNG icons for all 8 categories
+- Updated sidebar header with official Green Star logo
+- **Admin Panel Stability**: Fixed Babel parsing issues with JSX formatting in table components
 
 ### v1.3 (February 1, 2026)
 - Added Onboarding Tours section (Section 8)

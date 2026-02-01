@@ -4679,17 +4679,12 @@
                 exceptional: 'fa-award'
             };
 
-            const levelFullNames = {
-                minimum: 'Minimum Expectation',
-                credit: 'Credit Achievement',
-                exceptional: 'Exceptional Performance'
-            };
-
             // Get colors based on selected level
             const currentLevelColors = selectedLevel ? levelColors[selectedLevel] : null;
 
             // Handle dropdown change
             const handleSelectChange = (e) => {
+                e.stopPropagation();
                 const value = e.target.value;
                 if (value === '') {
                     onSelectLevel(null, 0);
@@ -4703,28 +4698,27 @@
 
             return (
                 <div
-                    className={`credit-card rounded-lg border transition-all bg-white
+                    className={`credit-card rounded-lg border transition-all bg-white cursor-pointer hover:shadow-sm
                         ${selectedLevel
                             ? `${currentLevelColors.border} ${currentLevelColors.bg}`
-                            : 'border-line'}`}
+                            : 'border-line hover:border-[#2E6B3F]/30'}`}
+                    onClick={onViewDetails}
                 >
-                    {/* Clickable Header row */}
-                    <div
-                        className="flex items-center gap-4 p-4 pb-2 cursor-pointer hover:bg-surface-1 rounded-t-lg transition-colors"
-                        onClick={onViewDetails}
-                    >
+                    {/* Single compact row layout */}
+                    <div className="flex items-center gap-3 p-3">
+                        {/* Left: Credit info */}
                         <div className="flex-grow min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                                <h3 className={`font-medium ${selectedLevel ? currentLevelColors.text : 'text-ink'}`}>
+                                <h3 className={`font-medium text-sm ${selectedLevel ? currentLevelColors.text : 'text-ink'}`}>
                                     {credit.name}
                                 </h3>
                                 {credit.required && (
-                                    <span className="required-badge bg-red-50 text-red-600 px-2 py-0.5 rounded text-xs font-semibold uppercase">
+                                    <span className="required-badge bg-red-50 text-red-600 px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase">
                                         Required
                                     </span>
                                 )}
                                 {credit.difficulty && (
-                                    <span className={`text-xs px-2 py-0.5 rounded ${
+                                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${
                                         credit.difficulty === 'Easy' ? 'bg-green-50 text-green-700' :
                                         credit.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700' :
                                         'bg-red-50 text-red-700'
@@ -4733,83 +4727,60 @@
                                     </span>
                                 )}
                                 {credit.calculatorRequired && (
-                                    <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded">
-                                        <i className="fa-solid fa-calculator mr-1"></i>
-                                        Calc
+                                    <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">
+                                        <i className="fa-solid fa-calculator"></i>
                                     </span>
                                 )}
                             </div>
-                            {credit.description && (
-                                <p className="text-sm text-ink-3 mt-1 line-clamp-2">{credit.description}</p>
-                            )}
+                            <p className="text-xs text-ink-3 mt-0.5 line-clamp-1">{credit.description}</p>
                         </div>
 
-                        <div className="flex items-center gap-3 flex-shrink-0">
-                            <div className={`font-mono text-lg font-bold min-w-[50px] text-right ${selectedLevel ? currentLevelColors.text : 'text-ink-3'}`}>
-                                +{currentPoints}
-                            </div>
-                            <i className="fa-solid fa-chevron-right text-ink-3 text-sm"></i>
-                        </div>
-                    </div>
-
-                    {/* Performance Level Dropdown Selector */}
-                    {hasLevels ? (
-                        <div className="px-4 pb-4 pt-2">
-                            <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-1 text-xs text-ink-3">
-                                    <i className="fa-solid fa-clipboard-check"></i>
-                                    <span>Claim:</span>
-                                </div>
-                                <div className="flex-grow relative">
+                        {/* Right: Dropdown + Points + Arrow */}
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                            {hasLevels ? (
+                                <div className="relative" onClick={(e) => e.stopPropagation()}>
                                     <select
                                         value={selectedLevel || ''}
                                         onChange={handleSelectChange}
-                                        onClick={(e) => e.stopPropagation()}
-                                        className={`w-full py-2 px-3 pr-8 rounded-lg border transition-all text-sm font-medium appearance-none cursor-pointer
+                                        className={`py-1.5 pl-2 pr-6 rounded border transition-all text-xs font-medium appearance-none cursor-pointer min-w-[130px]
                                             ${selectedLevel
                                                 ? `${levelColors[selectedLevel].bg} ${levelColors[selectedLevel].border} ${levelColors[selectedLevel].text}`
                                                 : 'bg-white border-line text-ink-2 hover:border-[#2E6B3F]'
                                             }`}
                                     >
-                                        <option value="">— Not Claimed —</option>
+                                        <option value="">Not Claimed</option>
                                         {credit.performanceLevels.map((level) => (
                                             <option key={level.level} value={level.level}>
-                                                {levelFullNames[level.level]} ({level.points} pts)
+                                                {level.level.charAt(0).toUpperCase() + level.level.slice(1)} ({level.points}pts)
                                             </option>
                                         ))}
                                     </select>
-                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <i className={`fa-solid ${selectedLevel ? levelIcons[selectedLevel] : 'fa-chevron-down'} text-sm ${selectedLevel ? levelColors[selectedLevel].text : 'text-ink-3'}`}></i>
+                                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <i className={`fa-solid fa-chevron-down text-[10px] ${selectedLevel ? levelColors[selectedLevel].text : 'text-ink-3'}`}></i>
                                     </div>
                                 </div>
-                            </div>
-                            {selectedLevel && (
-                                <div className="mt-2 text-xs text-ink-3 flex items-center gap-1">
-                                    <i className="fa-solid fa-circle-info"></i>
-                                    {selectedLevel === 'exceptional' && <span>Includes Credit Achievement + Minimum Expectation compliance</span>}
-                                    {selectedLevel === 'credit' && <span>Includes Minimum Expectation compliance</span>}
-                                    {selectedLevel === 'minimum' && <span>Meets Minimum Expectation requirements only</span>}
-                                </div>
+                            ) : (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onSelectLevel(selectedLevel ? null : 'credit', credit.points);
+                                    }}
+                                    className={`py-1.5 px-3 rounded border transition-all text-xs font-medium
+                                        ${selectedLevel
+                                            ? 'bg-[#1F4B2E]/5 border-[#1F4B2E] text-[#1F4B2E]'
+                                            : 'bg-white border-line text-ink-2 hover:border-[#2E6B3F]'
+                                        }`}
+                                >
+                                    {selectedLevel ? `Selected (${credit.points}pts)` : `Add (${credit.points}pts)`}
+                                </button>
                             )}
+
+                            <div className={`font-mono text-sm font-bold w-10 text-right ${selectedLevel ? currentLevelColors.text : 'text-ink-3'}`}>
+                                +{currentPoints}
+                            </div>
+                            <i className="fa-solid fa-chevron-right text-ink-3 text-xs"></i>
                         </div>
-                    ) : (
-                        <div className="px-4 pb-4 pt-2">
-                            <button
-                                onClick={() => onSelectLevel(selectedLevel ? null : 'credit', credit.points)}
-                                className={`w-full py-2 px-3 rounded-lg border transition-all text-sm font-medium
-                                    ${selectedLevel
-                                        ? 'bg-[#1F4B2E]/5 border-[#1F4B2E] text-[#1F4B2E]'
-                                        : 'bg-white border-line text-ink-2 hover:border-[#2E6B3F] hover:bg-[#1F4B2E]/5'
-                                    }`}
-                            >
-                                <div className="flex items-center justify-center gap-2">
-                                    <i className={`fa-solid ${selectedLevel ? 'fa-check' : 'fa-plus'} text-sm`}></i>
-                                    <span>{selectedLevel ? 'Selected' : 'Select Credit'}</span>
-                                    <span className="font-mono">({credit.points} pts)</span>
-                                </div>
-                            </button>
-                        </div>
-                    )}
+                    </div>
                 </div>
             );
         }
