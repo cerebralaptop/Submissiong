@@ -1608,37 +1608,14 @@
         // MAIN APP
         // ============================================================
         function App() {
+            // ALL HOOKS MUST BE AT THE TOP - before any conditional returns
             const [isAuthenticated, setIsAuthenticated] = useState(() => isSessionValid());
             const [activeTab, setActiveTab] = useState('dashboard');
             const [showImportModal, setShowImportModal] = useState(false);
             const [toast, setToast] = useState(null);
             const [showTour, setShowTour] = useState(false);
 
-            // Check if first visit and show tour
-            React.useEffect(() => {
-                const hasSeenTour = localStorage.getItem('greenstar-admin-tour-completed');
-                if (!hasSeenTour) {
-                    setTimeout(() => setShowTour(true), 500);
-                }
-            }, []);
-
-            const completeTour = () => {
-                setShowTour(false);
-                localStorage.setItem('greenstar-admin-tour-completed', 'true');
-            };
-
-            // Handle logout
-            const handleLogout = () => {
-                endSession();
-                setIsAuthenticated(false);
-            };
-
-            // Show login screen if not authenticated
-            if (!isAuthenticated) {
-                return <LoginScreen onLogin={() => setIsAuthenticated(true)} />;
-            }
-
-            // Data state
+            // Data state - moved to top to comply with Rules of Hooks
             const [categories, setCategories] = useState(() => {
                 const saved = localStorage.getItem('admin_categories');
                 return saved ? JSON.parse(saved) : defaultCategories;
@@ -1680,6 +1657,16 @@
             const [history, setHistory] = useState([]);
             const [historyIndex, setHistoryIndex] = useState(-1);
             const isUndoRedo = React.useRef(false);
+            const historyTimeout = React.useRef(null);
+
+            // Check if first visit and show tour
+            React.useEffect(() => {
+                if (!isAuthenticated) return;
+                const hasSeenTour = localStorage.getItem('greenstar-admin-tour-completed');
+                if (!hasSeenTour) {
+                    setTimeout(() => setShowTour(true), 500);
+                }
+            }, [isAuthenticated]);
 
             // Get current state snapshot
             const getSnapshot = () => ({
@@ -1701,8 +1688,8 @@
             }, [categories, credits, levels, criteria, documentation, templates, synergies, calculators, commonMistakes, historyIndex]);
 
             // Track changes and record history with debounce
-            const historyTimeout = React.useRef(null);
             useEffect(() => {
+                if (!isAuthenticated) return;
                 if (isUndoRedo.current) {
                     isUndoRedo.current = false;
                     return;
@@ -1714,7 +1701,7 @@
                 return () => {
                     if (historyTimeout.current) clearTimeout(historyTimeout.current);
                 };
-            }, [categories, credits, levels, criteria, documentation, templates, synergies, calculators, commonMistakes]);
+            }, [isAuthenticated, categories, credits, levels, criteria, documentation, templates, synergies, calculators, commonMistakes]);
 
             // Undo function
             const handleUndo = () => {
@@ -1760,6 +1747,7 @@
 
             // Keyboard shortcuts for undo/redo
             useEffect(() => {
+                if (!isAuthenticated) return;
                 const handleKeyDown = (e) => {
                     if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
                         e.preventDefault();
@@ -1777,39 +1765,64 @@
 
                 window.addEventListener('keydown', handleKeyDown);
                 return () => window.removeEventListener('keydown', handleKeyDown);
-            }, [historyIndex, history]);
+            }, [isAuthenticated, historyIndex, history]);
 
             const canUndo = historyIndex > 0;
             const canRedo = historyIndex < history.length - 1;
 
             // Auto-save to localStorage
             useEffect(() => {
+                if (!isAuthenticated) return;
                 localStorage.setItem('admin_categories', JSON.stringify(categories));
-            }, [categories]);
+            }, [isAuthenticated, categories]);
             useEffect(() => {
+                if (!isAuthenticated) return;
                 localStorage.setItem('admin_credits', JSON.stringify(credits));
-            }, [credits]);
+            }, [isAuthenticated, credits]);
             useEffect(() => {
+                if (!isAuthenticated) return;
                 localStorage.setItem('admin_levels', JSON.stringify(levels));
-            }, [levels]);
+            }, [isAuthenticated, levels]);
             useEffect(() => {
+                if (!isAuthenticated) return;
                 localStorage.setItem('admin_criteria', JSON.stringify(criteria));
-            }, [criteria]);
+            }, [isAuthenticated, criteria]);
             useEffect(() => {
+                if (!isAuthenticated) return;
                 localStorage.setItem('admin_documentation', JSON.stringify(documentation));
-            }, [documentation]);
+            }, [isAuthenticated, documentation]);
             useEffect(() => {
+                if (!isAuthenticated) return;
                 localStorage.setItem('admin_templates', JSON.stringify(templates));
-            }, [templates]);
+            }, [isAuthenticated, templates]);
             useEffect(() => {
+                if (!isAuthenticated) return;
                 localStorage.setItem('admin_synergies', JSON.stringify(synergies));
-            }, [synergies]);
+            }, [isAuthenticated, synergies]);
             useEffect(() => {
+                if (!isAuthenticated) return;
                 localStorage.setItem('admin_calculators', JSON.stringify(calculators));
-            }, [calculators]);
+            }, [isAuthenticated, calculators]);
             useEffect(() => {
+                if (!isAuthenticated) return;
                 localStorage.setItem('admin_mistakes', JSON.stringify(commonMistakes));
-            }, [commonMistakes]);
+            }, [isAuthenticated, commonMistakes]);
+
+            const completeTour = () => {
+                setShowTour(false);
+                localStorage.setItem('greenstar-admin-tour-completed', 'true');
+            };
+
+            // Handle logout
+            const handleLogout = () => {
+                endSession();
+                setIsAuthenticated(false);
+            };
+
+            // Show login screen if not authenticated - AFTER all hooks
+            if (!isAuthenticated) {
+                return <LoginScreen onLogin={() => setIsAuthenticated(true)} />;
+            }
 
             const dataStats = {
                 categories: categories.length,
