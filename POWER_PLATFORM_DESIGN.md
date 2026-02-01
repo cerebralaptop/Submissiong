@@ -606,7 +606,19 @@ Create a reusable component library for consistent UI:
 | cmpLevelSelector | Level radio buttons | Levels collection, SelectedLevel |
 | cmpDocumentUploader | File upload | ProjectId, CreditId, OnUpload |
 | cmpCategoryIcon | Category icon | CategoryName, Size, Color |
-| cmpTourStep | Onboarding step | StepNumber, Title, Content, Position |
+| cmpTourStep | Onboarding step | StepNumber, Title, Content, Position, TargetElement |
+
+**Note on Tour Positioning**: The static HTML version uses `getBoundingClientRect()` for dynamic tooltip positioning relative to target elements. In Power Apps Canvas, implement similar behavior using control coordinates:
+
+```powerapps
+// Calculate tooltip position based on target control
+Set(varTooltipX, targetControl.X + targetControl.Width + 16);
+Set(varTooltipY, targetControl.Y + (targetControl.Height / 2) - (tooltipHeight / 2));
+
+// Constrain to screen bounds
+Set(varTooltipX, Max(16, Min(varTooltipX, App.Width - tooltipWidth - 16)));
+Set(varTooltipY, Max(16, Min(varTooltipY, App.Height - tooltipHeight - 16)));
+```
 
 **Example: cmpCreditCard**
 
@@ -1355,7 +1367,7 @@ function generateGuid() {
 | PDF export | Power Automate + Word templates |
 | Project switching | Dataverse record selection |
 | Scenario cloning | Duplicate detection + flow |
-| Onboarding tour | Canvas app component with tutorial screens |
+| Onboarding tour (dynamic positioning) | Canvas app component with tutorial screens + control coordinate-based positioning |
 | Dark mode | Power Apps theming (limited) |
 | Offline support | Power Apps offline capabilities |
 
@@ -1407,8 +1419,8 @@ function generateGuid() {
 
 ---
 
-*Document Version: 1.0*
-*Created: February 1, 2026*
+*Document Version: 1.1*
+*Last Updated: February 1, 2026*
 *Author: Green Star Development Team*
 *Target Platform: Microsoft Power Platform*
 
@@ -1418,4 +1430,5 @@ function generateGuid() {
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| 1.1 | Feb 1, 2026 | Development Team | Added tour positioning guidance for Power Apps Canvas implementation; Updated cmpTourStep component with TargetElement property |
 | 1.0 | Feb 1, 2026 | Development Team | Initial Power Platform design document |
